@@ -1,0 +1,19 @@
+{
+  "name": "learn-welsh-vocab-api",
+  "version": "1.0.0",
+  "description": "Cloud Run API for Learn Welsh Vocab (Firestore + Firebase Auth)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.0.2"
+  },
+  "private": true
+}

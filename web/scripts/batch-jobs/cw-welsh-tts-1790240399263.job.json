@@ -1,0 +1,21 @@
+{
+  "job_name": "batches/gkkwh9i8q22uxn8aikefrbjyx2vf9kp623m5",
+  "file_name": "files/nyuzlqdzpo8h",
+  "model": "gemini-3.1-flash-tts-preview",
+  "voice": "Enceladus",
+  "language": "cy-GB",
+  "request_count": 248,
+  "jsonl_file": "/Users/raghavganesh/Documents/Code Projects/Colloquial Welsh Flashcards/web/scripts/batch-jobs/cw-welsh-tts-1790240399263.jsonl",
+  "created_at": "2026-09-24T09:00:04.032Z",
+  "state": "JOB_STATE_SUCCEEDED",
+  "polled_at": "2026-09-24T09:03:25.844Z",
+  "batch_stats": {
+    "requestCount": "248",
+    "successfulRequestCount": "248"
+  },
+  "completed_at": "2026-09-24T09:03:26.914Z",
+  "result_file": "files/batch-gkkwh9i8q22uxn8aikefrbjyx2vf9kp623m5",
+  "local_results_path": "/Users/raghavganesh/Documents/Code Projects/Colloquial Welsh Flashcards/web/scripts/batch-jobs/cw-welsh-tts-1790240399263.results.jsonl",
+  "applied_ok": 248,
+  "applied_failed": 0
+}

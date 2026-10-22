@@ -1,0 +1,13 @@
+.DS_Store
+*.pdf
+.env
+.env.*
+!.env.example
+
+node_modules
+dist
+dist-ssr
+
+server/firebase-debug.log
+web/scripts/batch-jobs/*.jsonl
+web/scripts/batch-jobs/*.results.jsonl
