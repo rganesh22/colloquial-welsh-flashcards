@@ -481,12 +481,6 @@ export function recordDailyReview(): void {
   localStorage.setItem(DAILY_KEY, JSON.stringify(state))
 }
 
-function loadIntroHistoryMap(): Record<string, number> {
-  return Object.fromEntries(
-    Object.entries(loadIntroDayMap()).map(([k, v]) => [k, v.count]),
-  )
-}
-
 export type IntroDayDetail = {
   date: string
   count: number

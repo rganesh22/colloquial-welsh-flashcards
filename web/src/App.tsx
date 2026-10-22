@@ -1568,12 +1568,6 @@ function StudyView({
   const [, setDailyTick] = useState(0)
   const sessionStartedAt = useRef(Date.now())
   const [elapsedNow, setElapsedNow] = useState(() => Date.now())
-  const dueAtOpen = useRef(
-    mode === 'review'
-      ? countStats(progress, filter, settings.direction).due
-      : 0,
-  )
-  const introAtOpen = useRef(dailyIntroCount())
   const sessionIntroduced = useRef(0)
 
   useEffect(() => {
