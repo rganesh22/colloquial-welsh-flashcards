@@ -170,6 +170,46 @@ kbd {
   gap: 0.4rem;
 }
 
+.sign-in-gate {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+}
+
+.sign-in-card {
+  width: min(28rem, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.sign-in-card h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  font-size: clamp(2.4rem, 7vw, 3.4rem);
+  color: var(--green-deep);
+}
+
+.sign-in-card p {
+  margin: 0;
+  max-width: 26rem;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.sign-in-card .is-error {
+  color: var(--again);
+}
+
+.sign-in-card .primary-btn {
+  margin-top: 0.35rem;
+}
+
 .account-bar {
   display: flex;
   flex-wrap: wrap;

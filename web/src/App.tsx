@@ -82,7 +82,7 @@ import {
   type AccountPhase,
   type AccountUser,
 } from './lib/account'
-import { AccountBar } from './components/AccountBar'
+import { AccountBar, SignInGate } from './components/AccountBar'
 import { ActivityView } from './components/ActivityView'
 import { AskPanel } from './components/AskPanel'
 import { MutationsView } from './components/MutationsView'
@@ -251,8 +251,11 @@ export default function App() {
     })
   }
 
+  const locked = syncOn && !accountUser
+
   useKeydown(
     (e) => {
+      if (locked) return
       if (e.key === 'Escape') {
         // Study view owns Escape (activity skip / exit).
         if (view.name === 'study') return
@@ -303,8 +306,21 @@ export default function App() {
       settings,
       progress,
       overall,
+      locked,
     ],
   )
+
+  if (locked) {
+    return (
+      <SignInGate
+        phase={accountPhase}
+        detail={accountDetail}
+        onSignIn={() => {
+          void signInWithGoogle()
+        }}
+      />
+    )
+  }
 
   return (
     <div className="app">
