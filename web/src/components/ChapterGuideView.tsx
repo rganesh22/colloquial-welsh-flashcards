@@ -1,40 +1,41 @@
-import { useMemo, useState } from 'react'
-import type { ChapterGuide, GuideBlock, GuideLine } from '../lib/chapterGuide'
-import type { LessonMeta, VocabCard } from '../lib/types'
-import { dialectLabel } from '../lib/srs'
+import { useState } from 'react'
+import type {
+  ChapterGuide,
+  GuideBlock,
+  GuideLine,
+  GuideStep,
+} from '../lib/chapterGuide'
+import type { LessonMeta } from '../lib/types'
 import { getApiKey } from '../lib/gemini'
 import { playWelshSequence } from '../lib/tts'
 import { SpeakButton } from './SpeakButton'
 
+const SECTION_ORDER = ['Phrase', 'Grammar', 'Pattern', 'Culture', 'Tip', 'Check']
+
+const SECTION_TITLES: Record<string, string> = {
+  Phrase: 'Phrases',
+  Grammar: 'Grammar',
+  Pattern: 'Patterns',
+  Culture: 'Culture',
+  Tip: 'Tips',
+  Check: 'Check',
+}
+
 export function ChapterGuideView({
   lesson,
-  cards,
   guide,
   apiKey,
   onClose,
   onPractice,
 }: {
   lesson: LessonMeta
-  cards: VocabCard[]
   guide: ChapterGuide | null
   apiKey: string
   onClose: () => void
   onPractice: () => void
 }) {
-  const [query, setQuery] = useState('')
   const [playingId, setPlayingId] = useState<string | null>(null)
-  const needle = query.trim().toLowerCase()
-  const visible = useMemo(() => {
-    if (!needle) return cards
-    return cards.filter((card) =>
-      [card.welsh, card.english, card.notes, card.plural]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase()
-        .includes(needle),
-    )
-  }, [cards, needle])
-  const sections = useMemo(() => groupCards(visible), [visible])
+  const sections = guide ? groupSteps(guide.steps) : []
 
   async function playSection(id: string, lines: string[]) {
     setPlayingId(id)
@@ -51,166 +52,95 @@ export function ChapterGuideView({
         <button type="button" className="ghost-btn" onClick={onClose}>
           Back
         </button>
-        <p className="guide-count">
-          {visible.length} line{visible.length === 1 ? '' : 's'}
-        </p>
       </div>
-      <p className="book-kicker">{lesson.titleEn}</p>
+      <p className="book-kicker">Learn grammar</p>
       <h1 className="page-title">
         <span className="lesson-id-lg">{lesson.id}</span> {lesson.titleCy}
       </h1>
       <p className="page-lead">
-        Every line from this chapter. Tap the speaker to hear it.
+        {guide?.intro ||
+          'Phrases, grammar, and culture for this chapter. The word list stays in practice.'}
       </p>
-      <input
-        className="chapter-search"
-        type="search"
-        value={query}
-        placeholder="Search this chapter"
-        onChange={(e) => setQuery(e.target.value)}
-      />
       {sections.length === 0 ? (
-        <p className="placeholder-note">Nothing in this chapter matches.</p>
+        <p className="placeholder-note">
+          This chapter’s grammar lesson is not written yet.
+        </p>
       ) : (
-        sections.map((section) => (
-          <section key={section.id} className="chapter-section">
-            <div className="chapter-section-head">
-              <h2>{section.title}</h2>
-              <button
-                type="button"
-                className="secondary-btn"
-                onClick={() =>
-                  void playSection(
-                    section.id,
-                    section.cards.map((card) => card.welsh),
-                  )
-                }
-              >
-                {playingId === section.id ? 'Playing…' : 'Play section'}
-              </button>
-            </div>
-            <ul className="chapter-lines">
-              {section.cards.map((card) => (
-                <li key={card.id} className="chapter-line">
-                  <SpeakButton
-                    text={card.welsh}
-                    apiKeyStored={apiKey}
-                    className="card-speak"
-                  />
-                  <div>
-                    <p className="guide-welsh">{card.welsh}</p>
-                    <p className="guide-english">{card.english}</p>
-                    {metaLine(card) && (
-                      <p className="chapter-meta">{metaLine(card)}</p>
-                    )}
-                    {card.notes && <p className="guide-note">{card.notes}</p>}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
-      )}
-      {guide && guide.steps.length > 0 && (
-        <section className="chapter-patterns">
-          <h2>Patterns in this chapter</h2>
-          {guide.intro && <p className="guide-intro">{guide.intro}</p>}
-          {guide.steps.map((step) => (
-            <article key={step.id} className="chapter-pattern">
-              <p className="guide-kicker">{step.kicker}</p>
-              <h3>{step.title}</h3>
-              <div className="guide-blocks">
-                {step.blocks.map((block, i) => (
-                  <GuideBlockView
-                    key={`${step.id}-${i}`}
-                    block={block}
-                    apiKey={apiKey}
-                  />
-                ))}
+        sections.map((section) => {
+          const lines = section.steps.flatMap(welshLines)
+          return (
+            <section key={section.kicker} className="learn-section">
+              <div className="learn-section-head">
+                <h2>{section.title}</h2>
+                {lines.length > 0 && (
+                  <button
+                    type="button"
+                    className="secondary-btn"
+                    onClick={() => void playSection(section.kicker, lines)}
+                  >
+                    {playingId === section.kicker ? 'Playing…' : 'Play section'}
+                  </button>
+                )}
               </div>
-            </article>
-          ))}
-        </section>
+              {section.steps.map((step) => (
+                <article key={step.id} className="chapter-pattern">
+                  <h3>{step.title}</h3>
+                  <div className="guide-blocks">
+                    {step.blocks.map((block, i) => (
+                      <GuideBlockView
+                        key={`${step.id}-${i}`}
+                        block={block}
+                        apiKey={apiKey}
+                      />
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </section>
+          )
+        })
       )}
       <div className="guide-nav">
         <button type="button" className="primary-btn" onClick={onPractice}>
-          Practice this chapter
+          Practice the words
         </button>
       </div>
     </div>
   )
 }
 
-const GRAMMAR_TAGS = new Set([
-  'noun',
-  'verb',
-  'verb-noun',
-  'adj',
-  'adjective',
-  'adv',
-  'adverb',
-  'name',
-  'prep',
-  'preposition',
-  'pron',
-  'pronoun',
-  'conj',
-  'conjunction',
-  'phrase',
-  'particle',
-  'poss',
-  'possessive',
-  'article',
-  'num',
-  'numeral',
-])
-
-const SECTION_LABELS: Record<string, string> = {
-  sgwrs: 'Dialogue',
-  geirfa: 'Vocabulary',
-  vowel: 'Vowels',
-  consonant: 'Consonants',
-  diphthong: 'Diphthongs',
-}
-
-function topicTag(card: VocabCard): string | undefined {
-  const tags = card.tags ?? []
-  return tags.find((tag) => !GRAMMAR_TAGS.has(tag)) ?? tags[0]
-}
-
-function groupCards(cards: VocabCard[]): {
-  id: string
+function groupSteps(steps: GuideStep[]): {
+  kicker: string
   title: string
-  cards: VocabCard[]
+  steps: GuideStep[]
 }[] {
-  const sections: { id: string; title: string; cards: VocabCard[] }[] = []
-  for (const card of cards) {
-    const title = sectionTitle(topicTag(card))
-    const last = sections[sections.length - 1]
-    if (last && last.title === title) last.cards.push(card)
-    else sections.push({ id: `${title}-${card.id}`, title, cards: [card] })
+  const buckets = new Map<string, GuideStep[]>()
+  for (const step of steps) {
+    const key = step.kicker || 'Grammar'
+    const list = buckets.get(key) ?? []
+    list.push(step)
+    buckets.set(key, list)
   }
-  return sections
+  const ordered = [
+    ...SECTION_ORDER.filter((kicker) => buckets.has(kicker)),
+    ...[...buckets.keys()].filter((kicker) => !SECTION_ORDER.includes(kicker)),
+  ]
+  return ordered.map((kicker) => ({
+    kicker,
+    title: SECTION_TITLES[kicker] ?? kicker,
+    steps: buckets.get(kicker) ?? [],
+  }))
 }
 
-function metaLine(card: VocabCard): string {
-  const bits: string[] = []
-  const dialect = dialectLabel(card.dialect)
-  if (dialect) bits.push(dialect)
-  if (card.gender === 'm') bits.push('masculine')
-  else if (card.gender === 'f') bits.push('feminine')
-  if (card.plural) bits.push(`plural ${card.plural}`)
-  return bits.join(' · ')
-}
-
-function sectionTitle(tag: string | undefined): string {
-  if (!tag) return 'Words'
-  const known = SECTION_LABELS[tag]
-  if (known) return known
-  return tag
-    .split(/[-_]/)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ')
+function welshLines(step: GuideStep): string[] {
+  const lines: string[] = []
+  for (const block of step.blocks) {
+    if (block.type === 'say') lines.push(block.line.welsh)
+    if (block.type === 'rule') {
+      for (const example of block.examples) lines.push(example.welsh)
+    }
+  }
+  return lines.filter((line) => line.trim())
 }
 
 function Line({ line, apiKey }: { line: GuideLine; apiKey: string }) {

@@ -452,7 +452,6 @@ export default function App() {
         {view.name === 'guide' && (
           <ChapterGuideView
             lesson={getLesson(view.bookId, view.lessonId)!}
-            cards={cardsForLesson(view.bookId, view.lessonId)}
             guide={getChapterGuide(view.bookId, view.lessonId) ?? null}
             apiKey={settings.apiKey}
             onClose={() =>
@@ -513,12 +512,15 @@ export default function App() {
                 lessonId: view.lessonId,
               })
             }
-            onOpenGuide={() =>
-              setView({
-                name: 'guide',
-                bookId: view.bookId,
-                lessonId: view.lessonId,
-              })
+            onOpenGuide={
+              getChapterGuide(view.bookId, view.lessonId)
+                ? () =>
+                    setView({
+                      name: 'guide',
+                      bookId: view.bookId,
+                      lessonId: view.lessonId,
+                    })
+                : undefined
             }
           />
         )}
@@ -1389,9 +1391,9 @@ function LessonView({
                   className="primary-btn"
                   onClick={onOpenGuide}
                 >
-                  Read the chapter
+                  Learn grammar
                   <span className="btn-meta">
-                    Every line, with audio
+                    Phrases, grammar, and culture
                   </span>
                 </button>
               )}
