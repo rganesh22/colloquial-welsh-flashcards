@@ -20,6 +20,7 @@ import type {
 import { directionsForMode, progressIdFor } from './types'
 import { ALL_CARDS, cardsForLesson } from '../data/deck'
 import { LESSONS } from './lessons'
+import { asDaily, type AccountPayload } from './accountMerge'
 import {
   clampAskModel,
   clampAskTemperature,
@@ -28,8 +29,31 @@ import {
 
 const STORAGE_KEY = 'colloquial-welsh-fsrs-v1'
 const SETTINGS_KEY = 'colloquial-welsh-settings-v4'
+const SETTINGS_UPDATED_KEY = 'colloquial-welsh-settings-updated-at'
 const DAILY_KEY = 'colloquial-welsh-daily-v1'
 const INTRO_HISTORY_KEY = 'colloquial-welsh-intro-history-v1'
+
+let localChangeHook: (() => void) | null = null
+let suppressLocalChange = 0
+
+/** Account sync listens so a local save can upload after the write. */
+export function setLocalChangeHook(fn: (() => void) | null): void {
+  localChangeHook = fn
+}
+
+export function runWithoutLocalChangeHook(fn: () => void): void {
+  suppressLocalChange += 1
+  try {
+    fn()
+  } finally {
+    suppressLocalChange -= 1
+  }
+}
+
+function noteLocalChange(): void {
+  if (suppressLocalChange > 0) return
+  localChangeHook?.()
+}
 
 /** Default how many brand-new headwords per learn wave (shown gradually). */
 export const DEFAULT_LEARN_BATCH_SIZE = 5
@@ -296,6 +320,7 @@ export function saveProgress(progress: ProgressMap): void {
     /* fall through and write */
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
+  noteLocalChange()
 }
 
 export function progressCardCount(progress: ProgressMap): number {
@@ -352,7 +377,60 @@ export function importProgressBackup(json: string): {
       JSON.stringify(parsed.introHistory),
     )
   }
+  noteLocalChange()
   return { progress, cards }
+}
+
+type SettingsInput = Partial<AppSettings> & {
+  welshFront?: boolean
+  newCardsPerDay?: number
+}
+
+export function settingsFromPartial(
+  parsed: SettingsInput,
+  apiKey = parsed.apiKey ?? '',
+): AppSettings {
+  const direction: DirectionMode =
+    parsed.direction === 'cy-en' ||
+    parsed.direction === 'en-cy' ||
+    parsed.direction === 'both'
+      ? parsed.direction
+      : parsed.welshFront === false
+        ? 'en-cy'
+        : DEFAULT_SETTINGS.direction
+  const dailyWordGoal = clampDailyWordGoal(
+    parsed.dailyWordGoal ?? parsed.newCardsPerDay ?? DEFAULT_DAILY_WORD_GOAL,
+  )
+  const theme: AppSettings['theme'] =
+    parsed.theme === 'light' || parsed.theme === 'dark'
+      ? parsed.theme
+      : DEFAULT_SETTINGS.theme
+  return {
+    direction,
+    theme,
+    apiKey,
+    learnBatchSize: clampLearnBatchSize(
+      // Migrate the old too-large default (15) down to a gentler set size.
+      parsed.learnBatchSize === 15 || parsed.learnBatchSize == null
+        ? DEFAULT_LEARN_BATCH_SIZE
+        : parsed.learnBatchSize,
+    ),
+    dailyWordGoal,
+    dailySessions: clampDailySessions(parsed.dailySessions ?? 1),
+    maxDailyReviews: clampMaxDailyReviews(
+      parsed.maxDailyReviews ?? defaultMaxDailyReviews(dailyWordGoal),
+    ),
+    learnActivities: parsed.learnActivities ?? true,
+    listenActivities: parsed.listenActivities ?? true,
+    askModel: clampAskModel(
+      !parsed.askModel || parsed.askModel === 'gemini-2.5-flash'
+        ? DEFAULT_ASK_MODEL
+        : parsed.askModel,
+    ),
+    askTemperature: clampAskTemperature(
+      parsed.askTemperature ?? DEFAULT_SETTINGS.askTemperature,
+    ),
+  }
 }
 
 export function loadSettings(): AppSettings {
@@ -360,58 +438,116 @@ export function loadSettings(): AppSettings {
     const raw =
       localStorage.getItem(SETTINGS_KEY) ??
       localStorage.getItem('colloquial-welsh-settings-v3')
-    if (!raw) {
-      return { ...DEFAULT_SETTINGS }
-    }
-    const parsed = JSON.parse(raw) as Partial<AppSettings> & {
-      welshFront?: boolean
-      newCardsPerDay?: number
-    }
-    const direction: DirectionMode =
-      parsed.direction ??
-      (parsed.welshFront === false ? 'en-cy' : DEFAULT_SETTINGS.direction)
-    const dailyWordGoal = clampDailyWordGoal(
-      parsed.dailyWordGoal ??
-        parsed.newCardsPerDay ??
-        DEFAULT_DAILY_WORD_GOAL,
-    )
-    return {
-      direction,
-      theme: parsed.theme ?? DEFAULT_SETTINGS.theme,
-      apiKey: parsed.apiKey ?? '',
-      learnBatchSize: clampLearnBatchSize(
-        // Migrate the old too-large default (15) down to a gentler set size.
-        parsed.learnBatchSize === 15 || parsed.learnBatchSize == null
-          ? DEFAULT_LEARN_BATCH_SIZE
-          : parsed.learnBatchSize,
-      ),
-      dailyWordGoal,
-      dailySessions: clampDailySessions(parsed.dailySessions ?? 1),
-      maxDailyReviews: clampMaxDailyReviews(
-        parsed.maxDailyReviews ?? defaultMaxDailyReviews(dailyWordGoal),
-      ),
-      learnActivities: parsed.learnActivities ?? true,
-      listenActivities: parsed.listenActivities ?? true,
-      askModel: clampAskModel(
-        !parsed.askModel || parsed.askModel === 'gemini-2.5-flash'
-          ? DEFAULT_ASK_MODEL
-          : parsed.askModel,
-      ),
-      askTemperature: clampAskTemperature(
-        parsed.askTemperature ?? DEFAULT_SETTINGS.askTemperature,
-      ),
-    }
+    if (!raw) return { ...DEFAULT_SETTINGS }
+    return settingsFromPartial(JSON.parse(raw) as SettingsInput)
   } catch {
     return { ...DEFAULT_SETTINGS }
   }
 }
 
-export function saveSettings(settings: AppSettings): void {
+export function settingsLookDefault(settings: AppSettings): boolean {
+  const baseline = settingsFromPartial({})
+  const current = settingsFromPartial({ ...settings, apiKey: '' })
+  return (
+    current.direction === baseline.direction &&
+    current.theme === baseline.theme &&
+    current.learnBatchSize === baseline.learnBatchSize &&
+    current.dailyWordGoal === baseline.dailyWordGoal &&
+    current.dailySessions === baseline.dailySessions &&
+    current.maxDailyReviews === baseline.maxDailyReviews &&
+    current.learnActivities === baseline.learnActivities &&
+    current.listenActivities === baseline.listenActivities &&
+    current.askModel === baseline.askModel &&
+    current.askTemperature === baseline.askTemperature
+  )
+}
+
+export function loadSettingsUpdatedAt(): string | null {
+  return localStorage.getItem(SETTINGS_UPDATED_KEY) || null
+}
+
+export function saveSettings(settings: AppSettings, updatedAt?: string): void {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+  localStorage.setItem(
+    SETTINGS_UPDATED_KEY,
+    updatedAt ?? new Date().toISOString(),
+  )
+  noteLocalChange()
+}
+
+function readStoredJson(key: string): unknown {
+  try {
+    const raw = localStorage.getItem(key)
+    if (!raw) return null
+    return JSON.parse(raw) as unknown
+  } catch {
+    return null
+  }
+}
+
+function asObject(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  return value as Record<string, unknown>
+}
+
+/** Local study state, without the Gemini key, ready to merge with an account. */
+export function readAccountPayload(): AccountPayload {
+  const { apiKey: _apiKey, ...prefs } = loadSettings()
+  return {
+    progress: asObject(readStoredJson(STORAGE_KEY)),
+    settings: asObject(prefs),
+    settingsUpdatedAt: loadSettingsUpdatedAt(),
+    daily: asDaily(readStoredJson(DAILY_KEY)),
+    introHistory: asObject(readStoredJson(INTRO_HISTORY_KEY)),
+  }
+}
+
+function writeProgressRaw(raw: Record<string, unknown>): ProgressMap {
+  const progress: ProgressMap = {}
+  for (const [id, card] of Object.entries(raw)) {
+    if (!card || typeof card !== 'object' || Array.isArray(card)) continue
+    try {
+      progress[id] = reviveCard(card as FSRSCard)
+    } catch {
+      /* skip one bad card */
+    }
+  }
+  saveProgress(progress)
+  return loadProgress()
+}
+
+/** Write a merged account snapshot back to this browser. Does not upload. */
+export function applyAccountPayload(payload: AccountPayload): {
+  progress: ProgressMap
+  settings: AppSettings
+} {
+  let progress = loadProgress()
+  let settings = loadSettings()
+  runWithoutLocalChangeHook(() => {
+    progress = writeProgressRaw(payload.progress)
+    const apiKey = loadSettings().apiKey
+    settings = settingsFromPartial(
+      { ...(payload.settings as SettingsInput), apiKey },
+      apiKey,
+    )
+    saveSettings(settings, payload.settingsUpdatedAt ?? undefined)
+    if (payload.daily) {
+      localStorage.setItem(DAILY_KEY, JSON.stringify(payload.daily))
+    }
+    localStorage.setItem(
+      INTRO_HISTORY_KEY,
+      JSON.stringify(payload.introHistory),
+    )
+  })
+  return { progress, settings }
 }
 
 export function applyTheme(theme: ThemeMode): void {
   document.documentElement.dataset.theme = theme
+}
+
+export function localCalendarDay(now = new Date()): string {
+  return todayKey(now)
 }
 
 function todayKey(now = new Date()): string {
@@ -479,6 +615,7 @@ export function recordDailyReview(): void {
   const state = loadDailyState()
   state.reviews += 1
   localStorage.setItem(DAILY_KEY, JSON.stringify(state))
+  noteLocalChange()
 }
 
 export type IntroDayDetail = {
@@ -520,6 +657,7 @@ function loadIntroDayMap(): Record<string, IntroDayStore> {
 
 function saveIntroDayMap(map: Record<string, IntroDayStore>): void {
   localStorage.setItem(INTRO_HISTORY_KEY, JSON.stringify(map))
+  noteLocalChange()
 }
 
 function bumpIntroHistory(date: string, cardId?: string): void {

@@ -166,7 +166,28 @@ kbd {
 .top-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.4rem;
+}
+
+.account-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 0.25rem;
+}
+
+.account-bar p {
+  margin: 0;
+  max-width: 16rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.account-bar p.is-error {
+  color: var(--again);
 }
 
 .ghost-btn,

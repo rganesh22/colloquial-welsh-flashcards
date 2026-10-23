@@ -8,12 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "check:sync": "node --experimental-strip-types scripts/check-account-merge.ts",
     "prefetch-tts": "node scripts/prefetch-tts.mjs",
     "prefetch-tts:demo": "node scripts/prefetch-tts.mjs --demo",
     "batch-tts": "node scripts/batch-tts.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.24.0",
+    "firebase": "^13.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",

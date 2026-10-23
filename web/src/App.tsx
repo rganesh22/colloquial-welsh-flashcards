@@ -73,6 +73,16 @@ import { getApiKey, ASK_MODELS, clampAskModel, clampAskTemperature } from './lib
 import { speakWelsh } from './lib/tts'
 import { useKeydown } from './lib/keys'
 import { formatElapsed } from './lib/format'
+import {
+  accountSyncEnabled,
+  flushAccountSync,
+  signInWithGoogle,
+  signOutAccount,
+  subscribeAccount,
+  type AccountPhase,
+  type AccountUser,
+} from './lib/account'
+import { AccountBar } from './components/AccountBar'
 import { ActivityView } from './components/ActivityView'
 import { AskPanel } from './components/AskPanel'
 import { MutationsView } from './components/MutationsView'
@@ -94,6 +104,14 @@ export default function App() {
   const [askContext, setAskContext] = useState<string | undefined>()
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [progressOpen, setProgressOpen] = useState(false)
+  const syncOn = accountSyncEnabled()
+  const [accountPhase, setAccountPhase] = useState<AccountPhase>(
+    syncOn ? 'checking' : 'off',
+  )
+  const [accountDetail, setAccountDetail] = useState(
+    syncOn ? 'Checking your account…' : 'Saved in this browser',
+  )
+  const [accountUser, setAccountUser] = useState<AccountUser | null>(null)
 
   useEffect(() => {
     applyTheme(settings.theme)
@@ -131,6 +149,7 @@ export default function App() {
         return
       }
       saveProgress(progress)
+      flushAccountSync()
     }
     const onHide = () => {
       if (document.visibilityState === 'hidden') flush()
@@ -142,6 +161,21 @@ export default function App() {
       document.removeEventListener('visibilitychange', onHide)
     }
   }, [progress])
+
+  useEffect(() => {
+    return subscribeAccount({
+      onSession: setAccountUser,
+      onStatus: (phase, detail) => {
+        setAccountPhase(phase)
+        setAccountDetail(detail)
+      },
+      onApplied: (nextProgress, nextSettings) => {
+        setProgress(nextProgress)
+        setSettings(nextSettings)
+        applyTheme(nextSettings.theme)
+      },
+    })
+  }, [])
 
   // If React somehow started empty but localStorage still has data, restore it.
   useEffect(() => {
@@ -285,6 +319,17 @@ export default function App() {
           <span className="brand-name">Welsh Flashcards</span>
         </button>
         <div className="top-actions">
+          <AccountBar
+            phase={accountPhase}
+            detail={accountDetail}
+            user={accountUser}
+            onSignIn={() => {
+              void signInWithGoogle()
+            }}
+            onSignOut={() => {
+              void signOutAccount()
+            }}
+          />
           <button
             type="button"
             className="ghost-btn"
