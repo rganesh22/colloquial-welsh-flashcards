@@ -81,7 +81,7 @@ export function SpeakButton({
         text,
         apiKey: getApiKey(apiKeyStored),
       })
-      if (res.source === 'gemini') setReady(true)
+      if (res.source !== 'browser') setReady(true)
     } catch (err) {
       console.warn(err)
     } finally {

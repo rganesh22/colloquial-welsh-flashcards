@@ -117,6 +117,7 @@ export type AppView =
       bookId: BookId
       lessonId: LessonId
     }
+  | { name: 'guide'; bookId: BookId; lessonId: LessonId }
 
 export function progressIdFor(
   cardId: string,

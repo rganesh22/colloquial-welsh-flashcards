@@ -84,6 +84,20 @@ function speakBrowser(text: string): void {
 }
 
 let currentAudio: HTMLAudioElement | null = null
+let playToken = 0
+let currentStop: (() => void) | null = null
+
+function haltPlayback(): number {
+  playToken += 1
+  window.speechSynthesis?.cancel()
+  currentStop?.()
+  currentStop = null
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio = null
+  }
+  return playToken
+}
 
 const TTS_CACHE_EVENT = 'cw-tts-cache'
 
@@ -112,9 +126,14 @@ type Manifest = {
 
 let manifestPromise: Promise<Manifest | null> | null = null
 
+function assetUrl(path: string): string {
+  const base = import.meta.env.BASE_URL || './'
+  return `${base}${path.replace(/^\//, '')}`
+}
+
 async function loadManifest(): Promise<Manifest | null> {
   if (!manifestPromise) {
-    manifestPromise = fetch('/tts/manifest.json')
+    manifestPromise = fetch(assetUrl('tts/manifest.json'))
       .then(async (r) => (r.ok ? ((await r.json()) as Manifest) : null))
       .catch(() => null)
   }
@@ -122,7 +141,7 @@ async function loadManifest(): Promise<Manifest | null> {
 }
 
 function bundledUrl(hash: string): string {
-  return `/tts/${hash}.wav`
+  return assetUrl(`tts/${hash}.wav`)
 }
 
 async function fetchBundledWav(
@@ -220,6 +239,17 @@ export async function ensureWelshAudio(opts: {
   const text = opts.text.trim()
   if (!text) throw new Error('Nothing to speak')
 
+  const bundled = await fetchBundledWav(text)
+  if (bundled) {
+    if (opts.apiKey) {
+      const key = await ttsAudioKey(text)
+      const wavBytes = new Uint8Array(await bundled.blob.arrayBuffer())
+      await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
+      notifyTtsCached(text)
+    }
+    return { cached: true, source: 'bundle' }
+  }
+
   if (!opts.apiKey) {
     return { cached: false, source: 'browser' }
   }
@@ -228,14 +258,6 @@ export async function ensureWelshAudio(opts: {
   const hit = await cacheGetAudio(key)
   if (hit) return { cached: true, source: 'gemini' }
 
-  const bundled = await fetchBundledWav(text)
-  if (bundled) {
-    const wavBytes = new Uint8Array(await bundled.blob.arrayBuffer())
-    await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
-    notifyTtsCached(text)
-    return { cached: true, source: 'bundle' }
-  }
-
   const wavBlob = await generateGeminiWav(text, opts.apiKey)
   const wavBytes = new Uint8Array(await wavBlob.arrayBuffer())
   await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
@@ -243,67 +265,124 @@ export async function ensureWelshAudio(opts: {
   return { cached: false, source: 'gemini' }
 }
 
+async function audioBlobFor(
+  text: string,
+  apiKey: string | null,
+): Promise<{ blob: Blob; cached: boolean; source: 'bundle' | 'gemini' } | null> {
+  const key = await ttsAudioKey(text)
+  const hit = await cacheGetAudio(key)
+  if (hit) {
+    const bytes = base64ToBytes(hit.base64)
+    const blob = hit.mimeType.includes('wav')
+      ? new Blob([toArrayBuffer(bytes)], { type: 'audio/wav' })
+      : pcmToWav(bytes)
+    return { blob, cached: true, source: 'gemini' }
+  }
+
+  const bundled = await fetchBundledWav(text)
+  if (bundled) {
+    const wavBytes = new Uint8Array(await bundled.blob.arrayBuffer())
+    await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
+    notifyTtsCached(text)
+    return { blob: bundled.blob, cached: true, source: 'bundle' }
+  }
+
+  if (!apiKey) return null
+  try {
+    const blob = await generateGeminiWav(text, apiKey)
+    const wavBytes = new Uint8Array(await blob.arrayBuffer())
+    await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
+    notifyTtsCached(text)
+    return { blob, cached: false, source: 'gemini' }
+  } catch (err) {
+    console.warn('Gemini TTS failed, falling back to browser', err)
+    return null
+  }
+}
+
+function playBlob(blob: Blob, token: number): Promise<void> {
+  return new Promise((resolve) => {
+    if (token !== playToken) {
+      resolve()
+      return
+    }
+    const url = URL.createObjectURL(blob)
+    const audio = new Audio(url)
+    currentAudio = audio
+    const finish = () => {
+      URL.revokeObjectURL(url)
+      if (currentStop === finish) currentStop = null
+      if (currentAudio === audio) currentAudio = null
+      resolve()
+    }
+    currentStop = finish
+    audio.onended = finish
+    audio.onerror = finish
+    void audio.play().catch(finish)
+  })
+}
+
+function speakBrowserWait(text: string, token: number): Promise<void> {
+  return new Promise((resolve) => {
+    if (token !== playToken || !('speechSynthesis' in window)) {
+      resolve()
+      return
+    }
+    const u = new SpeechSynthesisUtterance(text)
+    const voices = window.speechSynthesis.getVoices()
+    const cy =
+      voices.find((v) => v.lang.toLowerCase().startsWith('cy')) ??
+      voices.find((v) => /welsh|cymraeg/i.test(v.name))
+    if (cy) {
+      u.voice = cy
+      u.lang = cy.lang
+    } else {
+      u.lang = 'cy-GB'
+    }
+    u.rate = 0.9
+    const finish = () => {
+      if (currentStop === finish) currentStop = null
+      resolve()
+    }
+    currentStop = finish
+    u.onend = finish
+    u.onerror = finish
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(u)
+  })
+}
+
 export async function speakWelsh(opts: {
   text: string
   apiKey: string | null
-}): Promise<{ cached: boolean; source: 'gemini' | 'browser' }> {
+}): Promise<{ cached: boolean; source: 'gemini' | 'bundle' | 'browser' }> {
   const text = opts.text.trim()
   if (!text) throw new Error('Nothing to speak')
 
-  if (!opts.apiKey) {
+  const token = haltPlayback()
+  const loaded = await audioBlobFor(text, opts.apiKey)
+  if (token !== playToken) return { cached: false, source: 'browser' }
+  if (!loaded) {
     speakBrowser(text)
     return { cached: false, source: 'browser' }
   }
+  await playBlob(loaded.blob, token)
+  return { cached: loaded.cached, source: loaded.source }
+}
 
-  const key = await ttsAudioKey(text)
-  const hit = await cacheGetAudio(key)
-
-  let wavBlob: Blob
-  let cached = false
-
-  if (hit) {
-    cached = true
-    const bytes = base64ToBytes(hit.base64)
-    if (hit.mimeType.includes('wav')) {
-      wavBlob = new Blob([toArrayBuffer(bytes)], { type: 'audio/wav' })
-    } else {
-      wavBlob = pcmToWav(bytes)
-    }
-  } else {
-    const bundled = await fetchBundledWav(text)
-    if (bundled) {
-      cached = true
-      wavBlob = bundled.blob
-      const wavBytes = new Uint8Array(await wavBlob.arrayBuffer())
-      await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
-      notifyTtsCached(text)
-    } else {
-      try {
-        wavBlob = await generateGeminiWav(text, opts.apiKey)
-        const wavBytes = new Uint8Array(await wavBlob.arrayBuffer())
-        await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
-        notifyTtsCached(text)
-        cached = false
-      } catch (err) {
-        console.warn('Gemini TTS failed, falling back to browser', err)
-        speakBrowser(text)
-        return { cached: false, source: 'browser' }
-      }
-    }
+/** Play Welsh lines in order. A new call, or speakWelsh, stops the previous run. */
+export async function playWelshSequence(
+  texts: string[],
+  apiKey: string | null,
+): Promise<void> {
+  const token = haltPlayback()
+  for (const raw of texts) {
+    const text = raw.trim()
+    if (!text) continue
+    if (token !== playToken) return
+    const loaded = await audioBlobFor(text, apiKey)
+    if (token !== playToken) return
+    if (!loaded) await speakBrowserWait(text, token)
+    else await playBlob(loaded.blob, token)
   }
-
-  if (currentAudio) {
-    currentAudio.pause()
-    currentAudio = null
-  }
-  const url = URL.createObjectURL(wavBlob)
-  const audio = new Audio(url)
-  currentAudio = audio
-  audio.onended = () => {
-    URL.revokeObjectURL(url)
-    if (currentAudio === audio) currentAudio = null
-  }
-  await audio.play()
-  if (!cached) notifyTtsCached(text)
-  return { cached, source: 'gemini' }
 }

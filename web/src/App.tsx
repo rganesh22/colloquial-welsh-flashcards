@@ -84,6 +84,8 @@ import {
 } from './lib/account'
 import { AccountBar, SignInGate } from './components/AccountBar'
 import { ActivityView } from './components/ActivityView'
+import { ChapterGuideView } from './components/ChapterGuideView'
+import { getChapterGuide } from './data/guides'
 import { AskPanel } from './components/AskPanel'
 import { MutationsView } from './components/MutationsView'
 import { ProgressPanel } from './components/ProgressPanel'
@@ -213,6 +215,14 @@ export default function App() {
       return
     }
     if (view.name === 'activity') {
+      setView({
+        name: 'lesson',
+        bookId: view.bookId,
+        lessonId: view.lessonId,
+      })
+      return
+    }
+    if (view.name === 'guide') {
       setView({
         name: 'lesson',
         bookId: view.bookId,
@@ -439,6 +449,32 @@ export default function App() {
           />
         )}
         {view.name === 'mutations' && <MutationsView />}
+        {view.name === 'guide' && (
+          <ChapterGuideView
+            lesson={getLesson(view.bookId, view.lessonId)!}
+            cards={cardsForLesson(view.bookId, view.lessonId)}
+            guide={getChapterGuide(view.bookId, view.lessonId) ?? null}
+            apiKey={settings.apiKey}
+            onClose={() =>
+              setView({
+                name: 'lesson',
+                bookId: view.bookId,
+                lessonId: view.lessonId,
+              })
+            }
+            onPractice={() =>
+              setView({
+                name: 'study',
+                mode: 'learn',
+                filter: {
+                  kind: 'lesson',
+                  bookId: view.bookId,
+                  lessonId: view.lessonId,
+                },
+              })
+            }
+          />
+        )}
         {view.name === 'lesson' && (
           <LessonView
             bookId={view.bookId}
@@ -473,6 +509,13 @@ export default function App() {
               setView({
                 name: 'activity',
                 activity,
+                bookId: view.bookId,
+                lessonId: view.lessonId,
+              })
+            }
+            onOpenGuide={() =>
+              setView({
+                name: 'guide',
                 bookId: view.bookId,
                 lessonId: view.lessonId,
               })
@@ -1184,6 +1227,7 @@ function LessonView({
   onLearn,
   onReview,
   onActivity,
+  onOpenGuide,
 }: {
   bookId: BookId
   lessonId: LessonId
@@ -1194,6 +1238,7 @@ function LessonView({
   onLearn: () => void
   onReview: () => void
   onActivity: (activity: ActivityKind) => void
+  onOpenGuide?: () => void
 }) {
   const lesson = getLesson(bookId, lessonId)!
   const filter = { kind: 'lesson' as const, bookId, lessonId }
@@ -1338,6 +1383,18 @@ function LessonView({
         ) : (
           <>
             <div className="action-grid">
+              {onOpenGuide && !empty && (
+                <button
+                  type="button"
+                  className="primary-btn"
+                  onClick={onOpenGuide}
+                >
+                  Read the chapter
+                  <span className="btn-meta">
+                    Every line, with audio
+                  </span>
+                </button>
+              )}
               <button
                 type="button"
                 className="primary-btn"
