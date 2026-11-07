@@ -12,8 +12,12 @@ import type { Dialect, VocabCard } from '../lib/types'
 
 type RawCard = Omit<VocabCard, 'bookId' | 'number' | 'sense'>
 
-/** [welsh, english, note?, dialect?] */
-type Row = [string, string, string?, Dialect?]
+/**
+ * [welsh, english, note?, dialect?, idSlug?]
+ * Ids come from the Welsh text. When a card's Welsh is corrected, idSlug keeps
+ * the original slug so learners don't lose their progress on it.
+ */
+type Row = [string, string, string?, Dialect?, string?]
 
 function slug(s: string): string {
   return s
@@ -29,8 +33,8 @@ function slug(s: string): string {
 
 function lesson(lessonId: string, tag: string, rows: Row[]): RawCard[] {
   const seen = new Set<string>()
-  return rows.map(([welsh, english, notes, dialect]) => {
-    let id = `yw-${lessonId}-${slug(welsh)}`
+  return rows.map(([welsh, english, notes, dialect, idSlug]) => {
+    let id = `yw-${lessonId}-${idSlug ?? slug(welsh)}`
     while (seen.has(id)) id += '-2'
     seen.add(id)
     return {
@@ -77,11 +81,11 @@ const p2 = lesson('p2', 'about-me', [
   ['… dw i.', 'I’m … (name)', 'Put your name first: “Raj dw i.” The most natural way to say it.'],
   ['Fy enw i ydy …', 'My name is …'],
   ['Beth ydy’ch enw chi?', 'What’s your name? (polite)'],
-  ['Beth yw dy enw di?', 'What’s your name? (to a friend)'],
+  ['Beth ydy dy enw di?', 'What’s your name? (to a friend)', undefined, undefined, 'beth-yw-dy-enw-di'],
   ['O ble dych chi’n dod?', 'Where are you from?'],
   ['Dw i’n dod o India.', 'I come from India.'],
   ['Ble dych chi’n byw?', 'Where do you live?'],
-  ['Dw i’n byw yn …', 'I live in …', 'yn + place takes the nasal mutation: yng Nghaerdydd, ym Mangalore.'],
+  ['Dw i’n byw yn …', 'I live in …', 'yn + a Welsh place name takes the nasal mutation: yng Nghaerdydd, ym Mangor. Foreign names usually stay as they are: yn Bangalore, ym Mumbai (yn → ym before m).'],
   ['Beth dych chi’n wneud?', 'What do you do (for work)?'],
   ['Dw i’n gweithio fel …', 'I work as a …', 'No mutation after fel.'],
   ['Dw i’n gweithio gyda chyfrifiaduron.', 'I work with computers.', 'gyda + c → ch (aspirate mutation).'],
@@ -123,6 +127,11 @@ const p3 = lesson('p3', 'repair', [
   ['Dw i ddim wedi clywed hynny o’r blaen.', 'I haven’t heard that before.'],
   ['Dim problem!', 'No problem!'],
   ['Dych chi’n siarad Saesneg?', 'Do you speak English?', 'Last resort — most Welsh speakers here speak Spanish, not English.'],
+  ['Ga i ymarfer fy Nghymraeg gyda chi?', 'Can I practise my Welsh with you?', 'fy + C → Ngh (nasal). In Y Wladfa you’ll also hear efo chi. The kindest way to keep a chat in Welsh.'],
+  ['Siaradwch Gymraeg gyda fi, yn araf, os gwelwch yn dda.', 'Speak Welsh with me, slowly, please.', 'For when someone switches to Spanish to help you. Smile as you say it.'],
+  ['Dw i ddim yn siarad llawer o Sbaeneg.', 'I don’t speak much Spanish.', 'A gentle reason to stay in Welsh.'],
+  ['Dych chi’n deall Cymraeg?', 'Do you understand Welsh?', 'Many people here understand far more Welsh than they speak.'],
+  ['Mae’n well gen i siarad Cymraeg, os ydy hynny’n iawn.', 'I’d rather speak Welsh, if that’s OK.'],
 ])
 
 const p4 = lesson('p4', 'family', [
@@ -183,7 +192,7 @@ const p6 = lesson('p6', 'tea-house', [
   ['Ga i goffi?', 'Can I have a coffee?'],
   ['Ga i de Cymreig i ddau?', 'Can I have Welsh tea for two?', 'The full spread: tea, bread and butter, jam, scones, cakes.'],
   ['paned', 'a cuppa'],
-  ['gyda llaeth', 'with milk', 'llaeth is the Patagonian word (as in South Wales); llefrith is rare here.'],
+  ['gyda llaeth', 'with milk', 'Both llaeth and llefrith are heard in Y Wladfa.'],
   ['heb siwgr', 'without sugar'],
   ['bara menyn', 'bread and butter'],
   ['teisen ddu', 'black cake (torta negra)', 'The famous Gaiman fruit cake that keeps for ages.'],
@@ -197,7 +206,7 @@ const p6 = lesson('p6', 'tea-house', [
   ['Dw i’n llwgu!', 'I’m starving!'],
   ['Mae syched arna i.', 'I’m thirsty.'],
   ['Faint ydy hwnna?', 'How much is that?'],
-  ['Mae’n costio pum mil o besos.', 'It costs five thousand pesos.', 'o softens: pesos → besos.'],
+  ['Mae’n costio pum mil o besos.', 'It costs five thousand pesos.', 'o softens: pesos → besos. The number is only an example: prices change fast with inflation, and you’ll usually hear prices in Spanish anyway.'],
   ['un, dau, tri, pedwar, pump', 'one, two, three, four, five'],
   ['chwech, saith, wyth, naw, deg', 'six, seven, eight, nine, ten'],
   ['dau ddeg, tri deg, pedwar deg', 'twenty, thirty, forty', 'Learner counting is decimal: 34 = tri deg pedwar.'],
@@ -245,7 +254,7 @@ const p8 = lesson('p8', 'weather-plans', [
   ['Mae’r haul allan.', 'The sun’s out.', 'Wladfa Welsh says allan (out), not South Wales mas.'],
   ['Mae’n gymylog.', 'It’s cloudy.'],
   ['Yn India mae’n boeth iawn.', 'In India it’s very hot.'],
-  ['… on’d yw hi?', '… isn’t it?', '“Mae’n braf, on’d yw hi?” — answer “Ydy!”'],
+  ['… on’d yw hi?', '… isn’t it?', '“Mae’n braf, on’d yw hi?” — answer “Ydy!” Older Wladfa speakers say “yn tydi?”.'],
   ['Dw i’n mynd i weld y capel.', 'I’m going to see the chapel.', 'mynd i + verb softens it: gweld → weld.'],
   ['Beth dych chi’n mynd i wneud yfory?', 'What are you going to do tomorrow?'],
   ['Dw i’n mynd i ymweld â’r amgueddfa.', 'I’m going to visit the museum.'],
@@ -253,7 +262,7 @@ const p8 = lesson('p8', 'weather-plans', [
   ['Bydd hi’n braf yfory.', 'It’ll be nice tomorrow.'],
   ['Dych chi’n rhydd heno?', 'Are you free tonight?'],
   ['Hoffech chi ddod?', 'Would you like to come?'],
-  ['Hoffwn i, diolch!', 'I’d like to, thanks!'],
+  ['Hoffwn, diolch!', 'I’d like to, thanks!', 'The answer to “Hoffech chi…?” is just Hoffwn (yes) or Na hoffwn (no).', undefined, 'hoffwn-i-diolch'],
   ['Beth am baned?', 'How about a cuppa?'],
   ['Am faint o’r gloch?', 'At what time?'],
   ['yfory / heno / y penwythnos', 'tomorrow / tonight / the weekend'],
@@ -274,7 +283,7 @@ const p9 = lesson('p9', 'past', [
   ['Wnes i fwynhau’n fawr.', 'I enjoyed it a lot.'],
   ['Welais i’r môr.', 'I saw the sea.'],
   ['Bwytais i asado.', 'I ate asado.'],
-  ['Yfais i mate am y tro cynta.', 'I drank mate for the first time.'],
+  ['Yfais i mate am y tro cynta.', 'I drank mate for the first time.', 'Formally: Yfais i fate; many leave loanwords unmutated.'],
   ['Prynais i deisen ddu.', 'I bought a black cake.'],
   ['Siaradais i Gymraeg drwy’r dydd!', 'I spoke Welsh all day!'],
   ['Arhosais i mewn gwesty.', 'I stayed in a hotel.'],
@@ -333,7 +342,7 @@ const p10 = lesson('p10', 'opinions', [
   ['Dw i’n cael hwyl!', 'I’m having fun!'],
   ['Peidiwch â phoeni!', 'Don’t worry!'],
   ['Popeth yn iawn.', 'All good. / Everything’s fine.'],
-  ['Tan tro nesa!', 'Until next time!'],
+  ['Tan y tro nesa!', 'Until next time!', undefined, undefined, 'tan-tro-nesa'],
   ['Dw i’n hoffi’r syniad.', 'I like the idea.'],
 ])
 
@@ -364,25 +373,41 @@ const p11 = lesson('p11', 'wladfa', [
 const p12 = lesson('p12', 'interview', [
   ['Ga i ofyn ychydig o gwestiynau i chi?', 'Can I ask you a few questions?'],
   ['Ga i’ch ffilmio chi?', 'May I film you?'],
-  ['Ydy’n iawn os dw i’n ffilmio?', 'Is it OK if I film?'],
+  ['Ydy hi’n iawn os dw i’n ffilmio?', 'Is it OK if I film?', undefined, undefined, 'ydyn-iawn-os-dw-in-ffilmio'],
   ['Ga i ddefnyddio hwn yn fy fideo?', 'Can I use this in my video?'],
   ['Allech chi ddweud hynny eto i’r camera?', 'Could you say that again for the camera?'],
   ['Sut dysgoch chi Gymraeg?', 'How did you learn Welsh?'],
   ['Oedd eich teulu chi’n siarad Cymraeg gartre?', 'Did your family speak Welsh at home?'],
-  ['Faint o bobl sy’n siarad Cymraeg yma?', 'How many people speak Welsh here?', 'Nobody knows exactly: estimates are around 5,000, and over 1,000 people were registered in Welsh classes in 2024–25.'],
-  ['Ydy pobl ifanc yn dysgu Cymraeg?', 'Are young people learning Welsh?'],
+  ['Pryd oedd y tro diwetha i chi siarad Cymraeg heddiw? Gyda phwy?', 'When did you last speak Welsh today? Who with?', 'A story question: people answer with a real moment, which is far better on camera than a number.', undefined, 'faint-o-bobl-syn-siarad-cymraeg-yma'],
+  ['Beth fyddech chi’n ddweud wrth rywun sy’n meddwl am ddysgu Cymraeg?', 'What would you say to someone thinking of learning Welsh?', 'A great last question: it usually gets a warm, quotable answer.', undefined, 'ydy-pobl-ifanc-yn-dysgu-cymraeg'],
   ['Ble dych chi’n siarad Cymraeg fel arfer?', 'Where do you usually speak Welsh?'],
   ['Pa iaith dych chi’n siarad gartre?', 'Which language do you speak at home?'],
   ['Beth mae’r Gymraeg yn ei olygu i chi?', 'What does Welsh mean to you?'],
-  ['Ydy’r Gymraeg yn gryf yma?', 'Is Welsh strong here?'],
+  ['Oedd ’na gyfnod pan oedd y Gymraeg bron â diflannu yma? Beth newidiodd?', 'Was there a time when Welsh nearly disappeared here? What changed?', '’na softens the next word: cyfnod → gyfnod. bron â = almost.', undefined, 'ydyr-gymraeg-yn-gryf-yma'],
   ['Beth ydy dyfodol y Gymraeg yn y Wladfa?', 'What’s the future of Welsh in Patagonia?'],
   ['Dych chi’n teimlo’n Gymreig, yn Archentaidd, neu’r ddau?', 'Do you feel Welsh, Argentine, or both?'],
-  ['Ydy’r Gymraeg yma’n wahanol i Gymraeg Cymru?', 'Is Welsh here different from Welsh in Wales?'],
+  ['Sut mae’r Gymraeg yma’n wahanol i Gymraeg Cymru?', 'How is Welsh here different from Welsh in Wales?', undefined, undefined, 'ydyr-gymraeg-yman-wahanol-i-gymraeg-cymr'],
   ['Oes geiriau Sbaeneg yn eich Cymraeg chi?', 'Are there Spanish words in your Welsh?'],
   ['Beth ydy’ch hoff air Cymraeg?', 'What’s your favourite Welsh word?'],
-  ['Ydy’r ysgol ddwyieithog yn bwysig?', 'Is the bilingual school important?', 'Three bilingual Welsh–Spanish primary schools: Trelew (Ysgol yr Hendre, 2006), Gaiman and Trevelin.'],
-  ['Cynllun yr Iaith Gymraeg', 'the Welsh Language Project', 'Since 1997, sends teachers from Wales (Feb–Dec) and supports local tutors.'],
+  ['Pam mae’r ysgol ddwyieithog yn bwysig?', 'Why is the bilingual school important?', 'Three bilingual Welsh–Spanish primary schools: Trelew (Ysgol yr Hendre, 2006), Gaiman and Trevelin.', undefined, 'ydyr-ysgol-ddwyieithog-yn-bwysig'],
+  ['Cynllun yr Iaith Gymraeg', 'the Welsh Language Project', 'Since 1997. Most classes are taught by 20+ local tutors, with one or two teachers from Wales each year (about March–December, so they’ll have left by January). Nobody knows exactly how many people speak Welsh here: about 1,500–6,000 (estimates vary), and over 1,000 were registered in Welsh classes in 2024–25.'],
   ['Diolch yn fawr am eich amser.', 'Thank you very much for your time.'],
+  ['Pam hynny?', 'Why’s that?', 'Or simply: Pam? The easiest follow-up there is.'],
+  ['Dwedwch fwy, os gwelwch yn dda.', 'Tell me more, please.', 'Then stay quiet and let them talk — the best footage comes after this.'],
+  ['Allwch chi roi enghraifft?', 'Can you give an example?'],
+  ['Felly, dych chi’n dweud bod…?', 'So, you’re saying that…?', 'Say back what you understood (Felly, dych chi’n dweud bod y Gymraeg yn fyw?). It checks your understanding and invites more.'],
+  ['Atebion byr, os gwelwch yn dda. Dw i’n dal i ddysgu.', 'Short answers, please. I’m still learning.', 'Say it before you start filming.'],
+  ['Ga i ddefnyddio’ch enw chi?', 'May I use your name?'],
+  ['Bydda i’n anfon y fideo atoch chi.', 'I’ll send you the video.'],
+  ['Bydd isdeitlau yn Sbaeneg.', 'There will be subtitles in Spanish.'],
+  ['Dych chi’n hapus i fi rannu’r fideo ar-lein?', 'Are you happy for me to share the video online?', 'Ask before you post. Older speakers may say “Dach chi’n hapus…” — same meaning.'],
+  ['Ga i’ch ffilmio a recordio’ch llais chi ar gyfer fideo ar-lein? Cewch chi ddweud na unrhyw bryd.', 'May I film you and record your voice for an online video? You can say no at any time.', 'Covers your picture, your voice, and their right to change their mind. Ask on camera so the yes is recorded.'],
+  ['Pwy arall ddylwn i siarad â nhw?', 'Who else should I talk to?', 'Everyone knows everyone here — this is how you find your next interview.'],
+  ['Ga i’ch rhif WhatsApp chi?', 'Can I have your WhatsApp number?', 'Everyone in Argentina uses WhatsApp.'],
+  ['Oes gwreiddiau Cymreig gyda chi?', 'Do you have Welsh roots?', 'Don’t assume: many Welsh speakers here have no Welsh ancestry.'],
+  ['Pam dechreuoch chi ddysgu Cymraeg?', 'Why did you start learning Welsh?'],
+  ['Allwch chi ddechrau’ch ateb gyda’r cwestiwn?', 'Could you start your answer with the question?', 'For clips: “Dw i’n siarad Cymraeg achos…” makes sense without your question.'],
+  ['Gawn ni siarad Cymraeg? Dw i yma i ymarfer.', 'Can we speak Welsh? I’m here to practise.', 'For when someone kindly switches to English for you.'],
 ])
 
 const p13 = lesson('p13', 'wladfa-words', [
@@ -397,16 +422,31 @@ const p13 = lesson('p13', 'wladfa-words', [
   ['budr', 'dirty'],
   ['ffroes', 'pancakes', 'From south-east Wales; still used in Patagonia.'],
   ['clwyd', 'farm gate'],
-  ['poncins', 'pumpkins', 'Only in Patagonia.'],
-  ['singlet', 'vest', 'Only in Patagonia.'],
-  ['sgubell', 'broom', 'Only in Patagonia.'],
-  ['llwybr', 'dirt road', 'In Wales it means a path.'],
+  ['sgubell', 'broom', 'Common in Y Wladfa (ysgubell); brwsh is more usual in Wales today.'],
   ['corral', 'sheepfold', 'From Spanish. Wales: corlan.'],
-  ['mynd i baseando', 'to go for a walk', 'Spanish paseando, with a Welsh mutation!'],
   ['siarad drwy’r ffôn', 'to talk on the phone', 'Modelled on Spanish por teléfono. Wales: ar y ffôn.'],
   ['sobrino / sobrina', 'nephew / niece', 'Spanish words used in Welsh. Wales: nai / nith.'],
   ['bueno… este…', '(Spanish fillers: well… um…)', 'You may hear these slip into Welsh conversation.'],
-  ['tot o fati', 'a little drink of mate', 'From Quechua mati.'],
+  ['mate', 'mate (the herbal drink shared from one gourd)', 'Used as it is in Wladfa Welsh, from Spanish (originally Quechua mati). If you’re offered mate, it’s a welcome. In Argentina, saying thank you means “no more for me”.', undefined, 'tot-o-fati'],
+])
+
+/** Recognition: what you'll hear in interview answers, not what you need to say. */
+const p14 = lesson('p14', 'answers', [
+  ['Roedd fy nain yn siarad Cymraeg.', 'My granny used to speak Welsh.', 'roedd = was / used to. Stories about the past are full of it.'],
+  ['O’n i’n siarad Cymraeg gartre.', 'I used to speak Welsh at home.', 'o’n i = ro’n i (I was / I used to). Speakers often drop the r-.'],
+  ['Oedd hi’n canu yn y capel.', 'She used to sing in the chapel.', 'oedd e / oedd o / oedd hi = he / she was. Spoken without the r-.'],
+  ['Oedden ni’n siarad Cymraeg efo nain.', 'We used to speak Welsh with granny.', 'oedden ni = we were / we used to.'],
+  ['Doedd neb yn siarad Cymraeg yn yr ysgol.', 'Nobody spoke Welsh at school.', 'doedd = wasn’t. Many older speakers have a story like this.'],
+  ['Pan o’n i’n blentyn…', 'When I was a child…', 'yn softens: plentyn → blentyn. The classic start of a memory.'],
+  ['Dw i’n meddwl bod…', 'I think that…', 'bod = that (… is / was). What comes after it is the answer.'],
+  ['Mae’n debyg bod…', 'Apparently… / Probably…'],
+  ['mil wyth cant chwe deg pump', '1865', 'Years are often said in full like this. You may also hear un wyth chwech pump.'],
+  ['yn y saithdegau', 'in the seventies', 'Also: yn y chwedegau (sixties), yn yr wythdegau (eighties), yn y nawdegau (nineties).'],
+  ['erbyn hyn', 'by now / these days'],
+  ['ers talwm', 'long ago / in the old days', 'Northern and Wladfa.', 'N'],
+  ['ia', 'yes / yeah', 'The northern and Wladfa form of ie.', 'N'],
+  ['…yn de', '…you know? / …right?', 'A northern tag on the end of a sentence (from ynte).', 'N'],
+  ['wchi', 'you know', 'From wyddoch chi. A filler, not a question.', 'N'],
 ])
 
 export const patagoniaLessons: Record<string, RawCard[]> = {
@@ -423,4 +463,5 @@ export const patagoniaLessons: Record<string, RawCard[]> = {
   p11,
   p12,
   p13,
+  p14,
 }

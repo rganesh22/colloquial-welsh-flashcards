@@ -1,4 +1,4 @@
-import { softMutate, ynPlace } from '../../lib/mutation'
+import { aspirateMutate, isWelshPlace, mutatedAlternative, oPlace, ynPlace } from '../../lib/mutation'
 import type { IntroProfile } from '../../lib/trip'
 
 export interface Line {
@@ -7,35 +7,59 @@ export interface Line {
   note?: string
 }
 
-export const JOBS: { en: string; cy: string }[] = [
+/**
+ * cy slots into “Dw i’n gweithio fel …”; say replaces that whole sentence
+ * (for things that aren't jobs, like being a student). fem, when given, is
+ * shown as a note: the form a woman uses.
+ */
+export const JOBS: {
+  en: string
+  cy: string
+  say?: { welsh: string; english: string }
+  fem?: string
+}[] = [
   { en: 'software engineer', cy: 'peiriannydd meddalwedd' },
   { en: 'engineer', cy: 'peiriannydd' },
-  { en: 'student', cy: 'myfyriwr' },
-  { en: 'teacher', cy: 'athro' },
+  {
+    en: 'student',
+    cy: 'myfyriwr',
+    say: { welsh: 'Dw i’n fyfyriwr.', english: 'I’m a student.' },
+    fem: 'Dw i’n fyfyrwraig.',
+  },
+  { en: 'teacher', cy: 'athro', fem: 'Dw i’n gweithio fel athrawes.' },
   { en: 'doctor', cy: 'meddyg' },
   { en: 'nurse', cy: 'nyrs' },
   { en: 'designer', cy: 'dylunydd' },
-  { en: 'video maker', cy: 'gwneuthurwr fideos' },
+  {
+    en: 'video maker',
+    cy: 'gwneud fideos',
+    say: { welsh: 'Dw i’n gwneud fideos.', english: 'I make videos.' },
+  },
   { en: 'writer', cy: 'awdur' },
   { en: 'researcher', cy: 'ymchwilydd' },
   { en: 'accountant', cy: 'cyfrifydd' },
-  { en: 'manager', cy: 'rheolwr' },
-  { en: 'lawyer', cy: 'cyfreithiwr' },
+  { en: 'manager', cy: 'rheolwr', fem: 'Dw i’n gweithio fel rheolwraig.' },
+  { en: 'lawyer', cy: 'cyfreithiwr', fem: 'Dw i’n gweithio fel cyfreithwraig.' },
   { en: 'scientist', cy: 'gwyddonydd' },
+  {
+    en: 'retired',
+    cy: 'wedi ymddeol',
+    say: { welsh: 'Dw i wedi ymddeol.', english: 'I’m retired.' },
+  },
 ]
 
 /** Language names in Welsh (Welsh uses -eg for many language names). */
 export const LANGUAGES: { en: string; cy: string }[] = [
   { en: 'English', cy: 'Saesneg' },
   { en: 'Hindi', cy: 'Hindi' },
-  { en: 'Tamil', cy: 'Tamil' },
+  { en: 'Tamil', cy: 'Tamileg' },
   { en: 'Telugu', cy: 'Telugu' },
   { en: 'Kannada', cy: 'Kannada' },
   { en: 'Malayalam', cy: 'Malayalam' },
   { en: 'Marathi', cy: 'Marathi' },
   { en: 'Bengali', cy: 'Bengaleg' },
   { en: 'Gujarati', cy: 'Gwjarati' },
-  { en: 'Punjabi', cy: 'Pwnjabi' },
+  { en: 'Punjabi', cy: 'Pwnjabeg' },
   { en: 'Urdu', cy: 'Wrdw' },
   { en: 'Spanish', cy: 'Sbaeneg' },
   { en: 'French', cy: 'Ffrangeg' },
@@ -44,7 +68,7 @@ export const LANGUAGES: { en: string; cy: string }[] = [
 
 export const REASONS: Line[] = [
   {
-    welsh: 'Dw i’n caru ieithoedd.',
+    welsh: 'Dw i wrth fy modd ag ieithoedd.',
     english: 'I love languages.',
   },
   {
@@ -65,14 +89,34 @@ export const REASONS: Line[] = [
   },
 ]
 
+/** Welsh list: “a” takes the aspirate (a Thamil); “ac” before a vowel (ac Wrdw). */
 function list(items: string[]): string {
   if (items.length <= 1) return items[0] ?? ''
-  return `${items.slice(0, -1).join(', ')} a ${items[items.length - 1]}`
+  const last = items[items.length - 1]!
+  const joined = /^[aeiouwyâêîôûŵŷ]/i.test(last) ? `ac ${last}` : `a ${aspirateMutate(last)}`
+  return `${items.slice(0, -1).join(', ')} ${joined}`
+}
+
+function listEnglish(items: string[]): string {
+  if (items.length <= 1) return items[0] ?? ''
+  return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`
 }
 
 function jobWelsh(job: string): string {
   const hit = JOBS.find((j) => j.en === job.trim().toLowerCase())
   return hit ? hit.cy : job.trim()
+}
+
+/** “Dw i’n gweithio fel …”, or the job’s own natural sentence. */
+function jobLine(job: string): Line {
+  const hit = JOBS.find((j) => j.en === job.trim().toLowerCase())
+  const fem = hit?.fem ? { note: `A woman says: ${hit.fem}` } : {}
+  if (hit?.say) return { ...hit.say, ...fem }
+  return {
+    welsh: `Dw i’n gweithio fel ${job ? jobWelsh(job) : '…'}.`,
+    english: `I work as ${/^[aeiou]/i.test(job) ? 'an' : 'a'} ${job || '…'}.`,
+    ...fem,
+  }
 }
 
 /** Your 30–45 second introduction, built from the profile. */
@@ -85,33 +129,39 @@ export function buildIntro(p: IntroProfile): Line[] {
     },
   ]
   if (p.city) {
+    const city = p.city.trim()
+    const from = oPlace(city)
+    const alt = mutatedAlternative(city, 'o')
     lines.push({
-      welsh: `Dw i’n dod o India, o ${softMutate(p.city)}.`,
-      english: `I come from India, from ${p.city}.`,
-      note:
-        softMutate(p.city) !== p.city.trim()
-          ? `“o” softens the next word: ${p.city} → ${softMutate(p.city)}. Plenty of speakers leave foreign names unmutated, so either is fine.`
+      welsh: `Dw i’n dod o India, ${from}.`,
+      english: `I come from India, from ${city}.`,
+      note: isWelshPlace(city) && from !== `o ${city}`
+        ? `“o” softens the next word: ${city} → ${from.slice(2)}.`
+        : alt
+          ? `Foreign names usually stay as they are after “o”; ${alt} is also heard.`
           : undefined,
     })
   } else {
     lines.push({ welsh: 'Dw i’n dod o India.', english: 'I come from India.' })
   }
   if (p.livesIn) {
+    const place = p.livesIn.trim()
+    const placed = ynPlace(place)
+    const mutated = placed.replace(/^y(n|m|ng) /, '') !== place
+    const alt = mutatedAlternative(place, 'yn')
     lines.push({
-      welsh: `Dw i’n byw ${ynPlace(p.livesIn)}.`,
-      english: `I live in ${p.livesIn}.`,
-      note:
-        ynPlace(p.livesIn) !== `yn ${p.livesIn.trim()}`
-          ? '“yn” + a place triggers the nasal mutation (yng Nghaerdydd, ym Mangor).'
-          : undefined,
+      welsh: `Dw i’n byw ${placed}.`,
+      english: `I live in ${place}.`,
+      note: mutated
+        ? '“yn” + a Welsh place name triggers the nasal mutation (yng Nghaerdydd, ym Mangor).'
+        : alt
+          ? `Foreign names usually stay as they are. Some speakers mutate: ${alt}.`
+          : placed !== `yn ${place}`
+            ? '“yn” becomes “ym” before m.'
+            : undefined,
     })
   }
-  if (p.job) {
-    lines.push({
-      welsh: `Dw i’n gweithio fel ${jobWelsh(p.job)}.`,
-      english: `I work as a ${p.job}.`,
-    })
-  }
+  if (p.job) lines.push(jobLine(p.job))
   const langs = p.languages
     .split(',')
     .map((l) => l.trim())
@@ -120,9 +170,14 @@ export function buildIntro(p: IntroProfile): Line[] {
     const cy = langs.map(
       (l) => LANGUAGES.find((x) => x.en.toLowerCase() === l.toLowerCase())?.cy ?? l,
     )
+    const last = cy[cy.length - 1]!
     lines.push({
       welsh: `Dw i’n siarad ${list(cy)}.`,
-      english: `I speak ${list(langs).replace(/ a /, ' and ')}.`,
+      english: `I speak ${listEnglish(langs)}.`,
+      note:
+        cy.length > 1 && aspirateMutate(last) !== last
+          ? `After “a” (and), p/t/c become ph/th/ch: a ${aspirateMutate(last)}. With foreign names it’s optional — many speakers say “a ${last}”.`
+          : undefined,
     })
   }
   lines.push({
@@ -133,9 +188,9 @@ export function buildIntro(p: IntroProfile): Line[] {
   if (reason) lines.push(reason)
   lines.push(
     {
-      welsh: 'Efallai mai fi ydy’r person cynta o India i siarad Cymraeg yma!',
-      english: 'Maybe I’m the first person from India to speak Welsh here!',
-      note: '“mai” puts the focus on “fi” — a nice line for the camera.',
+      welsh: 'Dw i ddim yn nabod llawer o bobl o India sy’n siarad Cymraeg!',
+      english: 'I don’t know many Indians who speak Welsh!',
+      note: 'nabod = to know (a person). A modest, true line that usually gets a smile on camera.',
     },
     {
       welsh: 'Braf cwrdd â chi!',
@@ -175,10 +230,7 @@ export const EXPECTED_QUESTIONS: ExpectedQuestion[] = [
   {
     welsh: 'Beth dych chi’n wneud?',
     english: 'What do you do (for work)?',
-    answer: (p) => ({
-      welsh: `Dw i’n gweithio fel ${p.job ? jobWelsh(p.job) : '…'}.`,
-      english: `I work as a ${p.job || '…'}.`,
-    }),
+    answer: (p) => jobLine(p.job),
   },
   {
     welsh: 'Pam dych chi’n dysgu Cymraeg?',
@@ -206,9 +258,9 @@ export const EXPECTED_QUESTIONS: ExpectedQuestion[] = [
     welsh: 'Dych chi wedi bod yng Nghymru?',
     english: 'Have you been to Wales?',
     answer: () => ({
-      welsh: 'Naddo, dim eto. Ond dw i eisiau mynd!',
+      welsh: 'Nac ydw, ddim eto. Ond dw i eisiau mynd!',
       english: 'No, not yet. But I want to go!',
-      note: 'Past-tense question (“wedi bod”) → answer Do (yes) / Naddo (no).',
+      note: '“wedi” questions take the present-tense verb: Ydw (yes) / Nac ydw (no).',
     }),
   },
   {
@@ -259,7 +311,7 @@ export const EXPECTED_QUESTIONS: ExpectedQuestion[] = [
     answer: () => ({
       welsh: 'Oes, ychydig. Roedd cenhadon o Gymru ym Mryniau Khasi, yng ngogledd-ddwyrain India.',
       english: 'Yes, a few. There were missionaries from Wales in the Khasi Hills, in north-east India.',
-      note: 'Welsh missionaries worked in the Khasi Hills from 1841 — a great connection to mention.',
+      note: 'Welsh missionaries worked in the Khasi Hills from 1841. One of them, Thomas Jones, gave Khasi the Roman spelling it still uses, with Welsh-influenced rules (it had been written in Bengali script before).',
     }),
   },
   {

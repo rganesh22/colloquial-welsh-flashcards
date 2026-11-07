@@ -16,10 +16,13 @@ export function StoryView({
   profile,
   apiKey,
   onProfile,
+  onDone,
 }: {
   profile: IntroProfile
   apiKey: string
   onProfile: (p: IntroProfile) => void
+  /** Back to today's session. */
+  onDone?: () => void
 }) {
   const key = getApiKey(apiKey)
   const [draft, setDraft] = useState(profile)
@@ -246,6 +249,11 @@ export function StoryView({
           })}
         </ul>
       </section>
+      {onDone && (
+        <button type="button" className="primary-btn" onClick={onDone}>
+          Done — back to today
+        </button>
+      )}
     </div>
   )
 }

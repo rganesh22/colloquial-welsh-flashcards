@@ -7,6 +7,7 @@ export interface Recording {
   wav: Blob
   /** Original browser recording, for instant playback. */
   raw: Blob
+  /** Speech length, with leading/trailing silence trimmed (0 if silent). */
   seconds: number
 }
 
@@ -31,7 +32,6 @@ export async function startMic(): Promise<MicSession> {
     if (e.data.size > 0) chunks.push(e.data)
   }
   recorder.start()
-  const startedAt = Date.now()
 
   const release = () => stream.getTracks().forEach((t) => t.stop())
 
@@ -48,8 +48,9 @@ export async function startMic(): Promise<MicSession> {
             const raw = new Blob(chunks, {
               type: recorder.mimeType || 'audio/webm',
             })
-            const wav = await toWav(raw)
-            resolve({ wav, raw, seconds: (Date.now() - startedAt) / 1000 })
+            const { wav, seconds } = await toWav(raw)
+            // Speech length without the silence before and after.
+            resolve({ wav, raw, seconds })
           } catch (err) {
             reject(err)
           }
@@ -60,23 +61,58 @@ export async function startMic(): Promise<MicSession> {
   }
 }
 
-async function toWav(blob: Blob): Promise<Blob> {
+/** Trimmed 16 kHz WAV plus its speech length (0 if it was all silence). */
+async function toWav(blob: Blob): Promise<{ wav: Blob; seconds: number }> {
   const buf = await blob.arrayBuffer()
   const ctx = new AudioContext()
   try {
     const decoded = await ctx.decodeAudioData(buf)
     const mono = mixDown(decoded)
-    const resampled = resample(mono, decoded.sampleRate, TARGET_RATE)
+    const full = resample(mono, decoded.sampleRate, TARGET_RATE)
+    const trimmed = trimSilence(full, TARGET_RATE)
+    const resampled = trimmed ?? full
     const pcm = new Uint8Array(resampled.length * 2)
     const view = new DataView(pcm.buffer)
     for (let i = 0; i < resampled.length; i++) {
       const s = Math.max(-1, Math.min(1, resampled[i]!))
       view.setInt16(i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true)
     }
-    return pcmToWav(pcm, TARGET_RATE)
+    return {
+      wav: pcmToWav(pcm, TARGET_RATE),
+      seconds: trimmed ? trimmed.length / TARGET_RATE : 0,
+    }
   } finally {
     void ctx.close()
   }
+}
+
+/**
+ * Cut leading and trailing silence: 20 ms frames whose RMS is under 4% of the
+ * loudest frame (floor 0.01) count as silence. Keeps 150 ms either side.
+ * Null when nothing is above the threshold.
+ */
+function trimSilence(data: Float32Array, rate: number): Float32Array | null {
+  const frame = Math.max(1, Math.round(rate * 0.02))
+  const frames = Math.ceil(data.length / frame)
+  const rms = new Float32Array(frames)
+  let peak = 0
+  for (let f = 0; f < frames; f++) {
+    let sum = 0
+    const end = Math.min(data.length, (f + 1) * frame)
+    for (let i = f * frame; i < end; i++) sum += data[i]! * data[i]!
+    rms[f] = Math.sqrt(sum / Math.max(1, end - f * frame))
+    peak = Math.max(peak, rms[f]!)
+  }
+  const threshold = Math.max(0.01, peak * 0.04)
+  let first = 0
+  while (first < frames && rms[first]! < threshold) first++
+  if (first >= frames) return null
+  let last = frames - 1
+  while (last > first && rms[last]! < threshold) last--
+  const pad = Math.round(rate * 0.15)
+  const start = Math.max(0, first * frame - pad)
+  const stop = Math.min(data.length, (last + 1) * frame + pad)
+  return data.subarray(start, stop)
 }
 
 function mixDown(buffer: AudioBuffer): Float32Array {

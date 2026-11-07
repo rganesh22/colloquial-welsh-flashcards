@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getApiKey } from '../lib/gemini'
 import { micSupported, startMic, type MicSession, type Recording } from '../lib/recorder'
-import { retellFeedback } from '../lib/talk'
+import { retellFeedback, type RetellFeedback } from '../lib/talk'
 
 /** Nation's 4/3/2, scaled for beginners: the same talk in 2:00, 1:30, 1:00. */
 const ROUNDS = [120, 90, 60]
@@ -9,6 +9,7 @@ const ROUNDS = [120, 90, 60]
 export function RetellDrill({
   topic,
   prompts,
+  week,
   apiKey,
   model,
   short = false,
@@ -17,6 +18,8 @@ export function RetellDrill({
 }: {
   topic: string
   prompts: string[]
+  /** Plan week, so feedback matches the level. */
+  week: number
   apiKey: string
   model: string
   /** 10-minute day: one 2-minute round only. */
@@ -29,12 +32,8 @@ export function RetellDrill({
   const [round, setRound] = useState(0)
   const [left, setLeft] = useState<number | null>(null)
   const [mic, setMic] = useState<MicSession | null>(null)
-  const [takes, setTakes] = useState<(Recording & { url: string })[]>([])
-  const [feedback, setFeedback] = useState<{
-    heard: string
-    tips: string[]
-    better: string
-  } | null>(null)
+  const [takes, setTakes] = useState<(Recording & { url: string; round: number })[]>([])
+  const [feedback, setFeedback] = useState<RetellFeedback | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const micRef = useRef<MicSession | null>(null)
@@ -72,7 +71,8 @@ export function RetellDrill({
     if (m) {
       try {
         const rec = await m.stop()
-        setTakes((t) => [...t, { ...rec, url: URL.createObjectURL(rec.raw) }])
+        const n = round + 1
+        setTakes((t) => [...t, { ...rec, url: URL.createObjectURL(rec.raw), round: n }])
       } catch {
         /* keep going without the take */
       }
@@ -80,14 +80,23 @@ export function RetellDrill({
     setRound((r) => r + 1)
   }
 
+  /** Round 1 and the final round, so the feedback can say what changed. */
   async function getFeedback() {
+    const first = takes[0]
     const last = takes[takes.length - 1]
-    if (!key || !last) return
+    if (!key || !first || !last) return
+    const pick = first === last ? [first] : [first, last]
     setBusy(true)
     setError(null)
     try {
       setFeedback(
-        await retellFeedback({ apiKey: key, model, topic, audio: last.wav }),
+        await retellFeedback({
+          apiKey: key,
+          model,
+          topic,
+          week,
+          takes: pick.map((t) => ({ audio: t.wav, seconds: t.seconds, round: t.round })),
+        }),
       )
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Feedback failed')
@@ -123,18 +132,21 @@ export function RetellDrill({
       </ul>
 
       <div className="retell-rounds">
-        {rounds.map((secs, i) => (
-          <div
-            key={secs}
-            className={`retell-round ${i < round ? 'done' : i === round ? 'current' : ''}`}
-          >
-            <span className="retell-round-n">Round {i + 1}</span>
-            <span className="retell-round-t">
-              {i === round && left != null ? fmt(left) : fmt(secs)}
-            </span>
-            {takes[i] && <audio controls src={takes[i]!.url} />}
-          </div>
-        ))}
+        {rounds.map((secs, i) => {
+          const take = takes.find((t) => t.round === i + 1)
+          return (
+            <div
+              key={secs}
+              className={`retell-round ${i < round ? 'done' : i === round ? 'current' : ''}`}
+            >
+              <span className="retell-round-n">Round {i + 1}</span>
+              <span className="retell-round-t">
+                {i === round && left != null ? fmt(left) : fmt(secs)}
+              </span>
+              {take && <audio controls src={take.url} />}
+            </div>
+          )
+        })}
       </div>
 
       {error && <p className="talk-warning">{error}</p>}
@@ -167,7 +179,11 @@ export function RetellDrill({
                 onClick={() => void getFeedback()}
                 disabled={busy}
               >
-                {busy ? 'Listening…' : 'Get feedback on my last round'}
+                {busy
+                  ? 'Listening…'
+                  : takes.length > 1
+                    ? 'Compare my first and last round'
+                    : 'Get feedback on my round'}
               </button>
             )}
             <button type="button" className="primary-btn" onClick={onDone}>
@@ -176,8 +192,27 @@ export function RetellDrill({
           </div>
           {feedback && (
             <div className="talk-report">
-              <h3>What I heard</h3>
-              <p className="cy">{feedback.heard}</p>
+              {feedback.takes.map((t, i) => (
+                <div key={i} className="retell-take">
+                  <h3>
+                    {feedback.takes.length > 1
+                      ? i === 0
+                        ? 'Round 1'
+                        : 'Last round'
+                      : 'What I heard'}
+                    <span className="retell-wpm">
+                      {t.wpm} words/min · {Math.round(t.seconds)} s
+                    </span>
+                  </h3>
+                  <p className="cy">{t.heard}</p>
+                </div>
+              ))}
+              {feedback.change && (
+                <>
+                  <h3>Between rounds</h3>
+                  <p>{feedback.change}</p>
+                </>
+              )}
               <h3>Tips</h3>
               <ul>
                 {feedback.tips.map((t) => (

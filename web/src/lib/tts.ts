@@ -7,9 +7,69 @@ export const TTS_LANGUAGE = 'cy-GB'
 export const TTS_ACCENT_PROMPT =
   'Speak in Welsh as spoken in Wales, with a calm deep male voice.'
 
-export function ttsSpeakPrompt(text: string): string {
+/**
+ * Optional voice and delivery for a line. Leave both out to get the default
+ * voice, which is the only one the bundled audio (tts/manifest.json) covers.
+ */
+export interface WelshVoice {
+  /** Gemini prebuilt TTS voice name, e.g. TTS_VOICES.female. */
+  voice?: string
+  /** How to say it, appended to the accent prompt, e.g. TTS_SLOW_STYLE. */
+  style?: string
+  /**
+   * Who is speaking: 'wales' (default), 'wladfa' for a Welsh speaker from
+   * Patagonia, 'spanish' for a line in Rioplatense Argentine Spanish.
+   */
+  accent?: TtsAccent
+}
+
+export type TtsAccent = 'wales' | 'wladfa' | 'spanish'
+
+/** A line to play with its own voice (for playWelshSequence). */
+export type WelshLine = WelshVoice & { text: string }
+
+/** Prebuilt Gemini voices used for characters. */
+export const TTS_VOICES = {
+  /** Firm, clear female voice. */
+  female: 'Kore',
+  /** Lighter, younger female voice. */
+  femaleYoung: 'Leda',
+  /** Informative male voice. */
+  male: 'Charon',
+  /** Upbeat younger male voice. */
+  maleYoung: 'Puck',
+  /** The default (bundled) calm deep male voice. */
+  default: TTS_VOICE,
+} as const
+
+/** For beginners: steady pace with room to process. */
+export const TTS_CLEAR_STYLE = 'slowly and clearly, with pauses'
+/** The "slower" replay. */
+export const TTS_SLOW_STYLE =
+  'very slowly and clearly, with a short pause between phrases, stressing the key words'
+
+function isDefaultVoice(v?: WelshVoice): boolean {
+  return (
+    (!v?.voice || v.voice === TTS_VOICE) && !v?.style && (!v?.accent || v.accent === 'wales')
+  )
+}
+
+function accentPrompt(v?: WelshVoice): string {
+  if (isDefaultVoice(v)) return TTS_ACCENT_PROMPT
+  const speaker =
+    v?.accent === 'spanish'
+      ? 'Speak in Rioplatense Argentine Spanish'
+      : v?.accent === 'wladfa'
+        ? 'Speak in Welsh as a Welsh speaker from Patagonia, slow and clear'
+        : 'Speak in Welsh as spoken in Wales'
+  const base =
+    !v?.voice || v.voice === TTS_VOICE ? `${speaker}, with a calm deep male voice` : speaker
+  return v?.style ? `${base}, ${v.style}.` : `${base}.`
+}
+
+export function ttsSpeakPrompt(text: string, v?: WelshVoice): string {
   const spoken = text.trim()
-  return `${TTS_ACCENT_PROMPT}\n\nRead aloud exactly the following text:\n${spoken}`
+  return `${accentPrompt(v)}\n\nRead aloud exactly the following text:\n${spoken}`
 }
 
 function base64ToBytes(base64: string): Uint8Array {
@@ -101,18 +161,19 @@ function haltPlayback(): number {
 
 const TTS_CACHE_EVENT = 'cw-tts-cache'
 
-export function cachePayloadFor(text: string): string {
+/** Default voice gives the same payload (and hash) as the bundled audio. */
+export function cachePayloadFor(text: string, v?: WelshVoice): string {
   return JSON.stringify({
     model: TTS_MODEL,
-    voice: TTS_VOICE,
+    voice: v?.voice || TTS_VOICE,
     language: TTS_LANGUAGE,
-    accent: TTS_ACCENT_PROMPT,
+    accent: accentPrompt(v),
     text: text.trim(),
   })
 }
 
-export async function ttsAudioKey(text: string): Promise<string> {
-  return hashKey(cachePayloadFor(text))
+export async function ttsAudioKey(text: string, v?: WelshVoice): Promise<string> {
+  return hashKey(cachePayloadFor(text, v))
 }
 
 type Manifest = {
@@ -209,17 +270,18 @@ export function onTtsCached(
 async function generateGeminiWav(
   text: string,
   apiKey: string,
+  v?: WelshVoice,
 ): Promise<Blob> {
   const { GoogleGenAI } = await import('@google/genai')
   const ai = new GoogleGenAI({ apiKey })
   const response = await ai.models.generateContent({
     model: TTS_MODEL,
-    contents: [{ parts: [{ text: ttsSpeakPrompt(text) }] }],
+    contents: [{ parts: [{ text: ttsSpeakPrompt(text, v) }] }],
     config: {
       responseModalities: ['AUDIO'],
       speechConfig: {
         voiceConfig: {
-          prebuiltVoiceConfig: { voiceName: TTS_VOICE },
+          prebuiltVoiceConfig: { voiceName: v?.voice || TTS_VOICE },
         },
       },
     },
@@ -268,8 +330,9 @@ export async function ensureWelshAudio(opts: {
 async function audioBlobFor(
   text: string,
   apiKey: string | null,
+  v?: WelshVoice,
 ): Promise<{ blob: Blob; cached: boolean; source: 'bundle' | 'gemini' } | null> {
-  const key = await ttsAudioKey(text)
+  const key = await ttsAudioKey(text, v)
   const hit = await cacheGetAudio(key)
   if (hit) {
     const bytes = base64ToBytes(hit.base64)
@@ -279,7 +342,8 @@ async function audioBlobFor(
     return { blob, cached: true, source: 'gemini' }
   }
 
-  const bundled = await fetchBundledWav(text)
+  // The bundle only holds the default voice.
+  const bundled = isDefaultVoice(v) ? await fetchBundledWav(text) : null
   if (bundled) {
     const wavBytes = new Uint8Array(await bundled.blob.arrayBuffer())
     await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
@@ -289,10 +353,10 @@ async function audioBlobFor(
 
   if (!apiKey) return null
   try {
-    const blob = await generateGeminiWav(text, apiKey)
+    const blob = await generateGeminiWav(text, apiKey, v)
     const wavBytes = new Uint8Array(await blob.arrayBuffer())
     await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
-    notifyTtsCached(text)
+    if (isDefaultVoice(v)) notifyTtsCached(text)
     return { blob, cached: false, source: 'gemini' }
   } catch (err) {
     console.warn('Gemini TTS failed, falling back to browser', err)
@@ -352,15 +416,26 @@ function speakBrowserWait(text: string, token: number): Promise<void> {
   })
 }
 
+/**
+ * Speak one Welsh line. `voice`/`style` are optional (see WelshVoice); other
+ * voices are generated and cached per voice+style, never read from the bundle.
+ */
 export async function speakWelsh(opts: {
   text: string
   apiKey: string | null
+  voice?: string
+  style?: string
+  accent?: TtsAccent
 }): Promise<{ cached: boolean; source: 'gemini' | 'bundle' | 'browser' }> {
   const text = opts.text.trim()
   if (!text) throw new Error('Nothing to speak')
 
   const token = haltPlayback()
-  const loaded = await audioBlobFor(text, opts.apiKey)
+  const loaded = await audioBlobFor(text, opts.apiKey, {
+    voice: opts.voice,
+    style: opts.style,
+    accent: opts.accent,
+  })
   if (token !== playToken) return { cached: false, source: 'browser' }
   if (!loaded) {
     speakBrowser(text)
@@ -370,17 +445,21 @@ export async function speakWelsh(opts: {
   return { cached: loaded.cached, source: loaded.source }
 }
 
-/** Play Welsh lines in order. A new call, or speakWelsh, stops the previous run. */
+/**
+ * Play Welsh lines in order. A new call, or speakWelsh, stops the previous run.
+ * Pass `{ text, voice, style }` items for per-speaker voices.
+ */
 export async function playWelshSequence(
-  texts: string[],
+  texts: (string | WelshLine)[],
   apiKey: string | null,
 ): Promise<void> {
   const token = haltPlayback()
-  for (const raw of texts) {
-    const text = raw.trim()
+  for (const item of texts) {
+    const line = typeof item === 'string' ? { text: item } : item
+    const text = line.text.trim()
     if (!text) continue
     if (token !== playToken) return
-    const loaded = await audioBlobFor(text, apiKey)
+    const loaded = await audioBlobFor(text, apiKey, line)
     if (token !== playToken) return
     if (!loaded) await speakBrowserWait(text, token)
     else await playBlob(loaded.blob, token)

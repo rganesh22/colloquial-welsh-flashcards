@@ -110,6 +110,7 @@ const tripLocal = {
   done: { '1': { date: '2026-11-08' } },
   blocks: { '2': ['review'] },
   light: ['2026-11-09'],
+  active: ['2026-11-10'],
   checkpoints: {},
 }
 const tripRemote = {
@@ -119,6 +120,7 @@ const tripRemote = {
   done: { '2': { date: '2026-11-11' } },
   blocks: { '2': ['speak'] },
   light: ['2026-11-07'],
+  active: ['2026-11-07'],
   checkpoints: { '1': { overall: 3 } },
 }
 const tripMerged = mergeTrip(tripLocal, tripRemote)!
@@ -129,6 +131,7 @@ assert.deepEqual(
   ['review', 'speak'],
 )
 assert.deepEqual(tripMerged.light, ['2026-11-07', '2026-11-09'])
+assert.deepEqual(tripMerged.active, ['2026-11-07', '2026-11-10'])
 assert.ok((tripMerged.checkpoints as Record<string, unknown>)['1'])
 assert.equal(mergeTrip(null, tripRemote), tripRemote)
 assert.equal(mergeTrip(tripLocal, undefined), tripLocal)

@@ -1,5 +1,13 @@
 import { cardsForLesson } from '../deck'
-import type { BlockId } from '../../lib/trip'
+import {
+  currentSession,
+  daysBetween,
+  isSessionDone,
+  type BlockId,
+  type TripState,
+} from '../../lib/trip'
+import { localCalendarDay } from '../../lib/srs'
+import { CLIP_SCHEDULE } from './listening'
 
 /**
  * The 8-week Patagonia plan. 48 sessions (6 a week) over ~60 calendar days,
@@ -8,7 +16,9 @@ import type { BlockId } from '../../lib/trip'
  *
  * Shape of a session (≈60 min, Nation's four strands tilted to speaking):
  *   reviews + new phrases → listen → shadow → plan + AI conversation → 4/3/2 retell
- * Every 6th session is a checkpoint: no new phrases, a scored conversation.
+ *   (+ a 5-minute run-through of your story on some days)
+ * Every 6th session is a checkpoint: no new phrases, a scored conversation,
+ * and from week 3 a conversation with a real person.
  */
 
 export const SESSIONS_PER_WEEK = 6
@@ -38,7 +48,7 @@ export interface WeekPlan {
 export const WEEK_PLANS: WeekPlan[] = [
   {
     week: 1,
-    titleCy: 'Helo, fi ydy…',
+    titleCy: 'Helo, … dw i',
     title: 'Sounds, greetings and you',
     focus:
       'Get the Welsh sounds into your mouth and nail a 30-second introduction you can say on autopilot.',
@@ -110,7 +120,7 @@ export const WEEK_PLANS: WeekPlan[] = [
     phraseLessons: ['p7', 'p8'],
     patterns: ['5', '5', '7', '8', '8'],
     dialogues: ['d7', 'd7', 'd8', 'd8', 'd8'],
-    scenarios: ['gwesty', 'gwesty', 'fferm-trevelin', 'gwesty', 'fferm-trevelin'],
+    scenarios: ['gwesty', 'gwesty', 'fferm-trevelin', 'ymwelydd', 'fferm-trevelin'],
     retell: {
       topic: 'Your plans for the trip',
       prompts: ['Where you’re going', 'When', 'Who you want to meet', 'What you want to see'],
@@ -118,7 +128,7 @@ export const WEEK_PLANS: WeekPlan[] = [
   },
   {
     week: 5,
-    titleCy: 'Beth wnest ti?',
+    titleCy: 'Beth wnaethoch chi?',
     title: 'Telling what happened',
     focus:
       'The past tense unlocks stories: what you did yesterday, how you got here, why you started Welsh.',
@@ -127,10 +137,10 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Tell the story of your journey to Patagonia',
       'Ask others what they did',
     ],
-    phraseLessons: ['p9'],
+    phraseLessons: ['p9', 'p14'],
     patterns: ['9', '9', '9', '9', '9'],
     dialogues: ['d9', 'd9', 'd10', 'd10', 'd10'],
-    scenarios: ['sgwrs-rydd', 'bws-trelew', 'sgwrs-rydd', 'fferm-trevelin', 'sgwrs-rydd'],
+    scenarios: ['dysgwr-lleol', 'bws-trelew', 'ymwelydd', 'fferm-trevelin', 'cyfweliad-iaith'],
     retell: {
       topic: 'What you did last weekend',
       prompts: ['Where you went', 'Who with', 'What you ate', 'How it was'],
@@ -139,18 +149,18 @@ export const WEEK_PLANS: WeekPlan[] = [
   {
     week: 6,
     titleCy: 'Dw i’n meddwl bod…',
-    title: 'Opinions and natural flow',
+    title: 'Opinions, flow and Y Wladfa',
     focus:
-      'Give opinions, react like a native speaker and use the little words (wel, ’te, chwarae teg) that make you sound fluent.',
+      'Give opinions, react like a native speaker, and talk about Y Wladfa itself — the Mimosa, the chapels, the eisteddfod.',
     canDo: [
       'Say what you think and ask what others think',
       'React naturally: really?, of course, fair play',
       'Hold a 5-minute chat that doesn’t feel like a quiz',
     ],
-    phraseLessons: ['p10'],
+    phraseLessons: ['p10', 'p11'],
     patterns: ['10', '10', '11', '11', '11'],
     dialogues: ['d11', 'd11', 'd12', 'd12', 'd12'],
-    scenarios: ['sgwrs-rydd', 'capel', 'sgwrs-rydd', 'capel', 'ysgol-athrawes'],
+    scenarios: ['sgwrs-rydd', 'capel', 'sbaeneg', 'cyfweliad-iaith', 'ysgol-athrawes'],
     retell: {
       topic: 'Why you’re learning Welsh — and what you think of it',
       prompts: ['How you started', 'What’s hard', 'What you love', 'What you hope to find in Patagonia'],
@@ -161,16 +171,16 @@ export const WEEK_PLANS: WeekPlan[] = [
     titleCy: 'Y Wladfa',
     title: 'Patagonia, history and your interview',
     focus:
-      'Talk about Y Wladfa itself — the Mimosa, the chapels, the eisteddfod — and rehearse your on-camera interview questions.',
+      'Rehearse your on-camera interview, ask permission to film, and keep a conversation in Welsh when people switch to Spanish.',
     canDo: [
       'Ask locals about their family history and the settlers',
       'Run a short interview about the state of Welsh',
       'Ask permission to film, politely',
     ],
-    phraseLessons: ['p11', 'p12', 'p13'],
+    phraseLessons: ['p12'],
     patterns: [null, null, null, null, null],
     dialogues: ['d13', 'd13', 'd14', 'd14', 'd14'],
-    scenarios: ['cyfweliad-iaith', 'fferm-trevelin', 'cyfweliad-iaith', 'capel', 'cyfweliad-iaith'],
+    scenarios: ['cyfweliad-iaith', 'sbaeneg', 'cyfweliad-iaith', 'disgynnydd', 'cyfweliad-iaith'],
     retell: {
       topic: 'What you know about Y Wladfa',
       prompts: ['1865 and the Mimosa', 'Where the Welsh live now', 'Chapels and tea houses', 'Why you’re visiting'],
@@ -181,16 +191,17 @@ export const WEEK_PLANS: WeekPlan[] = [
     titleCy: 'Barod!',
     title: 'Rehearsal week',
     focus:
-      'No new phrases. Lock in what you have with mock conversations, your interview and your story — so it all comes out under pressure.',
+      'Almost no new phrases — just Patagonian words to recognise. Lock in what you have with mock conversations, your interview and your story, so it all comes out under pressure.',
     canDo: [
       'Hold 5–10 minute conversations with strangers on familiar topics',
       'Recover when you don’t understand, without switching to English',
       'Tell your story and run your interview with confidence',
     ],
-    phraseLessons: [],
+    // Only the Patagonian words to recognise (p13); everything else is rehearsal.
+    phraseLessons: ['p13'],
     patterns: [null, null, null, null, null],
     dialogues: ['d14', 'd2', 'd10', 'd12', 'd13'],
-    scenarios: ['cyfweliad-iaith', 'fferm-trevelin', 'sgwrs-rydd', 'te-gaiman', 'cyfweliad-iaith'],
+    scenarios: ['cyfweliad-iaith', 'fferm-trevelin', 'sbaeneg', 'dysgwr-lleol', 'cyfweliad-iaith'],
     retell: {
       topic: 'Your whole story',
       prompts: ['Who you are', 'Why Welsh', 'Your two months', 'Why Patagonia', 'What’s next'],
@@ -214,10 +225,19 @@ export interface PlanSession {
   phraseIds: string[]
   pattern: string | null
   dialogue: string | null
+  /** Real-voice clip (weeks 4–8, days 2 and 5). */
+  clip: string | null
   scenario: string
   retell: WeekPlan['retell']
   blocks: PlanBlock[]
+  /** Set when a tough checkpoint means this session repeats last week’s partner. */
+  repeatsWeek?: number
 }
+
+/** Week 5, day 1: confirm who you're meeting, where and when. */
+export const OUTREACH_CONFIRM = 4 * SESSIONS_PER_WEEK + 1
+/** Week 3, day 1: chase anyone who hasn't answered, and widen the net. */
+export const OUTREACH_CHASE = 2 * SESSIONS_PER_WEEK + 1
 
 function splitEvenly<T>(items: T[], parts: number): T[][] {
   const out: T[][] = Array.from({ length: parts }, () => [])
@@ -240,24 +260,38 @@ function buildSessions(): PlanSession[] {
       const n = (wk.week - 1) * SESSIONS_PER_WEEK + day
       const checkpoint = day === SESSIONS_PER_WEEK
       const phraseIds = checkpoint ? [] : (slices[day - 1] ?? [])
+      // Listening is the hardest skill to fake on the day, so it's core from week 3.
+      // Your story gets a short run-through twice a week, and daily in week 8.
+      const story = wk.week === WEEKS || day === 1 || day === 4
+      // Real people from Y Wladfa, twice a week from week 2, in place of shadowing.
+      const clip = day === 2 || day === 5 ? (CLIP_SCHEDULE[wk.week]?.[day === 2 ? 0 : 1] ?? null) : null
       const blocks: PlanBlock[] = checkpoint
         ? [
-            { id: 'review', minutes: 15, core: true },
-            { id: 'retell', minutes: 10, core: false },
+            { id: 'review', minutes: 10, core: true },
+            { id: 'story', minutes: 5, core: true },
             { id: 'checkpoint', minutes: 15, core: true },
-            { id: 'listen', minutes: 10, core: false },
+            { id: 'retell', minutes: 6, core: false },
+            { id: 'listen', minutes: 8, core: false },
+            ...(wk.week >= 2 ? [{ id: 'human' as const, minutes: 20, core: true }] : []),
           ]
         : [
-            { id: 'review', minutes: 12, core: true },
+            { id: 'review', minutes: 10, core: true },
             ...(phraseIds.length
               ? [{ id: 'phrases' as const, minutes: 8, core: true }]
               : []),
-            { id: 'listen', minutes: 8, core: false },
-            { id: 'shadow', minutes: 7, core: false },
+            { id: 'listen', minutes: 7, core: wk.week >= 3 },
+            clip
+              ? { id: 'clip' as const, minutes: 8, core: true }
+              : { id: 'shadow' as const, minutes: 5, core: false },
             { id: 'speak', minutes: 15, core: true },
-            { id: 'retell', minutes: 6, core: false },
+            { id: 'retell', minutes: 6, core: true },
+            ...(story ? [{ id: 'story' as const, minutes: 5, core: true }] : []),
+            // Line people up on day 1, then confirm them a month before the flight.
+            ...(n === 1 || n === OUTREACH_CHASE || n === OUTREACH_CONFIRM
+              ? [{ id: 'outreach' as const, minutes: 5, core: true }]
+              : []),
             ...(wk.patterns[day - 1]
-              ? [{ id: 'pattern' as const, minutes: 8, core: false }]
+              ? [{ id: 'pattern' as const, minutes: 5, core: false }]
               : []),
           ]
       sessions.push({
@@ -268,6 +302,7 @@ function buildSessions(): PlanSession[] {
         phraseIds,
         pattern: checkpoint ? null : (wk.patterns[day - 1] ?? null),
         dialogue: checkpoint ? null : (wk.dialogues[day - 1] ?? null),
+        clip: checkpoint ? null : clip,
         scenario: checkpoint ? 'prawf' : wk.scenarios[day - 1]!,
         retell: wk.retell,
         blocks,
@@ -285,6 +320,95 @@ export function getSession(n: number): PlanSession | undefined {
 
 export function weekPlan(week: number): WeekPlan {
   return WEEK_PLANS[week - 1] ?? WEEK_PLANS[0]!
+}
+
+/** First session of the interview week and of the rehearsal week. */
+const PROTECTED_STARTS = [(WEEKS - 1) * SESSIONS_PER_WEEK + 1, (WEEKS - 2) * SESSIONS_PER_WEEK + 1]
+
+/**
+ * Today's session. Normally the lowest unfinished one, but when the flight is
+ * close and you're behind, skip ahead so the rehearsal week (and before it the
+ * interview week) always happens; skipped sessions stay open on the week map.
+ */
+export function nextPlanSession(
+  trip: TripState,
+  today = localCalendarDay(),
+): { n: number; skipped: boolean } | null {
+  const first = currentSession(trip, TOTAL_SESSIONS)
+  if (first == null) return null
+  const daysLeft = daysBetween(today, trip.tripDate)
+  if (daysLeft > 0) {
+    for (const start of PROTECTED_STARTS) {
+      if (first >= start || daysLeft > TOTAL_SESSIONS - start + 1) continue
+      for (let n = start; n <= TOTAL_SESSIONS; n++) {
+        if (!isSessionDone(trip, n)) return { n, skipped: true }
+      }
+    }
+  }
+  return { n: first, skipped: false }
+}
+
+/**
+ * Checkpoint scores are against the end-of-plan target, so the score that
+ * counts as "on track" rises week by week.
+ */
+export const CHECKPOINT_ON_TRACK = [1.5, 2, 2, 2.5, 2.5, 3, 3, 3.5]
+
+/** Most interview-critical first: if phrases get skipped, these come back first. */
+const LESSON_PRIORITY = ['p11', 'p12', 'p3', 'p9', 'p10', 'p4', 'p2', 'p1', 'p8', 'p6', 'p5', 'p7', 'p13']
+
+/**
+ * A session adjusted to how things are going:
+ * - after a tough checkpoint (below that week's on-track score), the week's
+ *   first two sessions repeat last week's partners. Task repetition is how
+ *   fluency catches up;
+ * - in the rehearsal week, phrases from sessions you skipped come back, most
+ *   interview-critical first.
+ */
+export function adaptSession(session: PlanSession, trip: TripState): PlanSession {
+  if (session.week === WEEKS && !session.checkpoint) {
+    const missed = PLAN_SESSIONS.filter(
+      (s) => s.week < WEEKS && !s.checkpoint && !isSessionDone(trip, s.n),
+    ).flatMap((s) => s.phraseIds)
+    if (missed.length === 0) return session
+    const rank = (id: string) => {
+      const i = LESSON_PRIORITY.indexOf(id.split('-')[1] ?? '')
+      return i < 0 ? LESSON_PRIORITY.length : i
+    }
+    const sorted = [...missed].sort((a, b) => rank(a) - rank(b))
+    const phraseIds = splitEvenly(sorted, SESSIONS_PER_WEEK - 1)[session.day - 1] ?? []
+    if (phraseIds.length === 0) return session
+    const hasPhrases = session.blocks.some((b) => b.id === 'phrases')
+    return {
+      ...session,
+      // Missed interview-critical phrases come before the recognition-only words.
+      phraseIds: [...phraseIds, ...session.phraseIds].slice(0, 12),
+      blocks: hasPhrases
+        ? session.blocks
+        : [session.blocks[0]!, { id: 'phrases', minutes: 8, core: true }, ...session.blocks.slice(1)],
+    }
+  }
+  if (session.week === 1 || session.day > 2 || session.checkpoint) return session
+  const last = trip.checkpoints[String(session.week - 1)]
+  const bar = CHECKPOINT_ON_TRACK[session.week - 2] ?? 3
+  if (!last || last.overall >= bar) return session
+  const prev = weekPlan(session.week - 1)
+  return {
+    ...session,
+    scenario: prev.scenarios[session.day + 2] ?? session.scenario,
+    repeatsWeek: prev.week,
+  }
+}
+
+/** Minutes for the core blocks, and for everything. */
+export function sessionMinutes(session: PlanSession): { core: number; all: number } {
+  let core = 0
+  let all = 0
+  for (const b of session.blocks) {
+    all += b.minutes
+    if (b.core) core += b.minutes
+  }
+  return { core, all }
 }
 
 export const BLOCK_META: Record<
@@ -320,6 +444,26 @@ export const BLOCK_META: Record<
     titleCy: 'Adrodd 4/3/2',
     title: 'Retell (2 · 1½ · 1 min)',
     why: 'Tell the same short story three times with less time each round. Repetition under time pressure builds fluency that carries over to new topics.',
+  },
+  story: {
+    titleCy: 'Fy stori',
+    title: 'Your story & questions',
+    why: 'Run your intro and the quick-fire questions out loud. These are the first two minutes of every conversation in Patagonia, so make them automatic.',
+  },
+  clip: {
+    titleCy: 'Lleisiau go iawn',
+    title: 'Real voices',
+    why: 'Real people from Y Wladfa at real speed. Watch once with no subtitles and answer the gist questions, then again with subtitles. Catching half is normal — that’s the skill you’ll need there.',
+  },
+  outreach: {
+    titleCy: 'Cysylltu',
+    title: 'Contact Y Wladfa',
+    why: 'January is quiet there, so line people up early: message three contacts (Menter Patagonia, Asociación San David, a chapel or tea house) on WhatsApp or Facebook, then confirm names, dates and filming in week 5. Ready-made messages are in “Before you go”.',
+  },
+  human: {
+    titleCy: 'Person go iawn',
+    title: 'Talk with a real person',
+    why: 'An AI is patient and shows text; people interrupt, speed up and switch language. Book a Welsh tutor online, join an online Welsh chat group, video-call a contact in Y Wladfa — or, if none of that works this week, swap a few voice notes in Welsh with one of them.',
   },
   pattern: {
     titleCy: 'Patrwm',

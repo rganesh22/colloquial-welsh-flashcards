@@ -166,11 +166,12 @@ const PATAGONIA_LESSONS: Omit<LessonMeta, 'bookId'>[] = [
   { id: 'p6', titleCy: 'Yn y tŷ te', titleEn: 'At the tea house' },
   { id: 'p7', titleCy: 'Mynd o le i le', titleEn: 'Getting around' },
   { id: 'p8', titleCy: 'Tywydd a chynlluniau', titleEn: 'Weather and plans' },
-  { id: 'p9', titleCy: 'Beth wnest ti?', titleEn: 'What happened' },
+  { id: 'p9', titleCy: 'Beth wnaethoch chi?', titleEn: 'What happened' },
   { id: 'p10', titleCy: 'Barn a sgwrsio', titleEn: 'Opinions and natural chat' },
   { id: 'p11', titleCy: 'Y Wladfa', titleEn: 'Patagonia and its history' },
   { id: 'p12', titleCy: 'Holi am yr iaith', titleEn: 'Interview: the language' },
   { id: 'p13', titleCy: 'Geiriau’r Wladfa', titleEn: 'Patagonian words' },
+  { id: 'p14', titleCy: 'Clywed atebion', titleEn: 'Understanding answers' },
 ]
 
 function withBook(

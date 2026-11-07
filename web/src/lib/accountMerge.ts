@@ -157,7 +157,7 @@ function stamp(value: unknown): number {
 
 /**
  * Trip plan: settings-like fields follow the newer copy; finished sessions,
- * ticked blocks, light days and checkpoints are unioned so no device loses work.
+ * ticked blocks, light and active days and checkpoints are unioned so no device loses work.
  */
 export function mergeTrip(
   local: Record<string, unknown> | null | undefined,
@@ -185,11 +185,18 @@ export function mergeTrip(
       ...(Array.isArray(other.light) ? other.light : []),
     ]),
   ].sort()
+  const active = [
+    ...new Set([
+      ...(Array.isArray(base.active) ? base.active : []),
+      ...(Array.isArray(other.active) ? other.active : []),
+    ]),
+  ].sort()
   return {
     ...base,
     done: { ...asRecord(other.done), ...asRecord(base.done) },
     blocks,
     light,
+    active,
     checkpoints: {
       ...asRecord(other.checkpoints),
       ...asRecord(base.checkpoints),

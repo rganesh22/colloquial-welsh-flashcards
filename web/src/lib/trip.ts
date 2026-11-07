@@ -14,6 +14,10 @@ export type BlockId =
   | 'speak'
   | 'retell'
   | 'pattern'
+  | 'story'
+  | 'human'
+  | 'outreach'
+  | 'clip'
   | 'checkpoint'
 
 export interface SessionLog {
@@ -32,6 +36,15 @@ export interface CheckpointResult {
   accuracy: number
   interaction: number
   summary: string
+  /** Measured in the app, so weeks compare on numbers (absent on older results). */
+  wordsPerTurn?: number
+  /** Welsh words per recorded minute. */
+  speechRate?: number
+  /** Share of partner turns understood by ear, 0–1. */
+  understoodByEar?: number
+  welshShare?: number
+  /** Scenario goal: 0 no, 1 partly, 2 yes. */
+  taskDone?: number
 }
 
 export interface IntroProfile {
@@ -61,12 +74,16 @@ export interface TripState {
   blocks: Record<string, BlockId[]>
   /** Calendar days where only the 10-minute minimum was done. */
   light: string[]
+  /** Calendar days where at least one block was done, finished session or not. */
+  active: string[]
   /** Weekly speaking checkpoints, keyed by week number. */
   checkpoints: Record<string, CheckpointResult>
   profile: IntroProfile
   /** Things you wanted to say but couldn't — ask about these later. */
   gaps: GapNote[]
   updatedAt: string
+  /** Latest conversation-report corrections (newest first, max 3) for the AI partner to target. */
+  recentFixes?: string[]
 }
 
 export const EMPTY_PROFILE: IntroProfile = {
@@ -101,6 +118,7 @@ function defaultTrip(): TripState {
     done: {},
     blocks: {},
     light: [],
+    active: [],
     checkpoints: {},
     profile: { ...EMPTY_PROFILE },
     gaps: [],
@@ -119,10 +137,14 @@ export function tripFromRaw(raw: unknown): TripState {
     done: r.done && typeof r.done === 'object' ? r.done : {},
     blocks: r.blocks && typeof r.blocks === 'object' ? r.blocks : {},
     light: Array.isArray(r.light) ? r.light : [],
+    active: Array.isArray(r.active) ? r.active : [],
     checkpoints:
       r.checkpoints && typeof r.checkpoints === 'object' ? r.checkpoints : {},
     profile: { ...EMPTY_PROFILE, ...(r.profile ?? {}) },
     gaps: Array.isArray(r.gaps) ? r.gaps : [],
+    ...(Array.isArray(r.recentFixes)
+      ? { recentFixes: r.recentFixes.filter((f) => typeof f === 'string').slice(0, 3) }
+      : {}),
     updatedAt: typeof r.updatedAt === 'string' ? r.updatedAt : '',
   }
 }
@@ -172,20 +194,30 @@ export function currentSession(trip: TripState, total: number): number | null {
   return null
 }
 
-/** Calendar days with any study (full session or the 10-minute minimum). */
+/** Calendar days with any study: a finished session, the busy-day minimum, or any block done. */
 export function studyDays(trip: TripState): Set<string> {
-  const days = new Set(trip.light)
+  const days = new Set([...trip.light, ...trip.active])
   for (const log of Object.values(trip.done)) days.add(log.date)
   return days
 }
 
+/**
+ * Study days in a row. The plan has a spare day most weeks, so one missed
+ * day is a rest day and never breaks the streak; two in a row do.
+ */
 export function streak(trip: TripState, today = localCalendarDay()): number {
   const days = studyDays(trip)
   let n = 0
-  // Today not done yet doesn't break yesterday's streak.
+  let misses = 0
+  // Today not done yet doesn't count as a miss.
   let cursor = days.has(today) ? today : addDays(today, -1)
-  while (days.has(cursor)) {
-    n += 1
+  while (misses < 2) {
+    if (days.has(cursor)) {
+      n += 1
+      misses = 0
+    } else {
+      misses += 1
+    }
     cursor = addDays(cursor, -1)
   }
   return n
@@ -247,7 +279,10 @@ export function toggleBlock(
   const cur = new Set(trip.blocks[key] ?? [])
   if (on) cur.add(block)
   else cur.delete(block)
-  return saveTrip({ ...trip, blocks: { ...trip.blocks, [key]: [...cur] } })
+  // Any finished block makes it a study day, so a half session still counts.
+  const today = localCalendarDay()
+  const active = on && !trip.active.includes(today) ? [...trip.active, today] : trip.active
+  return saveTrip({ ...trip, active, blocks: { ...trip.blocks, [key]: [...cur] } })
 }
 
 export function finishSession(

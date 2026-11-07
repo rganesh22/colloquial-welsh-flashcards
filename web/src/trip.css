@@ -922,3 +922,311 @@
     max-width: 95%;
   }
 }
+
+/* —— Today-first layout —— */
+.trip-cue {
+  margin: 0.35rem 0 0;
+  color: var(--green-deep);
+  font-weight: 600;
+}
+
+.trip-stat-line {
+  display: none;
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+.trip-start {
+  width: 100%;
+  margin: 0.4rem 0 0.8rem;
+  font-size: 1.02rem;
+}
+
+.trip-minutes-core {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: right;
+}
+
+.trip-note {
+  margin: 0 0 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--green) 10%, transparent);
+  font-size: 0.92rem;
+}
+
+.trip-session-foot {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.trip-done h2 {
+  margin: 0.2rem 0 0.4rem;
+}
+
+.trip-page > .trip-links {
+  margin: 0.2rem 0 0;
+}
+
+@media (max-width: 719px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .topbar .top-actions {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 0.15rem;
+    scrollbar-width: none;
+  }
+
+  .topbar .top-actions > * {
+    flex: none;
+  }
+
+  .trip-hero .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .trip-stats {
+    display: none;
+  }
+
+  .trip-stat-line {
+    display: block;
+  }
+
+  .trip-scenarios .lesson-row {
+    grid-template-areas: none;
+    text-align: left;
+  }
+
+  .trip-scenarios .lesson-titles {
+    grid-area: auto;
+  }
+
+  .ask-fab {
+    min-width: 2.8rem;
+    height: 2.8rem;
+    padding: 0 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .trip-page {
+    padding-bottom: 4rem;
+  }
+}
+
+/* —— Conversation: listening first, retries, checkpoint metrics —— */
+
+.talk-play {
+  display: inline-flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.talk-show-text {
+  justify-self: start;
+}
+
+.talk-edit {
+  all: unset;
+  cursor: text;
+  font-weight: 600;
+  border-bottom: 1px dashed var(--line);
+  overflow-wrap: anywhere;
+}
+
+.talk-edit:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.talk-edit-input {
+  width: 100%;
+  min-width: 12rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--green);
+  background: var(--panel-solid);
+  font-weight: 600;
+}
+
+.talk-tag {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 0.45rem;
+}
+
+.talk-fixed {
+  color: var(--green-deep);
+  font-weight: 600;
+}
+
+.talk-retry-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--hard) 40%, var(--line));
+  background: color-mix(in srgb, var(--hard) 8%, var(--panel-solid));
+  font-size: 0.9rem;
+}
+
+.talk-link {
+  all: unset;
+  cursor: pointer;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  font-size: 0.85rem;
+}
+
+.talk-checkpoint-note {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--green) 10%, var(--panel-solid));
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.talk-metrics {
+  list-style: none;
+  padding: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.talk-metrics strong {
+  color: var(--ink);
+}
+
+.retell-take h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.retell-wpm {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.trip-start-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.trip-start-row .trip-start {
+  flex: 1 1 14rem;
+  width: auto;
+  margin: 0;
+}
+
+@media (max-width: 719px) {
+  /* "Ask" is in the top bar; the floating button would cover the tick column. */
+  .app[data-view='trip'] .ask-fab {
+    display: none;
+  }
+
+  .trip-pace.ahead,
+  .trip-pace.on-track {
+    display: none;
+  }
+
+  .trip-hero {
+    gap: 0.35rem;
+  }
+}
+
+.talk-task {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.talk-task-badge {
+  display: inline-block;
+  margin-left: 0.3rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid var(--line);
+}
+
+.talk-task-badge.done-2 {
+  color: var(--green-deep);
+  border-color: var(--green);
+}
+
+.talk-task-badge.done-0 {
+  color: var(--hard);
+}
+
+.trip-copy {
+  margin: 0.5rem 0 0.9rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.trip-copy-text {
+  margin: 0.4rem 0 0;
+  white-space: pre-line;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+.clip-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: 0.4rem 0 0.9rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+}
+
+.clip-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.clip-gist {
+  margin: 0.4rem 0 0.9rem;
+  padding-left: 1.2rem;
+}
+
+.trip-task {
+  margin: 0 0 0.8rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--green) 8%, transparent);
+}
+
+.trip-task .trip-copy {
+  margin-top: 0;
+}

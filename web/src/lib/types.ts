@@ -124,11 +124,12 @@ export type AppView =
   | { name: 'story' }
   | {
       name: 'trip-block'
-      block: 'listen' | 'shadow' | 'speak' | 'checkpoint' | 'retell' | 'practice'
+      block: 'listen' | 'shadow' | 'speak' | 'checkpoint' | 'retell' | 'practice' | 'clip'
       /** Plan session this block belongs to (none for free practice). */
       n?: number
       dialogue?: string
       scenario?: string
+      clip?: string
       short?: boolean
     }
 

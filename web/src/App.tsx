@@ -97,7 +97,10 @@ import {
 import { VocabBrowseControls, type VocabSortMode } from './components/VocabBrowseControls'
 import { TripView, type TripLaunch } from './components/TripView'
 import { TalkView } from './components/TalkView'
+import { mentionsUncertain } from './lib/talk'
 import { DialogueView } from './components/DialogueView'
+import { ClipView } from './components/ClipView'
+import { getClip } from './data/trip/listening'
 import { RetellDrill } from './components/RetellDrill'
 import { StoryView } from './components/StoryView'
 import { getScenario } from './data/trip/scenarios'
@@ -106,6 +109,7 @@ import { getSession } from './data/trip/plan'
 import {
   addGap,
   loadTrip,
+  markLightDay,
   saveCheckpoint,
   saveTrip,
   toggleBlock,
@@ -140,6 +144,11 @@ export default function App() {
 
   const overall = useMemo(
     () => countStats(progress, { kind: 'all' }, settings.direction),
+    [progress, settings.direction],
+  )
+  // The trip's review block covers the Patagonia phrase book; the old deck stays under Flashcards.
+  const tripStats = useMemo(
+    () => countStats(progress, { kind: 'book', bookId: 'patagonia' }, settings.direction),
     [progress, settings.direction],
   )
   const headStats = useMemo(
@@ -270,7 +279,8 @@ export default function App() {
         setView({
           name: 'study',
           mode: 'review',
-          filter: { kind: 'all' },
+          filter: { kind: 'book', bookId: 'patagonia' },
+          sessionReviewMax: 60,
           tripSession: l.n,
         })
         return
@@ -302,6 +312,13 @@ export default function App() {
         fromTrip.current = true
         tickTripBlock(l.n, 'pattern')
         setView({ name: 'guide', bookId: 'colloquial', lessonId: l.lessonId })
+        return
+      case 'story':
+        tickTripBlock(l.n, 'story')
+        setView({ name: 'story' })
+        return
+      case 'clip':
+        setView({ name: 'trip-block', block: 'clip', n: l.n, clip: l.clip })
         return
     }
   }
@@ -406,7 +423,7 @@ export default function App() {
   }
 
   return (
-    <div className="app">
+    <div className="app" data-view={view.name}>
       <div className="atmosphere" aria-hidden="true" />
       <header className="topbar">
         <button
@@ -467,7 +484,7 @@ export default function App() {
           >
             Settings
           </button>
-          {view.name !== 'home' && view.name !== 'trip' && (
+          {view.name !== 'home' && view.name !== 'trip' && view.name !== 'trip-block' && (
             <button
               type="button"
               className="ghost-btn"
@@ -628,7 +645,7 @@ export default function App() {
           <TripView
             trip={trip}
             progress={progress}
-            due={overall.due}
+            due={tripStats.due}
             onTrip={updateTrip}
             onLaunch={launchTrip}
             onStory={() => setView({ name: 'story' })}
@@ -642,6 +659,7 @@ export default function App() {
             onProfile={(profile: IntroProfile) =>
               setTrip((t) => saveTrip({ ...t, profile }))
             }
+            onDone={() => setView({ name: 'trip' })}
           />
         )}
         {view.name === 'trip-block' && (
@@ -706,6 +724,20 @@ function TripBlockView({
 }) {
   const session = view.n != null ? getSession(view.n) : undefined
   const week = session?.week ?? weekForToday(trip)
+  if (view.block === 'clip') {
+    const clip = getClip(view.clip ?? '')
+    if (!clip) return null
+    return (
+      <ClipView
+        clip={clip}
+        onClose={onClose}
+        onDone={() => {
+          onTick(view.n, 'clip')
+          onClose()
+        }}
+      />
+    )
+  }
   if (view.block === 'listen' || view.block === 'shadow') {
     const dialogue = getDialogue(view.dialogue ?? '')
     if (!dialogue) return null
@@ -728,12 +760,15 @@ function TripBlockView({
       <RetellDrill
         topic={retell.topic}
         prompts={retell.prompts}
+        week={week}
         apiKey={settings.apiKey}
         model={settings.askModel}
         short={view.short}
         onClose={onClose}
         onDone={() => {
-          if (!view.short) onTick(view.n, 'retell')
+          // The busy-day minimum only counts once the retell is actually done.
+          if (view.short) onTrip(markLightDay(loadTrip()))
+          else onTick(view.n, 'retell')
           onClose()
         }}
       />
@@ -749,16 +784,38 @@ function TripBlockView({
       apiKey={settings.apiKey}
       model={settings.askModel}
       checkpoint={checkpoint}
+      recentFixes={trip.recentFixes}
       onGap={(text) => onTrip(addGap(loadTrip(), text))}
       onClose={onClose}
       onFinished={(report) => {
         if (!report) return
+        // Newest corrections first; the partner targets these next time.
+        const latest = loadTrip()
+        // Skip fixes on words the transcriber wasn't sure it heard.
+        const fixes = report.fixes
+          .filter((f) => f.better.trim() && !mentionsUncertain(f.said, report.uncertain))
+          .map((f) => `${f.said} → ${f.better}${f.why ? ` (${f.why})` : ''}`)
+        if (fixes.length) {
+          const recentFixes = [...new Set([...fixes, ...(latest.recentFixes ?? [])])].slice(0, 3)
+          onTrip(saveTrip({ ...latest, recentFixes }))
+        }
         if (checkpoint && session) {
+          const m = report.metrics
           onTrip(
             saveCheckpoint(loadTrip(), session.week, {
               date: new Date().toISOString().slice(0, 10),
               ...report.scores,
               summary: report.summary,
+              taskDone: report.taskDone,
+              ...(m && {
+                wordsPerTurn: m.wordsPerTurn,
+                speechRate: m.speechRate,
+                welshShare: m.welshShare,
+                understoodByEar:
+                  m.understoodWithoutText != null && m.partnerTurnsAnswered
+                    ? Math.round((m.understoodWithoutText / m.partnerTurnsAnswered) * 100) / 100
+                    : undefined,
+              }),
             }),
           )
         }
