@@ -1,0 +1,924 @@
+/* Patagonia trip plan, conversation partner, dialogues, retell, story. */
+
+.trip-page,
+.talk-page,
+.dialogue-page,
+.retell-page,
+.story-page {
+  max-width: 860px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.trip-page section,
+.talk-page section,
+.dialogue-page section,
+.retell-page section,
+.story-page section {
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.trip-page h2,
+.talk-page h2,
+.story-page h2,
+.retell-page h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 1.25rem;
+}
+
+.trip-page h3,
+.talk-page h3,
+.retell-page h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.cy {
+  font-weight: 600;
+}
+
+.en {
+  color: var(--ink-soft);
+  font-size: 0.9em;
+}
+
+.ghost-btn.small {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.ghost-btn.is-on {
+  border-color: var(--green);
+  color: var(--green-deep);
+}
+
+/* —— Trip dashboard —— */
+
+.trip-page .trip-hero {
+  display: grid;
+  gap: 0.75rem;
+  background:
+    radial-gradient(ellipse 70% 90% at 100% 0%, rgba(90, 168, 212, 0.14), transparent 60%),
+    var(--panel);
+}
+
+.trip-hero .hero-title {
+  margin: 0;
+}
+
+.trip-hero-unit {
+  font-size: 0.45em;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.trip-hero .page-lead {
+  margin: 0;
+}
+
+.trip-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.trip-stats .stat-value {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.trip-stats .stat-label {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.trip-pace {
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  border: 1px solid var(--line);
+}
+
+.trip-pace.ahead,
+.trip-pace.on-track,
+.trip-pace.done {
+  border-color: color-mix(in srgb, var(--good) 50%, transparent);
+}
+
+.trip-pace.tight {
+  border-color: color-mix(in srgb, var(--hard) 60%, transparent);
+}
+
+.trip-pace.behind {
+  border-color: color-mix(in srgb, var(--again) 60%, transparent);
+}
+
+.trip-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.trip-banner {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--easy) 50%, transparent);
+  background: color-mix(in srgb, var(--easy) 10%, var(--panel));
+}
+
+.trip-session-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.trip-session-head .muted-line {
+  margin: 0;
+}
+
+.trip-minutes {
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.trip-merge {
+  margin: 0.6rem 0 0;
+}
+
+.trip-blocks {
+  list-style: none;
+  margin: 0.9rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.trip-block {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-solid);
+  overflow: hidden;
+}
+
+.trip-block.done {
+  border-color: color-mix(in srgb, var(--good) 55%, transparent);
+  background: color-mix(in srgb, var(--good) 8%, var(--panel-solid));
+}
+
+.trip-block-main {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+}
+
+.trip-block-main:disabled {
+  cursor: default;
+}
+
+.trip-block-main:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--green) 8%, transparent);
+}
+
+.trip-block-title {
+  font-weight: 650;
+}
+
+.trip-optional {
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  vertical-align: middle;
+}
+
+.trip-block-detail {
+  font-size: 0.9rem;
+}
+
+.trip-block-why {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.trip-block-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0 0.9rem;
+  border-left: 1px solid var(--line);
+  min-width: 3.5rem;
+}
+
+.trip-block-side input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--green);
+}
+
+.trip-block-min {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.trip-block-check {
+  color: var(--green-deep);
+  font-weight: 700;
+  min-height: 1.15rem;
+}
+
+.trip-session-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.trip-weeks ol {
+  list-style: none;
+  padding: 0;
+  margin: 0.6rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.trip-week-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.trip-week-head .lesson-titles {
+  display: grid;
+}
+
+.trip-week-n {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.trip-week-score {
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--green-deep);
+}
+
+.trip-week-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.45rem 0 0 2.6rem;
+}
+
+.trip-dot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  cursor: default;
+}
+
+.trip-dot.done {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  cursor: pointer;
+}
+
+.trip-dot.current {
+  border: 2px solid var(--easy);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.trip-dot.check:not(.done) {
+  color: var(--hard);
+}
+
+.trip-week-cando {
+  margin: 0.35rem 0 0 2.6rem;
+  padding-left: 1rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.trip-scenarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.trip-scenarios .lesson-row {
+  grid-template-columns: 1fr;
+}
+
+.trip-scenarios .lesson-titles {
+  display: grid;
+}
+
+.trip-gaps ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.trip-gaps li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.trip-gap-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.trip-setup {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.trip-setup label,
+.story-form label {
+  display: grid;
+  gap: 0.3rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.trip-setup input,
+.story-form input,
+.story-form select,
+.talk-input input {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+}
+
+.trip-why ul {
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.92rem;
+}
+
+.trip-why p {
+  font-size: 0.92rem;
+}
+
+/* —— Conversation —— */
+
+.talk-head {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+
+.talk-titles .page-title {
+  margin-bottom: 0.25rem;
+}
+
+.talk-titles .page-lead {
+  margin: 0;
+}
+
+.talk-warning {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--again) 55%, transparent);
+  background: color-mix(in srgb, var(--again) 8%, transparent);
+  font-size: 0.9rem;
+}
+
+.talk-plan {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+
+.talk-plan-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.talk-clock {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--easy);
+}
+
+.talk-clock.done {
+  color: var(--good);
+}
+
+.talk-frames {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.talk-frames li,
+.talk-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.talk-frames li > span,
+.talk-line > span:last-child {
+  display: grid;
+}
+
+.talk-frames li > .ghost-btn {
+  margin-left: auto;
+}
+
+.talk-chat {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.talk-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.talk-toolbar .muted-line {
+  margin: 0 0 0 auto;
+}
+
+.talk-log {
+  display: grid;
+  gap: 0.6rem;
+  max-height: 55vh;
+  overflow-y: auto;
+  padding: 0.2rem;
+}
+
+.talk-bubble {
+  max-width: 85%;
+  padding: 0.65rem 0.8rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.talk-bubble.them {
+  justify-self: start;
+  background: var(--panel-solid);
+  border-top-left-radius: 4px;
+}
+
+.talk-bubble.me {
+  justify-self: end;
+  background: color-mix(in srgb, var(--green) 14%, var(--panel-solid));
+  border-top-right-radius: 4px;
+}
+
+.talk-bubble.me .talk-line {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.talk-bubble.typing {
+  color: var(--ink-soft);
+  letter-spacing: 0.2em;
+}
+
+.talk-audio {
+  height: 2rem;
+  max-width: 220px;
+}
+
+.talk-en,
+.talk-hints {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.talk-en summary,
+.talk-hints summary {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.talk-hints ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.talk-hints li {
+  display: grid;
+}
+
+.talk-feedback {
+  font-size: 0.85rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.4rem;
+  display: grid;
+  gap: 0.25rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.talk-feedback p {
+  margin: 0;
+}
+
+.talk-fb-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--hard);
+}
+
+.talk-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.talk-input input {
+  flex: 1 1 200px;
+}
+
+.talk-mic {
+  padding: 0.75rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  background: var(--green);
+  color: #fff;
+}
+
+.talk-mic.on {
+  background: var(--again);
+  animation: talk-pulse 1.2s ease-in-out infinite;
+}
+
+.talk-mic:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@keyframes talk-pulse {
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--again) 25%, transparent);
+  }
+}
+
+.talk-end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.talk-end .muted-line {
+  margin: 0;
+}
+
+.talk-report ul {
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.talk-report .talk-frames {
+  padding: 0;
+}
+
+.talk-scores {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+}
+
+.talk-score {
+  display: grid;
+  justify-items: center;
+  padding: 0.5rem 0.2rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.talk-score-val {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-deep);
+}
+
+.talk-score-label {
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+}
+
+.talk-fixes s {
+  color: var(--ink-soft);
+}
+
+/* —— Dialogues & shadowing —— */
+
+.dialogue-listen,
+.dialogue-shadow {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: start;
+}
+
+.dialogue-listen .muted-line,
+.dialogue-shadow .muted-line {
+  margin: 0;
+}
+
+.dialogue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dialogue-script {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+  width: 100%;
+}
+
+.dialogue-script li {
+  display: grid;
+  grid-template-columns: 4.5rem auto 1fr;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.story-script .dialogue-script li {
+  grid-template-columns: auto 1fr;
+}
+
+.dialogue-script li > span:last-child {
+  display: grid;
+}
+
+.dialogue-script li.you .cy {
+  color: var(--green-deep);
+}
+
+.dialogue-who {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  padding-top: 0.2rem;
+}
+
+.dialogue-note {
+  font-size: 0.78rem;
+  color: var(--hard);
+}
+
+.shadow-card {
+  width: 100%;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+}
+
+.shadow-count,
+.shadow-who {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.shadow-cy {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 650;
+  color: var(--green-deep);
+}
+
+.shadow-cy.answer {
+  font-size: 1.2rem;
+  color: var(--ink);
+  margin-top: 0.5rem;
+}
+
+.shadow-en {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.secondary-btn.recording {
+  border-color: var(--again);
+  color: var(--again);
+}
+
+/* —— Retell —— */
+
+.retell-prompts {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+}
+
+.retell-prompts li {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+
+.retell-rounds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.6rem;
+}
+
+.retell-round {
+  display: grid;
+  gap: 0.3rem;
+  justify-items: start;
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.retell-round.current {
+  border-color: var(--easy);
+}
+
+.retell-round.done {
+  border-color: color-mix(in srgb, var(--good) 55%, transparent);
+}
+
+.retell-round-n {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.retell-round-t {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.retell-round audio {
+  width: 100%;
+  height: 2rem;
+}
+
+.retell-done {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.retell-done p {
+  margin: 0;
+}
+
+/* —— Story —— */
+
+.story-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+}
+
+.story-langs {
+  grid-column: 1 / -1;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.story-langs legend {
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.story-script,
+.story-questions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.story-qa {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.story-qa li {
+  display: grid;
+  gap: 0.3rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.story-answer {
+  padding-left: 1.5rem;
+}
+
+.story-answer .cy {
+  color: var(--green-deep);
+}
+
+@media (max-width: 640px) {
+  .trip-page section,
+  .talk-page section,
+  .dialogue-page section,
+  .retell-page section,
+  .story-page section {
+    padding: 0.9rem;
+  }
+
+  .talk-scores {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .trip-week-dots,
+  .trip-week-cando {
+    margin-left: 0;
+  }
+
+  .dialogue-script li {
+    grid-template-columns: auto 1fr;
+  }
+
+  .dialogue-who {
+    grid-column: 1 / -1;
+  }
+
+  .talk-bubble {
+    max-width: 95%;
+  }
+}

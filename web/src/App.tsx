@@ -95,12 +95,31 @@ import {
   pickLearnActivity,
 } from './components/StudyActivityBreak'
 import { VocabBrowseControls, type VocabSortMode } from './components/VocabBrowseControls'
+import { TripView, type TripLaunch } from './components/TripView'
+import { TalkView } from './components/TalkView'
+import { DialogueView } from './components/DialogueView'
+import { RetellDrill } from './components/RetellDrill'
+import { StoryView } from './components/StoryView'
+import { getScenario } from './data/trip/scenarios'
+import { getDialogue } from './data/trip/dialogues'
+import { getSession } from './data/trip/plan'
+import {
+  addGap,
+  loadTrip,
+  saveCheckpoint,
+  saveTrip,
+  toggleBlock,
+  type IntroProfile,
+  type TripState,
+} from './lib/trip'
 import { matchesSearchTokens } from './components/MultiSelect'
 import './App.css'
+import './trip.css'
 
 export default function App() {
-  const [view, setView] = useState<AppView>({ name: 'home' })
+  const [view, setView] = useState<AppView>({ name: 'trip' })
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress())
+  const [trip, setTrip] = useState<TripState>(() => loadTrip())
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings())
   const [askOpen, setAskOpen] = useState(false)
   const [askContext, setAskContext] = useState<string | undefined>()
@@ -174,6 +193,7 @@ export default function App() {
       onApplied: (nextProgress, nextSettings) => {
         setProgress(nextProgress)
         setSettings(nextSettings)
+        setTrip(loadTrip())
         applyTheme(nextSettings.theme)
       },
     })
@@ -206,31 +226,84 @@ export default function App() {
       return
     }
     if (view.name === 'home') return
-    if (view.name === 'study' && view.filter.kind === 'lesson') {
-      setView({
-        name: 'lesson',
-        bookId: view.filter.bookId,
-        lessonId: view.filter.lessonId,
-      })
-      return
+    setView(backTarget(view))
+  }
+
+  function backTarget(v: AppView): AppView {
+    if (v.name === 'trip-block' || v.name === 'story') return { name: 'trip' }
+    if (v.name === 'study' && v.tripSession != null) return { name: 'trip' }
+    if (v.name === 'guide' && v.bookId === 'colloquial' && fromTrip.current) {
+      return { name: 'trip' }
     }
-    if (view.name === 'activity') {
-      setView({
+    if (v.name === 'study' && v.filter.kind === 'lesson') {
+      return {
         name: 'lesson',
-        bookId: view.bookId,
-        lessonId: view.lessonId,
-      })
-      return
+        bookId: v.filter.bookId,
+        lessonId: v.filter.lessonId,
+      }
     }
-    if (view.name === 'guide') {
-      setView({
-        name: 'lesson',
-        bookId: view.bookId,
-        lessonId: view.lessonId,
-      })
-      return
+    if (v.name === 'activity' || v.name === 'guide') {
+      return { name: 'lesson', bookId: v.bookId, lessonId: v.lessonId }
     }
-    setView({ name: 'home' })
+    return { name: 'home' }
+  }
+
+  /** Set while a grammar guide was opened from the trip plan. */
+  const fromTrip = useRef(false)
+
+  function updateTrip(next: TripState) {
+    setTrip(next)
+  }
+
+  function tickTripBlock(
+    n: number | undefined,
+    block: Parameters<typeof toggleBlock>[2],
+  ) {
+    if (n == null) return
+    setTrip((t) => toggleBlock(t, n, block, true))
+  }
+
+  function launchTrip(l: TripLaunch) {
+    fromTrip.current = false
+    switch (l.kind) {
+      case 'review':
+        setView({
+          name: 'study',
+          mode: 'review',
+          filter: { kind: 'all' },
+          tripSession: l.n,
+        })
+        return
+      case 'phrases':
+        setView({
+          name: 'study',
+          mode: 'learn',
+          filter: { kind: 'book', bookId: 'patagonia' },
+          quotaCardIds: l.ids,
+          tripSession: l.n,
+          segmentLabel: `Session ${l.n} phrases`,
+        })
+        return
+      case 'listen':
+      case 'shadow':
+        setView({ name: 'trip-block', block: l.kind, n: l.n, dialogue: l.dialogue })
+        return
+      case 'speak':
+      case 'checkpoint':
+        setView({ name: 'trip-block', block: l.kind, n: l.n, scenario: l.scenario })
+        return
+      case 'practice':
+        setView({ name: 'trip-block', block: 'practice', scenario: l.scenario })
+        return
+      case 'retell':
+        setView({ name: 'trip-block', block: 'retell', n: l.n, short: l.short })
+        return
+      case 'pattern':
+        fromTrip.current = true
+        tickTripBlock(l.n, 'pattern')
+        setView({ name: 'guide', bookId: 'colloquial', lessonId: l.lessonId })
+        return
+    }
   }
 
   function startGoalSegment(segment: DaySegment) {
@@ -358,6 +431,20 @@ export default function App() {
           />
           <button
             type="button"
+            className={`ghost-btn ${view.name === 'trip' ? 'is-on' : ''}`}
+            onClick={() => setView({ name: 'trip' })}
+          >
+            Patagonia
+          </button>
+          <button
+            type="button"
+            className={`ghost-btn ${view.name === 'home' ? 'is-on' : ''}`}
+            onClick={() => setView({ name: 'home' })}
+          >
+            Flashcards
+          </button>
+          <button
+            type="button"
             className="ghost-btn"
             onClick={() => setView({ name: 'mutations' })}
           >
@@ -380,27 +467,11 @@ export default function App() {
           >
             Settings
           </button>
-          {view.name !== 'home' && (
+          {view.name !== 'home' && view.name !== 'trip' && (
             <button
               type="button"
               className="ghost-btn"
-              onClick={() =>
-                setView(
-                  view.name === 'study' && view.filter.kind === 'lesson'
-                    ? {
-                        name: 'lesson',
-                        bookId: view.filter.bookId,
-                        lessonId: view.filter.lessonId,
-                      }
-                    : view.name === 'activity'
-                      ? {
-                          name: 'lesson',
-                          bookId: view.bookId,
-                          lessonId: view.lessonId,
-                        }
-                      : { name: 'home' },
-                )
-              }
+              onClick={() => setView(backTarget(view))}
             >
               Back
             </button>
@@ -545,17 +616,42 @@ export default function App() {
             settings={settings}
             onProgress={updateProgress}
             onAsk={openAsk}
-            onExit={() =>
-              setView(
-                view.filter.kind === 'lesson'
-                  ? {
-                      name: 'lesson',
-                      bookId: view.filter.bookId,
-                      lessonId: view.filter.lessonId,
-                    }
-                  : { name: 'home' },
-              )
+            onExit={() => {
+              if (view.tripSession != null && view.mode === 'review') {
+                tickTripBlock(view.tripSession, 'review')
+              }
+              setView(backTarget(view))
+            }}
+          />
+        )}
+        {view.name === 'trip' && (
+          <TripView
+            trip={trip}
+            progress={progress}
+            due={overall.due}
+            onTrip={updateTrip}
+            onLaunch={launchTrip}
+            onStory={() => setView({ name: 'story' })}
+            onAsk={openAsk}
+          />
+        )}
+        {view.name === 'story' && (
+          <StoryView
+            profile={trip.profile}
+            apiKey={settings.apiKey}
+            onProfile={(profile: IntroProfile) =>
+              setTrip((t) => saveTrip({ ...t, profile }))
             }
+          />
+        )}
+        {view.name === 'trip-block' && (
+          <TripBlockView
+            view={view}
+            trip={trip}
+            settings={settings}
+            onTrip={setTrip}
+            onTick={tickTripBlock}
+            onClose={() => setView({ name: 'trip' })}
           />
         )}
       </main>
@@ -578,6 +674,109 @@ export default function App() {
       />
     </div>
   )
+}
+
+function learnerLine(trip: TripState): string {
+  const p = trip.profile
+  const bits = [
+    p.name ? `Name: ${p.name}.` : '',
+    `From India${p.city ? ` (${p.city})` : ''}.`,
+    p.livesIn ? `Lives in ${p.livesIn}.` : '',
+    p.job ? `Works as: ${p.job}.` : '',
+    p.languages ? `Speaks: ${p.languages}.` : '',
+    'Learning Welsh in about two months to visit Patagonia and film a video about Welsh there.',
+  ]
+  return bits.filter(Boolean).join(' ')
+}
+
+function TripBlockView({
+  view,
+  trip,
+  settings,
+  onTrip,
+  onTick,
+  onClose,
+}: {
+  view: Extract<AppView, { name: 'trip-block' }>
+  trip: TripState
+  settings: AppSettings
+  onTrip: (t: TripState) => void
+  onTick: (n: number | undefined, block: Parameters<typeof toggleBlock>[2]) => void
+  onClose: () => void
+}) {
+  const session = view.n != null ? getSession(view.n) : undefined
+  const week = session?.week ?? weekForToday(trip)
+  if (view.block === 'listen' || view.block === 'shadow') {
+    const dialogue = getDialogue(view.dialogue ?? '')
+    if (!dialogue) return null
+    return (
+      <DialogueView
+        dialogue={dialogue}
+        mode={view.block}
+        apiKey={settings.apiKey}
+        onClose={onClose}
+        onDone={() => {
+          onTick(view.n, view.block as 'listen' | 'shadow')
+          onClose()
+        }}
+      />
+    )
+  }
+  if (view.block === 'retell') {
+    const retell = session?.retell ?? getSession(1)!.retell
+    return (
+      <RetellDrill
+        topic={retell.topic}
+        prompts={retell.prompts}
+        apiKey={settings.apiKey}
+        model={settings.askModel}
+        short={view.short}
+        onClose={onClose}
+        onDone={() => {
+          if (!view.short) onTick(view.n, 'retell')
+          onClose()
+        }}
+      />
+    )
+  }
+  const checkpoint = view.block === 'checkpoint'
+  return (
+    <TalkView
+      scenario={getScenario(view.scenario ?? 'sgwrs-rydd')}
+      week={week}
+      learner={learnerLine(trip)}
+      name={trip.profile.name}
+      apiKey={settings.apiKey}
+      model={settings.askModel}
+      checkpoint={checkpoint}
+      onGap={(text) => onTrip(addGap(loadTrip(), text))}
+      onClose={onClose}
+      onFinished={(report) => {
+        if (!report) return
+        if (checkpoint && session) {
+          onTrip(
+            saveCheckpoint(loadTrip(), session.week, {
+              date: new Date().toISOString().slice(0, 10),
+              ...report.scores,
+              summary: report.summary,
+            }),
+          )
+        }
+        if (view.block === 'speak' || checkpoint) {
+          onTick(view.n, checkpoint ? 'checkpoint' : 'speak')
+        }
+      }}
+    />
+  )
+}
+
+/** Plan week of the current session, for free practice difficulty. */
+function weekForToday(trip: TripState): number {
+  for (let n = 1; ; n++) {
+    const s = getSession(n)
+    if (!s) return 8
+    if (!trip.done[String(n)]) return s.week
+  }
 }
 
 function SettingsBar({
@@ -2162,8 +2361,11 @@ function StudyView({
     sense ? ` [${sense}]` : ''
   }${current.card.notes ? `\n${current.card.notes}` : ''}`
 
-  const scopeLabel =
-    isQuota
+  const tripPhrases =
+    isQuota && filter.kind === 'book' && filter.bookId === 'patagonia'
+  const scopeLabel = tripPhrases
+    ? (segmentLabel ?? 'phrases')
+    : isQuota
       ? segmentLabel
         ? `goal · ${segmentLabel}`
         : 'today’s goal'
@@ -2204,7 +2406,14 @@ function StudyView({
           </button>
         <div className="study-meta">
           <span>
-            {isQuota ? 'Daily goal' : mode === 'learn' ? 'Learn' : 'Review'} ·{' '}
+            {tripPhrases
+              ? 'Patagonia'
+              : isQuota
+                ? 'Daily goal'
+                : mode === 'learn'
+                  ? 'Learn'
+                  : 'Review'}{' '}
+            ·{' '}
             {scopeLabel} · {directionLabel(current.direction)}
             {mode === 'learn' && (
               <span className="study-wave">

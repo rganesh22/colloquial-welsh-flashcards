@@ -16,6 +16,7 @@ import {
   settingsLookDefault,
   type AppSettings,
 } from './srs'
+import { readTripRaw, writeTripRaw } from './trip'
 import type { ProgressMap } from './types'
 
 export type AccountPhase =
@@ -109,6 +110,7 @@ function payloadFromCloud(
       typeof data.settingsUpdatedAt === 'string' ? data.settingsUpdatedAt : null,
     daily: asDaily(data.daily),
     introHistory: asRecord(data.introHistory),
+    trip: data.trip ? asRecord(data.trip) : null,
   }
 }
 
@@ -140,7 +142,7 @@ async function syncOnce(quiet: boolean): Promise<void> {
       bodies.push(typeof body === 'string' ? body : '{}')
     }
     const cloud = data ? payloadFromCloud(data, bodies) : null
-    const local = readAccountPayload()
+    const local = { ...readAccountPayload(), trip: readTripRaw() }
     let merged = mergePayloads(
       local,
       cloud,
@@ -156,6 +158,7 @@ async function syncOnce(quiet: boolean): Promise<void> {
       settingsUpdatedAt: null,
       daily: null,
       introHistory: {},
+      trip: null,
     }
     const localChanged = stableJson(local) !== stableJson(merged)
     const cloudChanged = stableJson(cloudComparable) !== stableJson(merged)
@@ -168,6 +171,7 @@ async function syncOnce(quiet: boolean): Promise<void> {
         settingsUpdatedAt: merged.settingsUpdatedAt,
         daily: merged.daily,
         introHistory: merged.introHistory,
+        trip: merged.trip ?? null,
         chunkCount: chunks.length,
         updatedAt: fs.serverTimestamp(),
       })
@@ -181,6 +185,7 @@ async function syncOnce(quiet: boolean): Promise<void> {
     return { localChanged, merged }
   })
   if (result.localChanged) {
+    if (result.merged.trip) writeTripRaw(result.merged.trip)
     const applied = applyAccountPayload(result.merged)
     appliedListener?.(applied.progress, applied.settings)
   }

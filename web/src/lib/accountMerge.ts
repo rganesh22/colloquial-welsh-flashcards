@@ -12,6 +12,8 @@ export interface AccountPayload {
   settingsUpdatedAt: string | null
   daily: DailyRecord | null
   introHistory: Record<string, unknown>
+  /** Patagonia trip plan; absent on accounts saved before it existed. */
+  trip?: Record<string, unknown> | null
 }
 
 const DEFAULT_CHUNK_BYTES = 700_000
@@ -148,6 +150,53 @@ export function mergeIntroHistory(
   return out
 }
 
+function stamp(value: unknown): number {
+  const t = Date.parse(typeof value === 'string' ? value : '')
+  return Number.isFinite(t) ? t : 0
+}
+
+/**
+ * Trip plan: settings-like fields follow the newer copy; finished sessions,
+ * ticked blocks, light days and checkpoints are unioned so no device loses work.
+ */
+export function mergeTrip(
+  local: Record<string, unknown> | null | undefined,
+  remote: Record<string, unknown> | null | undefined,
+): Record<string, unknown> | null {
+  if (!local) return remote ?? null
+  if (!remote) return local
+  const remoteNewer = stamp(remote.updatedAt) > stamp(local.updatedAt)
+  const base = remoteNewer ? remote : local
+  const other = remoteNewer ? local : remote
+  const blocks: Record<string, unknown> = {}
+  const baseBlocks = asRecord(base.blocks)
+  const otherBlocks = asRecord(other.blocks)
+  for (const key of new Set([
+    ...Object.keys(baseBlocks),
+    ...Object.keys(otherBlocks),
+  ])) {
+    const a = Array.isArray(baseBlocks[key]) ? (baseBlocks[key] as unknown[]) : []
+    const b = Array.isArray(otherBlocks[key]) ? (otherBlocks[key] as unknown[]) : []
+    blocks[key] = [...new Set([...a, ...b])]
+  }
+  const light = [
+    ...new Set([
+      ...(Array.isArray(base.light) ? base.light : []),
+      ...(Array.isArray(other.light) ? other.light : []),
+    ]),
+  ].sort()
+  return {
+    ...base,
+    done: { ...asRecord(other.done), ...asRecord(base.done) },
+    blocks,
+    light,
+    checkpoints: {
+      ...asRecord(other.checkpoints),
+      ...asRecord(base.checkpoints),
+    },
+  }
+}
+
 export function chooseNewer<T>(args: {
   local: T
   localAt: string | null
@@ -197,6 +246,7 @@ export function mergePayloads(
       local.introHistory,
       remote?.introHistory ?? {},
     ),
+    trip: mergeTrip(local.trip, remote?.trip),
   }
 }
 

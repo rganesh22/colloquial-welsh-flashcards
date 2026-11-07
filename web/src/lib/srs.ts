@@ -55,6 +55,11 @@ function noteLocalChange(): void {
   localChangeHook?.()
 }
 
+/** For other local stores (e.g. the trip plan) that sync with the account. */
+export function notifyLocalChange(): void {
+  noteLocalChange()
+}
+
 /** Default how many brand-new headwords per learn wave (shown gradually). */
 export const DEFAULT_LEARN_BATCH_SIZE = 5
 

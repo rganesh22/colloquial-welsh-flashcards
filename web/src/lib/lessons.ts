@@ -13,6 +13,12 @@ export const BOOKS: BookMeta[] = [
     title: 'Intermediate Welsh Reader',
     author: 'Gareth King',
   },
+  {
+    id: 'patagonia',
+    short: 'YW',
+    title: 'Y Wladfa phrase book',
+    author: 'Patagonia trip plan',
+  },
 ]
 
 /** Full Colloquial Welsh course (Alphabet + lessons 1a–16). */
@@ -150,6 +156,23 @@ const READER_LESSONS: Omit<LessonMeta, 'bookId'>[] = [
   { id: '35', titleCy: 'Hen Niclas', titleEn: 'Old Niclas' },
 ]
 
+/** Conversation chunks for the Patagonia trip, in plan order. */
+const PATAGONIA_LESSONS: Omit<LessonMeta, 'bookId'>[] = [
+  { id: 'p1', titleCy: 'Cyfarch', titleEn: 'Greetings and politeness' },
+  { id: 'p2', titleCy: 'Amdana i', titleEn: 'About me' },
+  { id: 'p3', titleCy: 'Achub y sgwrs', titleEn: 'Rescuing the conversation' },
+  { id: 'p4', titleCy: 'Teulu ac ieithoedd', titleEn: 'Family and languages' },
+  { id: 'p5', titleCy: 'Hoffi a diddordebau', titleEn: 'Likes and free time' },
+  { id: 'p6', titleCy: 'Yn y tŷ te', titleEn: 'At the tea house' },
+  { id: 'p7', titleCy: 'Mynd o le i le', titleEn: 'Getting around' },
+  { id: 'p8', titleCy: 'Tywydd a chynlluniau', titleEn: 'Weather and plans' },
+  { id: 'p9', titleCy: 'Beth wnest ti?', titleEn: 'What happened' },
+  { id: 'p10', titleCy: 'Barn a sgwrsio', titleEn: 'Opinions and natural chat' },
+  { id: 'p11', titleCy: 'Y Wladfa', titleEn: 'Patagonia and its history' },
+  { id: 'p12', titleCy: 'Holi am yr iaith', titleEn: 'Interview: the language' },
+  { id: 'p13', titleCy: 'Geiriau’r Wladfa', titleEn: 'Patagonian words' },
+]
+
 function withBook(
   bookId: BookId,
   lessons: Omit<LessonMeta, 'bookId'>[],
@@ -161,6 +184,7 @@ function withBook(
 export const LESSONS: LessonMeta[] = [
   ...withBook('colloquial', COLLOQUIAL_LESSONS),
   ...withBook('reader', READER_LESSONS),
+  ...withBook('patagonia', PATAGONIA_LESSONS),
 ]
 
 export function getBook(id: BookId): BookMeta {

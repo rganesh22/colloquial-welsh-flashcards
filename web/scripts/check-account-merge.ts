@@ -5,6 +5,7 @@ import {
   mergeIntroHistory,
   mergePayloads,
   mergeProgress,
+  mergeTrip,
   unchunkProgress,
 } from '../src/lib/accountMerge.ts'
 
@@ -100,3 +101,36 @@ assert.ok(parts.length > 1)
 assert.deepEqual(unchunkProgress(parts), fat)
 
 console.log('account merge ok')
+
+// Trip plan: newer settings win, finished sessions and ticks are unioned.
+const tripLocal = {
+  tripDate: '2027-01-06',
+  cue: 'dinner',
+  updatedAt: '2026-11-10T10:00:00.000Z',
+  done: { '1': { date: '2026-11-08' } },
+  blocks: { '2': ['review'] },
+  light: ['2026-11-09'],
+  checkpoints: {},
+}
+const tripRemote = {
+  tripDate: '2027-01-10',
+  cue: 'work',
+  updatedAt: '2026-11-11T10:00:00.000Z',
+  done: { '2': { date: '2026-11-11' } },
+  blocks: { '2': ['speak'] },
+  light: ['2026-11-07'],
+  checkpoints: { '1': { overall: 3 } },
+}
+const tripMerged = mergeTrip(tripLocal, tripRemote)!
+assert.equal(tripMerged.tripDate, '2027-01-10')
+assert.deepEqual(Object.keys(tripMerged.done as object).sort(), ['1', '2'])
+assert.deepEqual(
+  ((tripMerged.blocks as Record<string, string[]>)['2'] ?? []).sort(),
+  ['review', 'speak'],
+)
+assert.deepEqual(tripMerged.light, ['2026-11-07', '2026-11-09'])
+assert.ok((tripMerged.checkpoints as Record<string, unknown>)['1'])
+assert.equal(mergeTrip(null, tripRemote), tripRemote)
+assert.equal(mergeTrip(tripLocal, undefined), tripLocal)
+
+console.log('trip merge ok')

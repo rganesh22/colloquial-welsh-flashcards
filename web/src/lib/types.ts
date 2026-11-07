@@ -1,6 +1,6 @@
 import type { Card as FSRSCard } from 'ts-fsrs'
 
-export type BookId = 'colloquial' | 'reader'
+export type BookId = 'colloquial' | 'reader' | 'patagonia'
 
 /** Lesson id unique within a book (e.g. "1a", "7", "12"). */
 export type LessonId = string
@@ -110,6 +110,8 @@ export type AppView =
       /** 0-based day segment when studying a split goal. */
       segmentIndex?: number
       segmentLabel?: string
+      /** Started from the Patagonia plan: return there, tick this session. */
+      tripSession?: number
     }
   | {
       name: 'activity'
@@ -118,6 +120,17 @@ export type AppView =
       lessonId: LessonId
     }
   | { name: 'guide'; bookId: BookId; lessonId: LessonId }
+  | { name: 'trip' }
+  | { name: 'story' }
+  | {
+      name: 'trip-block'
+      block: 'listen' | 'shadow' | 'speak' | 'checkpoint' | 'retell' | 'practice'
+      /** Plan session this block belongs to (none for free practice). */
+      n?: number
+      dialogue?: string
+      scenario?: string
+      short?: boolean
+    }
 
 export function progressIdFor(
   cardId: string,

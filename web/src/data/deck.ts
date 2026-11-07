@@ -17,6 +17,7 @@ import { lesson13AlreadyPlural, lesson13Cards, lesson13NoPlural } from './lesson
 import { lesson14AlreadyPlural, lesson14Cards, lesson14NoPlural } from './lesson-14'
 import { lesson15AlreadyPlural, lesson15Cards, lesson15NoPlural } from './lesson-15'
 import { lesson16AlreadyPlural, lesson16Cards, lesson16NoPlural } from './lesson-16'
+import { patagoniaLessons } from './patagonia'
 import { reader1Cards } from './reader-1'
 import { reader2Cards } from './reader-2'
 import { reader3AlreadyPlural, reader3Cards, reader3NoPlural } from './reader-3'
@@ -328,6 +329,9 @@ export const ALL_CARDS: VocabCard[] = [
   ...enrichChapter('reader', reader33Cards as RawCard[]),
   ...enrichChapter('reader', reader34Cards as RawCard[]),
   ...enrichChapter('reader', reader35Cards as RawCard[]),
+  ...Object.values(patagoniaLessons).flatMap((cards) =>
+    enrichChapter('patagonia', cards as RawCard[]),
+  ),
 ]
 
 export function cardsForBook(bookId: BookId): VocabCard[] {
