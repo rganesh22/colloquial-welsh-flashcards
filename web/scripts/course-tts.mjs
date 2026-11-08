@@ -8,6 +8,9 @@
  *   npm run course-tts -- --dry       count lines, call nothing
  *   npm run course-tts                generate what's missing (needs GEMINI_API_KEY)
  *   npm run course-tts -- --resume <batches/…>   pick up a job that's still running
+ *   npm run course-tts -- --direct    one request at a time instead of a batch
+ *                                     (for projects where batch mode is off);
+ *                                     saves as it goes, so re-running resumes
  *
  * The line list, prompt and cache key come from the app's own modules, so
  * the files are exactly what the app asks for.
@@ -40,6 +43,8 @@ const args = process.argv.slice(2)
 const dry = args.includes('--dry')
 const resumeIdx = args.indexOf('--resume')
 const resumeJob = resumeIdx >= 0 ? args[resumeIdx + 1] : null
+const direct = args.includes('--direct')
+const API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
 
 async function loadCourse() {
   const server = await createServer({
@@ -93,7 +98,9 @@ async function toMp3(wav, key) {
 async function main() {
   const { lines, model } = await loadCourse()
   const manifest = await loadManifest(model)
-  const have = new Set(manifest.keys.filter((k) => existsSync(join(outDir, `${k}.mp3`))))
+  const onDisk = (k) => existsSync(join(outDir, `${k}.mp3`))
+  // Files from a run that stopped before saving still count.
+  const have = new Set([...manifest.keys, ...lines.map((l) => l.key)].filter(onDisk))
   // Default-voice lines already in the older WAV bundle share its key: skip them.
   const inOldBundle = (k) => existsSync(join(root, 'public', 'tts', `${k}.wav`))
   const todo = lines.filter((l) => !have.has(l.key) && !inOldBundle(l.key))
@@ -110,6 +117,7 @@ async function main() {
   const key = apiKey()
   await mkdir(outDir, { recursive: true })
   await mkdir(jobsDir, { recursive: true })
+  if (direct) return generateDirect(todo, model, key, manifest, have)
 
   let jobName = resumeJob
   let metaPath
@@ -144,7 +152,13 @@ async function main() {
     await writeFile(
       metaPath,
       JSON.stringify(
-        { job_name: jobName, file_name: fileName, model, request_count: requests.length, created_at: new Date().toISOString() },
+        {
+          job_name: jobName,
+          file_name: fileName,
+          model,
+          request_count: requests.length,
+          created_at: new Date().toISOString(),
+        },
         null,
         2,
       ),
@@ -175,6 +189,80 @@ async function main() {
   }
   manifest.keys = [...keys].sort()
   await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n')
+  console.log(`Done. ok=${ok} failed=${failed}. Re-run to retry any failures.`)
+}
+
+/** One request per line, a few at a time, backing off on rate limits. */
+async function generateDirect(todo, model, key, manifest, have) {
+  const keys = new Set(have)
+  let ok = 0
+  let failed = 0
+  let saved = Promise.resolve()
+  const save = () => {
+    manifest.keys = [...keys].sort()
+    saved = saved.then(() => writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n'))
+    return saved
+  }
+  let stopped = ''
+  async function one(l) {
+    for (let attempt = 0; attempt < 8 && !stopped; attempt++) {
+      let resp
+      try {
+        resp = await fetch(`${API_BASE}/models/${model}:generateContent`, {
+          method: 'POST',
+          headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: l.prompt }] }],
+            generationConfig: {
+              responseModalities: ['AUDIO'],
+              speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: l.voice } } },
+            },
+          }),
+        })
+      } catch (err) {
+        console.warn(`  network error (${err.cause?.code ?? err.message}), retrying…`)
+        await new Promise((r) => setTimeout(r, 10_000 * (attempt + 1)))
+        continue
+      }
+      if (resp.ok) {
+        const wav = audioFromResultLine({ response: await resp.json() })
+        if (!wav) break
+        await toMp3(wav, l.key)
+        keys.add(l.key)
+        ok++
+        await save()
+        if (ok % 25 === 0) console.log(`  ${ok + have.size}/${todo.length + have.size} done`)
+        return
+      }
+      const body = await resp.text()
+      // A daily cap or empty credits won't clear by waiting: stop and keep what's done.
+      if (resp.status === 402 || /per day|credits are depleted/i.test(body)) {
+        stopped = JSON.parse(body).error?.message ?? body
+        break
+      }
+      if (![429, 500, 503].includes(resp.status)) {
+        console.warn(`  ! ${resp.status} ${body.slice(0, 160)} — ${l.text}`)
+        break
+      }
+      const wait = resp.status === 429 ? 30_000 * (attempt + 1) : 5_000 * (attempt + 1)
+      if (attempt >= 2) console.warn(`  ${resp.status}, waiting ${wait / 1000}s…`)
+      await new Promise((r) => setTimeout(r, wait))
+    }
+    failed++
+  }
+  const queue = [...todo]
+  await Promise.all(
+    Array.from({ length: 3 }, async () => {
+      while (queue.length && !stopped) await one(queue.shift())
+    }),
+  )
+  await save()
+  if (stopped) {
+    console.error(`Stopped: ${stopped.split('\n').slice(-2).join(' ').slice(0, 300)}`)
+    console.error(`Saved ${ok} new files (${keys.size} in all). Re-run later to carry on.`)
+    process.exitCode = 1
+    return
+  }
   console.log(`Done. ok=${ok} failed=${failed}. Re-run to retry any failures.`)
 }
 
