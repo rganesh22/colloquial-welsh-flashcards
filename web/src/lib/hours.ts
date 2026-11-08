@@ -131,7 +131,7 @@ export interface HoursSummary {
   total: number
   /** Hours by the trip date if you keep your pace so far. */
   projected: number
-  /** Hours by the trip date on the full hybrid plan from today. */
+  /** Hours by the trip date with the extra-time targets on top, from today. */
   projectedPlan: number
   daysLeft: number
 }
@@ -148,8 +148,8 @@ export function hoursSummary(trip: TripState, today = localCalendarDay()): Hours
   const total = app + outside
   const daysLeft = Math.max(0, daysBetween(today, trip.tripDate))
   const daysIn = Math.max(1, daysBetween(trip.startedOn, today) + 1)
-  // Pace needs a few days of data before it means anything.
-  const pace = daysIn >= 5 ? total / daysIn : (PLAN_APP_MINUTES_PER_WEEK + PLAN_OUTSIDE_MINUTES_PER_WEEK) / 60 / 7
+  // Pace needs a few days of data; until then assume the one-hour course.
+  const pace = daysIn >= 5 ? total / daysIn : PLAN_APP_MINUTES_PER_WEEK / 60 / 7
   const planPerDay = (PLAN_APP_MINUTES_PER_WEEK + PLAN_OUTSIDE_MINUTES_PER_WEEK) / 60 / 7
   return {
     app,

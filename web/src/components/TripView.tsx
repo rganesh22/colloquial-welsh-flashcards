@@ -17,7 +17,7 @@ import { getDialogue } from '../data/trip/dialogues'
 import { getScenario, SCENARIOS } from '../data/trip/scenarios'
 import { getClip } from '../data/trip/listening'
 import { getLesson } from '../lib/lessons'
-import { UNIT_SKILLS } from '../lib/grammar'
+import { grammarLabel, UNIT_SKILLS } from '../lib/grammar'
 import { HybridCard } from './HybridCard'
 import { localCalendarDay } from '../lib/srs'
 import {
@@ -136,11 +136,11 @@ export function TripView({
               : 'You’re there. Pob lwc — and keep talking.'}
           </p>
           {trip.cue && pace.daysLeft > 0 && (
-            <p className="trip-cue">After {cueText(trip.cue)} → today’s session.</p>
+            <p className="trip-cue">After {cueText(trip.cue)} → today’s lesson.</p>
           )}
         </div>
         <div className="stat-row trip-stats">
-          <Stat label="Sessions" value={`${pace.completed}/${TOTAL_SESSIONS}`} />
+          <Stat label="Lessons" value={`${pace.completed}/${TOTAL_SESSIONS}`} />
           {days > 0 ? (
             <Stat label="Day streak" value={String(days)} />
           ) : (
@@ -149,7 +149,7 @@ export function TripView({
           {due > 0 && <Stat label="Due cards" value={String(due)} />}
         </div>
         <p className="trip-stat-line">
-          {pace.completed}/{TOTAL_SESSIONS} sessions
+          {pace.completed}/{TOTAL_SESSIONS} lessons
           {days > 1 ? ` · ${days}-day streak` : ''} · {due} cards due
         </p>
         <PaceLine pace={pace} />
@@ -157,9 +157,9 @@ export function TripView({
 
       {nextUp?.skipped && !doneForToday && (
         <div className="trip-banner">
-          <strong>Jumped ahead.</strong> Your flight is close, so today’s session is from{' '}
+          <strong>Jumped ahead.</strong> Your flight is close, so today’s lesson is from{' '}
           {session ? weekPlan(session.week).title.toLowerCase() : 'the last weeks'} — what
-          you’ll need most on camera. The sessions you skipped stay open on the week map.
+          you’ll need most on camera. The lessons you skipped stay open in the course outline.
         </div>
       )}
 
@@ -322,10 +322,10 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function PaceLine({ pace }: { pace: ReturnType<typeof tripPace> }) {
   const text: Record<typeof pace.status, string> = {
-    done: 'All 48 sessions done.',
+    done: 'All 48 lessons done.',
     ahead: `Ahead of schedule · ${pace.slack} spare days before the flight.`,
-    'on-track': `On track · ${pace.remaining} sessions in ${pace.daysLeft} days (${pace.slack} spare).`,
-    tight: `Tight · ${pace.remaining} sessions in ${pace.daysLeft} days. Try not to miss two in a row.`,
+    'on-track': `On track · ${pace.remaining} lessons in ${pace.daysLeft} days (${pace.slack} spare).`,
+    tight: `Tight · ${pace.remaining} lessons in ${pace.daysLeft} days. Try not to miss two in a row.`,
     behind: `Behind by ${-pace.slack} · use a double session to catch up (the plan offers one below).`,
   }
   return <p className={`trip-pace ${pace.status}`}>{text[pace.status]}</p>
@@ -435,6 +435,9 @@ function SessionCard({
         return session.retell.topic
       case 'pattern':
         if (session.pattern === 'mix') return UNIT_SKILLS.mix ?? ''
+        if (session.pattern?.includes('+')) {
+          return `Unit test: grammar from units ${session.pattern.split('+').join(', ')}`
+        }
         if (!pattern) return ''
         return `${pattern.id === 'alphabet' ? 'Yr Wyddor' : `Unit ${pattern.id}`} · ${UNIT_SKILLS[pattern.id] ?? pattern.titleCy}`
       case 'story':
@@ -464,11 +467,13 @@ function SessionCard({
       <div className="trip-session-head">
         <div>
           <p className="book-kicker">
-            Week {session.week} · {wk.titleCy} · session {n}
+            Unit {session.week} · {wk.titleCy} · lesson {n}
             {extra ? ` + ${extra.n}` : ''} of {TOTAL_SESSIONS}
           </p>
-          <h2>{session.checkpoint ? 'Checkpoint day' : wk.title}</h2>
-          <p className="muted-line">{session.checkpoint ? wk.canDo.join(' · ') : wk.focus}</p>
+          <h2>{session.title}</h2>
+          <p className="muted-line">
+            {session.checkpoint ? `This unit: ${wk.canDo.join(' · ')}` : `Unit ${session.week}: ${wk.title}`}
+          </p>
         </div>
         <span className="trip-minutes">
           ~{foldOptional ? minutes.core : minutes.all} min
@@ -499,7 +504,7 @@ function SessionCard({
         ) : (
           coreDone && (
             <button type="button" className="primary-btn trip-start" onClick={finish}>
-              Finish session ✓
+              Finish lesson ✓
             </button>
           )
         )}
@@ -605,7 +610,7 @@ function SessionCard({
         {coreDone ? (
           nextBlock && (
             <button type="button" className="secondary-btn" onClick={finish}>
-              Finish session ✓
+              Finish lesson ✓
             </button>
           )
         ) : (
@@ -645,14 +650,14 @@ function DoneToday({
   return (
     <section className="trip-session trip-done">
       <p className="book-kicker">
-        {finished ? `Session ${finished} done` : 'Busy day done'}
+        {finished ? `Lesson ${finished} done` : 'Busy day done'}
         {streakDays > 1 ? ` · ${streakDays}-day streak` : ''}
       </p>
       <h2>{finished ? 'Gwych! Da iawn.' : 'Habit kept. Da iawn.'}</h2>
       <p className="muted-line">
         {finished
           ? 'This week you’re working towards:'
-          : 'Two minutes counts. The full session is waiting for you. This week’s goals:'}
+          : 'Two minutes counts. The full lesson is waiting for you. This unit’s goals:'}
       </p>
       <ul className="trip-week-cando">
         {wk.canDo.map((c) => (
@@ -661,10 +666,10 @@ function DoneToday({
       </ul>
       {next && (
         <p className="trip-cue">
-          {trip.cue ? `Tomorrow, after ${cueText(trip.cue)}` : 'Next time'}: session {next.n} —{' '}
-          {next.checkpoint ? 'checkpoint day ★' : weekPlan(next.week).title.toLowerCase()}
+          {trip.cue ? `Tomorrow, after ${cueText(trip.cue)}` : 'Next time'}: lesson {next.n} —{' '}
+          {next.checkpoint ? 'the unit test ★' : next.title.charAt(0).toLowerCase() + next.title.slice(1)}
           {!next.checkpoint && toCheckpoint > 0
-            ? ` (${toCheckpoint} more to the week ${next.week} checkpoint ★)`
+            ? ` (${toCheckpoint} more to the unit ${next.week} test ★)`
             : ''}
           . Sleep is when today’s phrases settle in.
         </p>
@@ -693,9 +698,9 @@ function WeekMap({
   return (
     <section className="trip-weeks">
       <div className="talk-plan-head">
-        <h2>{all ? 'The eight weeks' : `This week · ${currentWeek} of 8`}</h2>
+        <h2>{all ? 'The course · 8 units, 48 lessons' : `This unit · ${currentWeek} of 8`}</h2>
         <button type="button" className="ghost-btn small" onClick={() => setAll((v) => !v)}>
-          {all ? 'Just this week' : 'Show all weeks'}
+          {all ? 'Just this unit' : 'Whole course'}
         </button>
       </div>
       <ol>
@@ -705,7 +710,9 @@ function WeekMap({
           return (
             <li key={wk.week} className="trip-week">
               <div className="trip-week-head">
-                <span className="trip-week-n">{wk.week}</span>
+                <span className="trip-week-n" aria-label={`Unit ${wk.week}`}>
+                  {wk.week}
+                </span>
                 <span className="lesson-titles">
                   <span className="cy">{wk.titleCy}</span>
                   <span className="en">{wk.title}</span>
@@ -717,24 +724,34 @@ function WeekMap({
                   </span>
                 )}
               </div>
-              <div className="trip-week-dots">
+              <ol className="trip-lessons">
                 {sessions.map((s) => {
                   const done = isSessionDone(trip, s.n)
                   return (
-                    <button
+                    <li
                       key={s.n}
-                      type="button"
-                      className={`trip-dot ${done ? 'done' : ''} ${s.n === current ? 'current' : ''} ${s.checkpoint ? 'check' : ''}`}
-                      title={`Session ${s.n}${s.checkpoint ? ' · checkpoint' : ''}${done ? ` · done ${trip.done[String(s.n)]!.date} (click to reopen)` : ''}`}
-                      onClick={() => {
-                        if (done && window.confirm(`Reopen session ${s.n}?`)) onReopen(s.n)
-                      }}
+                      className={`${done ? 'done' : ''} ${s.n === current ? 'current' : ''}`}
                     >
-                      {s.checkpoint ? '★' : s.n}
-                    </button>
+                      <button
+                        type="button"
+                        className={`trip-dot ${done ? 'done' : ''} ${s.n === current ? 'current' : ''} ${s.checkpoint ? 'check' : ''}`}
+                        title={`Lesson ${s.n}${done ? ` · done ${trip.done[String(s.n)]!.date} (click to reopen)` : ''}`}
+                        onClick={() => {
+                          if (done && window.confirm(`Reopen lesson ${s.n}?`)) onReopen(s.n)
+                        }}
+                      >
+                        {s.checkpoint ? '★' : s.n}
+                      </button>
+                      <span className="trip-lesson-text">
+                        <span>{s.title}</span>
+                        {s.pattern && !s.checkpoint && (
+                          <span className="muted-line">{grammarLabel(s.pattern)}</span>
+                        )}
+                      </span>
+                    </li>
                   )
                 })}
-              </div>
+              </ol>
               <ul className="trip-week-cando">
                 {wk.canDo.map((c) => (
                   <li key={c}>{c}</li>
@@ -808,7 +825,7 @@ function TripSetup({
         />
         {!trip.updatedAt && (
           <span className="muted-line">
-            Then press Start on session 1 above. Today also includes messaging a few
+            Then press Start on lesson 1 above. Today also includes messaging a few
             people in Y Wladfa, so you have someone to talk to by week 2.
           </span>
         )}
@@ -832,8 +849,8 @@ function downloadReminder(time: string, until: string, cue: string) {
     `DTSTART:${today}T${hh}${mm}00`,
     'DURATION:PT1H',
     `RRULE:FREQ=DAILY;UNTIL=${until.replaceAll('-', '')}T235959`,
-    'SUMMARY:Cymraeg · Patagonia session',
-    `DESCRIPTION:${cue ? `After ${cueText(cue)}: ` : ''}open the app for today’s session (busy day? the 2-minute retell).`,
+    'SUMMARY:Cymraeg · Patagonia lesson',
+    `DESCRIPTION:${cue ? `After ${cueText(cue)}: ` : ''}open the app for today’s lesson (busy day? the 2-minute retell).`,
     'BEGIN:VALARM',
     'TRIGGER:PT0M',
     'ACTION:DISPLAY',
@@ -887,7 +904,16 @@ function PlanWhy() {
       <h2>How this plan works</h2>
       <ul>
         <li>
-          <strong>Sessions, not dates.</strong> 48 sessions over ~60 days leaves about one
+          <strong>A course of 48 one-hour lessons.</strong> Eight units, each with one theme:
+          its phrases, grammar, dialogues and conversations all serve it, and its sixth
+          lesson is the unit test. Every lesson has the same shape, so you never decide what
+          to do: review (8 min) → new phrases (8) → grammar (10) → listening (7) →
+          conversation (15) → retell or your story (5–6). The conversation partner is told
+          today’s objective and grammar and steers you into using them, so the 15 minutes of
+          talking also practise the grammar.
+        </li>
+        <li>
+          <strong>Lessons, not dates.</strong> 48 lessons over ~60 days leaves about one
           free day a week. Miss a day and the plan simply waits; nothing piles up. One rest
           day never breaks your streak. If the flight gets close and you’re behind, the plan
           jumps ahead so the interview and rehearsal weeks always happen.
@@ -895,25 +921,24 @@ function PlanWhy() {
         <li>
           <strong>Reviews first, new phrases second.</strong> Retrieval practice with
           spacing is the most robust memory effect in learning research (Rowland 2014;
-          Cepeda et al. 2008). About 8–12 new phrases a session; week 8 only adds Patagonian
+          Cepeda et al. 2008). About 8–12 new phrases a lesson; week 8 only adds Patagonian
           words to recognise.
         </li>
         <li>
           <strong>Chunks first, grammar every day.</strong> Whole phrases like “Dw i’n dod
           o…” get you talking fastest (Boers et al. 2006), but B1 means building your own
-          sentences: stories in the past, plans, opinions, “if I…”. So every session has a
-          10-minute grammar block that walks through Colloquial Welsh units 1–15 in order
-          (week 8 mixes the B1 core), and you <em>say</em> six sentences that need each
+          sentences: stories in the past, plans, opinions, “if I…”. So every lesson has a
+          10-minute grammar block that walks through Colloquial Welsh units 1–15, matched to
+          the unit’s theme (the past tense arrives in the “what happened” unit; week 8 mixes
+          the B1 core), and you <em>say</em> six sentences that need each
           pattern, with feedback. Explicit teaching plus practice that makes you produce the
           form is what works for grammar (Spada & Tomita 2010).
         </li>
         <li>
-          <strong>Hybrid: the app is half of it.</strong> An hour a day in the app is about
-          50 hours by January — not enough for B1 on its own. The rest comes from outside:
-          an audio course on the commute, Welsh podcasts while you cook, two online lessons a
-          week with a tutor, and real conversations. Log them on the dashboard; the plan
-          adds up to about 2½ hours a day, most of it in time you’d otherwise lose. Tap
-          each row on the dashboard for what to use.
+          <strong>Extra time is optional.</strong> The course fits in an hour. If you have
+          spare time on a commute or while cooking, an audio course or a Welsh podcast on
+          top speeds you up; log it under “Extra time outside the app” and tap each row for
+          what to use.
         </li>
         <li>
           <strong>Listen without the text.</strong> Understanding people is harder than
@@ -951,15 +976,14 @@ function PlanWhy() {
         months can’t give anyone that, so nobody can promise you a solid B1 by January.
       </p>
       <ul>
-        <li>App only (about 45–50 h): A1+, A2 on your own topics.</li>
         <li>
-          Full hybrid plan (about 130–145 h): A2, strong on your topics, with B1 skills —
-          telling a story in the past, giving reasons, plans and “if I…” — practised every
-          week.
+          The course alone (48 lessons, about 45–50 h): A2 on your own topics — who you
+          are, your work, family, the trip, Y Wladfa — with every B1 skill practised:
+          stories in the past, reasons, plans and “if I…”. A1+ on anything unfamiliar.
         </li>
         <li>
-          Push the outside hours to about 3 hours a day in total (about 180 h): A2+, and B1
-          speaking on familiar topics becomes realistic.
+          With extra time on top (audio course, podcasts, a tutor): about 100 h gets you a
+          solid A2; about 180 h makes B1 speaking on familiar topics realistic.
         </li>
       </ul>
       <p>
@@ -1016,7 +1040,7 @@ function BeforeYouGo() {
           everyone “Pwy arall ddylwn i siarad â nhw?” — that’s how you find speakers.
         </li>
       </ul>
-      <CopyMessage title="First message (session 1)" text={OUTREACH_FIRST} />
+      <CopyMessage title="First message (lesson 1)" text={OUTREACH_FIRST} />
       <CopyMessage title="Confirming (week 5)" text={OUTREACH_CHECK} />
       <h3>When they switch to Spanish</h3>
       <ul>

@@ -72,6 +72,7 @@ import { cardsForLesson } from './data/deck'
 import { getApiKey, aiKeys, ASK_MODELS, clampAskModel } from './lib/gemini'
 import { getClaudeKey } from './lib/claude'
 import { GrammarBlock } from './components/GrammarBlock'
+import { grammarLabel } from './lib/grammar'
 import { speakWelsh } from './lib/tts'
 import { useKeydown } from './lib/keys'
 import { formatElapsed } from './lib/format'
@@ -808,6 +809,11 @@ function TripBlockView({
       model={settings.askModel}
       checkpoint={checkpoint}
       recentFixes={trip.recentFixes}
+      lesson={
+        session && !checkpoint && session.pattern
+          ? { objective: session.title, grammar: grammarLabel(session.pattern) }
+          : undefined
+      }
       onGap={(text) => onTrip(addGap(loadTrip(), text))}
       onClose={onClose}
       onFinished={(report) => {

@@ -35,6 +35,10 @@ export interface WeekPlan {
   phraseLessons: string[]
   /** Colloquial Welsh chapter guide per regular session (1–5). */
   patterns: (string | null)[]
+  /** Grammar units mixed in the unit test (joined with +), or 'mix'. */
+  review: string
+  /** What each of lessons 1–5 is for, as a can-do. */
+  lessons: string[]
   /** Model dialogue per regular session (1–5). */
   dialogues: string[]
   /** AI partner per regular session (1–5); repeats are deliberate. */
@@ -58,7 +62,16 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Ask someone their name and how they are',
     ],
     phraseLessons: ['p1', 'p2'],
-    patterns: ['alphabet', '1a', '1b', '2a', '2b'],
+    patterns: ['alphabet', '1a', '1b', '2a', '2a'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: '1a+1b+2a',
+    lessons: [
+      'Greet people at any time of day and get your mouth round Welsh sounds',
+      'Say your name and ask someone theirs, and introduce family with “fy”',
+      'Ask what things are and who people are (Beth ydy hwn? Pwy ydy hi?), and say your job',
+      'Say where you live and work with the present tense (dw i, dych chi, mae)',
+      'Introduce yourself in five full sentences without notes',
+    ],
     dialogues: ['d1', 'd1', 'd2', 'd2', 'd2'],
     scenarios: ['te-gaiman', 'te-gaiman', 'bws-trelew', 'te-gaiman', 'bws-trelew'],
     retell: {
@@ -78,7 +91,16 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Ask “and you?” questions to keep things going',
     ],
     phraseLessons: ['p3', 'p4'],
-    patterns: ['2b', '3', '4', '4', '5'],
+    patterns: ['2b', '2b', '4', '4', '6'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: '2b+4+6',
+    lessons: [
+      'Say what you don’t do or don’t understand (dw i ddim…)',
+      'Answer yes and no the Welsh way (Ydw, Nac ydw, Oes, Nac oes)',
+      'Talk about your family, with the mutations after “fy” and “a”',
+      'Ask for a room and cope with words that change their first letter',
+      'Say what you have: brothers, sisters, languages (mae gen i / mae gyda fi)',
+    ],
     dialogues: ['d3', 'd3', 'd4', 'd4', 'd4'],
     scenarios: ['bws-trelew', 'gwesty', 'bws-trelew', 'gwesty', 'sgwrs-rydd'],
     retell: {
@@ -98,7 +120,16 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Use numbers 1–100 for prices, ages and times',
     ],
     phraseLessons: ['p5', 'p6'],
-    patterns: ['5', '6', '6', '7', '7'],
+    patterns: ['3', '3', '6', '5', '5'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: '3+5+6',
+    lessons: [
+      'Say what you like and describe things (mae’n flasus, mae’n hyfryd)',
+      'Offer, accept and refuse: “Hoffech chi…?”',
+      'Order at the tea house with “Ga i…?” and count what you order',
+      'Ask politely (“Allwch chi…?”) and understand instructions',
+      'Handle prices, change and requests at the counter',
+    ],
     dialogues: ['d5', 'd5', 'd6', 'd6', 'd6'],
     scenarios: ['sgwrs-rydd', 'te-gaiman', 'te-gaiman', 'sgwrs-rydd', 'te-gaiman'],
     retell: {
@@ -118,7 +149,16 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Say what you’re going to do tomorrow and this week',
     ],
     phraseLessons: ['p7', 'p8'],
-    patterns: ['8', '8', '9', '9', '9'],
+    patterns: ['7', '7', '8', '10', '10'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: '7+8+10',
+    lessons: [
+      'Talk about the weather: what it was like and what it will be',
+      'Talk about last year and next week (roedd, bydd), and answer by echoing the verb',
+      'Say what you must and should do (rhaid i fi, dylwn i)',
+      'Say what you’ll do with the short future (af i, gwna i)',
+      'Make suggestions and plans together (Beth am…?, Well i ni…)',
+    ],
     dialogues: ['d7', 'd7', 'd8', 'd8', 'd8'],
     scenarios: ['gwesty', 'gwesty', 'fferm-trevelin', 'ymwelydd', 'fferm-trevelin'],
     retell: {
@@ -139,7 +179,16 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Tell a 2-minute story in order, linking it with wedyn, ar ôl, achos and felly (B1)',
     ],
     phraseLessons: ['p9', 'p14'],
-    patterns: ['10', '10', '11', '11', '12'],
+    patterns: ['9', '9', '9', '12', '12'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: '9+12',
+    lessons: [
+      'Say what you did yesterday: es i, ges i, wnes i, ddes i',
+      'Tell the story of your journey, in order (wedyn, ar ôl, achos)',
+      'Ask other people what they did, and react',
+      'Say what you’ve done and how long for (dw i wedi…, ers…)',
+      'Ask and answer about experiences in an interview (Dych chi wedi…?)',
+    ],
     dialogues: ['d9', 'd9', 'd10', 'd10', 'd10'],
     scenarios: ['dysgwr-lleol', 'stori-taith', 'ymwelydd', 'stori-taith', 'cyfweliad-iaith'],
     retell: {
@@ -160,7 +209,16 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Give an opinion with reasons, agree and disagree politely (B1)',
     ],
     phraseLessons: ['p10', 'p11'],
-    patterns: ['12', '12', '13', '13', '14'],
+    patterns: ['11', '11', '13', '13', '14'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: '11+13+14',
+    lessons: [
+      'Give your opinion: “Dw i’n meddwl bod…”',
+      'Back it up with reasons and comparisons (achos, mwy… na)',
+      'Describe people with “sy” (the woman who teaches Welsh…)',
+      'Tell history with the passive: cafodd y Wladfa ei sefydlu…',
+      'Say what you would do if… (baswn i, taswn i)',
+    ],
     dialogues: ['d11', 'd11', 'd12', 'd12', 'd12'],
     scenarios: ['barn', 'capel', 'sbaeneg', 'cyfweliad-iaith', 'pe-bai'],
     retell: {
@@ -181,7 +239,16 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Say what you would do if… and talk about hopes and plans (B1)',
     ],
     phraseLessons: ['p12'],
-    patterns: ['14', '14', '15', '15', 'mix'],
+    patterns: ['12', '14', '15', '15', '11'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: '12+14+15',
+    lessons: [
+      'Interview: ask how long and what someone has done (ers pryd, wedi)',
+      'Talk about hopes and “if only” (baswn i’n hoffi…, taswn i…)',
+      'Stress what matters: “Y bobl ifanc sy’n…”',
+      'Say what you know and don\'t know (gwybod), talking with a descendant of the settlers',
+      'Argue your case with someone who disagrees',
+    ],
     dialogues: ['d13', 'd13', 'd14', 'd14', 'd14'],
     scenarios: ['cyfweliad-iaith', 'pe-bai', 'cyfweliad-iaith', 'disgynnydd', 'barn'],
     retell: {
@@ -203,6 +270,15 @@ export const WEEK_PLANS: WeekPlan[] = [
     // Only the Patagonian words to recognise (p13); everything else is rehearsal.
     phraseLessons: ['p13'],
     patterns: ['mix', 'mix', 'mix', 'mix', 'mix'],
+    /** Unit test on the checkpoint day: these units, mixed. */
+    review: 'mix',
+    lessons: [
+      'Full interview run-through, start to finish',
+      'Your whole story, told to a stranger',
+      'Keep going in Welsh when people switch to Spanish',
+      'A long chat with a local learner, on any topic',
+      'Final debate: the future of Welsh in Y Wladfa',
+    ],
     dialogues: ['d14', 'd2', 'd10', 'd12', 'd13'],
     scenarios: ['cyfweliad-iaith', 'stori-taith', 'sbaeneg', 'dysgwr-lleol', 'barn'],
     retell: {
@@ -227,6 +303,8 @@ export interface PlanSession {
   checkpoint: boolean
   phraseIds: string[]
   pattern: string | null
+  /** The lesson's objective (what you can do by the end). */
+  title: string
   dialogue: string | null
   /** Real-voice clip (weeks 4–8, days 2 and 5). */
   clip: string | null
@@ -263,41 +341,44 @@ function buildSessions(): PlanSession[] {
       const n = (wk.week - 1) * SESSIONS_PER_WEEK + day
       const checkpoint = day === SESSIONS_PER_WEEK
       const phraseIds = checkpoint ? [] : (slices[day - 1] ?? [])
-      // Listening is the hardest skill to fake on the day, so it's core from week 3.
-      // Your story gets a short run-through twice a week, and daily in week 8.
-      const story = wk.week === WEEKS || day === 1 || day === 4
-      // Real people from Y Wladfa, twice a week from week 2, in place of shadowing.
+      // A lesson is one hour with the same shape every day: review, new
+      // language, grammar, listening, conversation, then a short fluency slot.
+      // Real people from Y Wladfa replace the dialogue twice a week from week 2.
       const clip = day === 2 || day === 5 ? (CLIP_SCHEDULE[wk.week]?.[day === 2 ? 0 : 1] ?? null) : null
+      // Your story on days 1 and 4 (and daily in week 8), the 4/3/2 retell
+      // otherwise; on the three outreach days the message takes that slot.
+      const outreach = n === 1 || n === OUTREACH_CHASE || n === OUTREACH_CONFIRM
+      const story = wk.week === WEEKS || day === 1 || day === 4
+      const slot: PlanBlock = outreach
+        ? { id: 'outreach', minutes: 5, core: true }
+        : story
+          ? { id: 'story', minutes: 5, core: true }
+          : { id: 'retell', minutes: 6, core: true }
       const blocks: PlanBlock[] = checkpoint
         ? [
-            { id: 'review', minutes: 10, core: true },
+            { id: 'review', minutes: 8, core: true },
+            { id: 'pattern', minutes: 10, core: true },
             { id: 'story', minutes: 5, core: true },
             { id: 'checkpoint', minutes: 15, core: true },
-            { id: 'retell', minutes: 6, core: false },
-            { id: 'listen', minutes: 8, core: false },
-            ...(wk.week >= 2 ? [{ id: 'human' as const, minutes: 20, core: true }] : []),
+            ...(wk.week >= 2
+              ? [{ id: 'human' as const, minutes: 20, core: true }]
+              : [
+                  { id: 'retell' as const, minutes: 6, core: true },
+                  { id: 'listen' as const, minutes: 7, core: true },
+                ]),
           ]
         : [
-            { id: 'review', minutes: 10, core: true },
+            { id: 'review', minutes: 8, core: true },
             ...(phraseIds.length
               ? [{ id: 'phrases' as const, minutes: 8, core: true }]
               : []),
-            // The grammar track: Colloquial Welsh 1a–15, then mixed B1 review,
-            // before the conversation so you can use it there.
-            ...(wk.patterns[day - 1]
-              ? [{ id: 'pattern' as const, minutes: 10, core: true }]
-              : []),
-            { id: 'listen', minutes: 7, core: wk.week >= 3 },
+            // Grammar before the conversation, so you use it there.
+            { id: 'pattern', minutes: 10, core: true },
             clip
               ? { id: 'clip' as const, minutes: 8, core: true }
-              : { id: 'shadow' as const, minutes: 5, core: false },
+              : { id: 'listen' as const, minutes: 7, core: true },
             { id: 'speak', minutes: 15, core: true },
-            { id: 'retell', minutes: 6, core: true },
-            ...(story ? [{ id: 'story' as const, minutes: 5, core: true }] : []),
-            // Line people up on day 1, then confirm them a month before the flight.
-            ...(n === 1 || n === OUTREACH_CHASE || n === OUTREACH_CONFIRM
-              ? [{ id: 'outreach' as const, minutes: 5, core: true }]
-              : []),
+            slot,
           ]
       sessions.push({
         n,
@@ -305,8 +386,11 @@ function buildSessions(): PlanSession[] {
         day,
         checkpoint,
         phraseIds,
-        pattern: checkpoint ? null : (wk.patterns[day - 1] ?? null),
-        dialogue: checkpoint ? null : (wk.dialogues[day - 1] ?? null),
+        pattern: checkpoint ? wk.review : (wk.patterns[day - 1] ?? null),
+        title: checkpoint
+          ? `Unit ${wk.week} test: grammar review and a filmed conversation`
+          : (wk.lessons[day - 1] ?? wk.title),
+        dialogue: checkpoint ? (wk.week >= 2 ? null : wk.dialogues[0]!) : (wk.dialogues[day - 1] ?? null),
         clip: checkpoint ? null : clip,
         scenario: checkpoint ? 'prawf' : wk.scenarios[day - 1]!,
         retell: wk.retell,

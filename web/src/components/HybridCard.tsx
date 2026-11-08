@@ -1,12 +1,6 @@
 import { useState } from 'react'
 import { PLAN_SESSIONS } from '../data/trip/plan'
-import {
-  hoursSummary,
-  levelForHours,
-  OUTSIDE_KINDS,
-  outsideByKind,
-  weekStart,
-} from '../lib/hours'
+import { hoursSummary, levelForHours, OUTSIDE_KINDS, outsideByKind, weekStart } from '../lib/hours'
 import { localCalendarDay } from '../lib/srs'
 import { logOutside, removeOutside, type OutsideKind, type TripState } from '../lib/trip'
 
@@ -15,7 +9,8 @@ function grammarProgress(trip: TripState): { done: number; total: number } {
   const all = new Set<string>()
   const done = new Set<string>()
   for (const s of PLAN_SESSIONS) {
-    if (!s.pattern || s.pattern === 'mix') continue
+    // Single units only: 'mix' and the unit tests ('2b+4+6') aren't new units.
+    if (!s.pattern || s.pattern === 'mix' || s.pattern.includes('+')) continue
     all.add(s.pattern)
     const key = String(s.n)
     if (trip.done[key] || trip.blocks[key]?.includes('pattern')) done.add(s.pattern)
@@ -37,14 +32,10 @@ const fmtH = (h: number) => (h < 10 ? h.toFixed(1) : String(Math.round(h)))
  * The hybrid half of the plan: log time outside the app, see this week
  * against the targets, and where your hours are heading.
  */
-export function HybridCard({
-  trip,
-  onTrip,
-}: {
-  trip: TripState
-  onTrip: (t: TripState) => void
-}) {
+export function HybridCard({ trip, onTrip }: { trip: TripState; onTrip: (t: TripState) => void }) {
   const [open, setOpen] = useState<OutsideKind | null>(null)
+  // The course fits in an hour a day; this is for days with spare time.
+  const [shown, setShown] = useState(() => trip.outside.some((o) => o.minutes > 0))
   const week = outsideByKind(trip, weekStart())
   const hours = hoursSummary(trip)
   const grammar = grammarProgress(trip)
@@ -55,75 +46,87 @@ export function HybridCard({
   return (
     <section className="trip-session hybrid-card">
       <div className="talk-plan-head">
-        <h2>Outside the app · this week</h2>
-        <span className="muted-line">{fmtH(hours.total)} h so far</span>
-      </div>
-      <ul className="hybrid-kinds">
-        {OUTSIDE_KINDS.map((k) => {
-          const mins = week[k.id]
-          const pct = Math.min(100, Math.round((mins / k.perWeek) * 100))
-          return (
-            <li key={k.id}>
-              <button
-                type="button"
-                className="hybrid-kind-head"
-                onClick={() => setOpen(open === k.id ? null : k.id)}
-                aria-expanded={open === k.id}
-              >
-                <span>
-                  <span className="cy">{k.titleCy}</span> {k.title}
-                </span>
-                <span className="muted-line">
-                  {Math.round(mins)} / {k.perWeek} min {open === k.id ? '▴' : '▾'}
-                </span>
-              </button>
-              <div className="hybrid-bar" aria-hidden>
-                <span style={{ width: `${pct}%` }} />
-              </div>
-              {open === k.id && (
-                <div className="hybrid-how">
-                  <p className="muted-line">{k.how}</p>
-                  <ul>
-                    {k.use.map((u) => (
-                      <li key={u.name}>
-                        {u.url ? (
-                          <a href={u.url} target="_blank" rel="noreferrer">
-                            {u.name}
-                          </a>
-                        ) : (
-                          <strong>{u.name}</strong>
-                        )}{' '}
-                        — {u.note}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              <div className="hybrid-log">
-                {[15, 30, 60].map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    className="ghost-btn small"
-                    onClick={() => onTrip(logOutside(trip, k.id, m))}
-                  >
-                    +{m} min
-                  </button>
-                ))}
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-      {lastToday && (
-        <button
-          type="button"
-          className="talk-link"
-          onClick={() => onTrip(removeOutside(trip, lastToday.id))}
-        >
-          Undo last: +{lastToday.minutes} min{' '}
-          {OUTSIDE_KINDS.find((k) => k.id === lastToday.kind)?.title.toLowerCase()}
+        <h2>Extra time outside the app</h2>
+        <button type="button" className="ghost-btn small" onClick={() => setShown((v) => !v)}>
+          {shown ? 'Hide' : 'Optional · show'}
         </button>
+      </div>
+      {!shown && (
+        <p className="muted-line">
+          {fmtH(hours.total)} h so far. The lessons are the plan; any podcast, audio-course or tutor
+          time on top speeds you up. Log it here.
+        </p>
+      )}
+      {shown && (
+        <>
+          <ul className="hybrid-kinds">
+            {OUTSIDE_KINDS.map((k) => {
+              const mins = week[k.id]
+              const pct = Math.min(100, Math.round((mins / k.perWeek) * 100))
+              return (
+                <li key={k.id}>
+                  <button
+                    type="button"
+                    className="hybrid-kind-head"
+                    onClick={() => setOpen(open === k.id ? null : k.id)}
+                    aria-expanded={open === k.id}
+                  >
+                    <span>
+                      <span className="cy">{k.titleCy}</span> {k.title}
+                    </span>
+                    <span className="muted-line">
+                      {Math.round(mins)} / {k.perWeek} min {open === k.id ? '▴' : '▾'}
+                    </span>
+                  </button>
+                  <div className="hybrid-bar" aria-hidden>
+                    <span style={{ width: `${pct}%` }} />
+                  </div>
+                  {open === k.id && (
+                    <div className="hybrid-how">
+                      <p className="muted-line">{k.how}</p>
+                      <ul>
+                        {k.use.map((u) => (
+                          <li key={u.name}>
+                            {u.url ? (
+                              <a href={u.url} target="_blank" rel="noreferrer">
+                                {u.name}
+                              </a>
+                            ) : (
+                              <strong>{u.name}</strong>
+                            )}{' '}
+                            — {u.note}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <div className="hybrid-log">
+                    {[15, 30, 60].map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        className="ghost-btn small"
+                        onClick={() => onTrip(logOutside(trip, k.id, m))}
+                      >
+                        +{m} min
+                      </button>
+                    ))}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+          {lastToday && (
+            <button
+              type="button"
+              className="talk-link"
+              onClick={() => onTrip(removeOutside(trip, lastToday.id))}
+            >
+              Undo last: +{lastToday.minutes} min{' '}
+              {OUTSIDE_KINDS.find((k) => k.id === lastToday.kind)?.title.toLowerCase()}
+            </button>
+          )}
+        </>
       )}
 
       <div className="hybrid-level">
@@ -140,7 +143,7 @@ export function HybridCard({
         {hours.daysLeft > 0 && (
           <p className="muted-line">
             At your pace: about {Math.round(hours.projected)} h by the flight (
-            {levelForHours(hours.projected)}). On the full hybrid plan from today: about{' '}
+            {levelForHours(hours.projected)}). With the extra-time targets on top: about{' '}
             {Math.round(hours.projectedPlan)} h ({levelForHours(hours.projectedPlan)}). Your
             checkpoints are the real measure.
           </p>

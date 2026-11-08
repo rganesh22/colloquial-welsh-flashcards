@@ -54,14 +54,22 @@ export function GrammarBlock({
   onDone: () => void
   onClose: () => void
 }) {
-  const lesson = unit === 'mix' ? undefined : getLesson('colloquial', unit)
+  const combined = unit.includes('+')
+  const lesson = unit === 'mix' || combined ? undefined : getLesson('colloquial', unit)
   const { title, rules } = useMemo(() => {
     if (unit === 'mix') return mixRules()
+    if (combined) {
+      const units = unit.split('+')
+      return {
+        title: `Unit test: units ${units.join(', ')}`,
+        rules: units.flatMap((u) => guideRules(getChapterGuide('colloquial', u)).slice(0, 2)),
+      }
+    }
     return {
       title: lesson ? `${lesson.titleCy} — ${lesson.titleEn}` : `Unit ${unit}`,
       rules: guideRules(getChapterGuide('colloquial', unit)),
     }
-  }, [unit, lesson])
+  }, [unit, lesson, combined])
   const aiReady = Boolean(keys.claude || keys.gemini)
   // The alphabet unit is about sounds: read it and say it, no sentence drill.
   const canDrill = aiReady && rules.length > 0 && unit !== 'alphabet'
@@ -164,10 +172,18 @@ export function GrammarBlock({
         </button>
         <div className="talk-titles">
           <p className="book-kicker">
-            Gramadeg · {unit === 'mix' ? 'review' : `Colloquial Welsh ${unit}`}
+            Gramadeg ·{' '}
+            {unit === 'mix' ? 'review' : combined ? 'unit test' : `Colloquial Welsh ${unit}`}
           </p>
           <h1 className="page-title">{title}</h1>
-          <p className="page-lead">{UNIT_SKILLS[unit] ?? ''}</p>
+          <p className="page-lead">
+            {combined
+              ? unit
+                  .split('+')
+                  .map((u) => UNIT_SKILLS[u])
+                  .join(' · ')
+              : (UNIT_SKILLS[unit] ?? '')}
+          </p>
         </div>
       </div>
 
@@ -210,7 +226,7 @@ export function GrammarBlock({
                 Done
               </button>
             )}
-            {unit !== 'mix' && (
+            {unit !== 'mix' && !combined && (
               <button type="button" className="secondary-btn" onClick={() => onOpenChapter(unit)}>
                 Open the full chapter
               </button>

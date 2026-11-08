@@ -201,6 +201,8 @@ export function talkTargets(opts: {
   frames: string[]
   /** "said → better (why)", newest first. */
   recentFixes?: string[]
+  /** Today's lesson objective and grammar, from the course. */
+  lesson?: { objective: string; grammar: string }
 }): string {
   const plan = weekPlan(opts.week)
   const frames = opts.frames.map((f) => `"${f}"`).join(', ')
@@ -210,6 +212,11 @@ export function talkTargets(opts: {
     `- This week's focus: ${plan.focus} (${plan.canDo.join('; ')})`,
     `- Planned frames: ${frames}`,
   ]
+  if (opts.lesson) {
+    target.push(
+      `- Today's lesson: ${opts.lesson.objective}. Today's grammar: ${opts.lesson.grammar}. At least every other turn, ask something whose natural answer needs today's grammar, so the learner uses it; treat it as a target form.`,
+    )
+  }
   if (fixes.length) {
     target.push(`- Recent fixes: ${fixes.map((f) => `"${f}"`).join('; ')}`)
   }

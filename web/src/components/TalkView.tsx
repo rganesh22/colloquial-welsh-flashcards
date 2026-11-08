@@ -68,6 +68,7 @@ export function TalkView({
   model,
   checkpoint = false,
   recentFixes,
+  lesson,
   onGap,
   onFinished,
   onClose,
@@ -83,6 +84,8 @@ export function TalkView({
   checkpoint?: boolean
   /** Corrections from recent reports, for the partner to watch for. */
   recentFixes?: string[]
+  /** Today's lesson objective and grammar, for the partner to steer towards. */
+  lesson?: { objective: string; grammar: string }
   onGap: (text: string) => void
   onFinished: (report: TalkReport | null) => void
   onClose: () => void
@@ -142,6 +145,7 @@ export function TalkView({
       week,
       frames: scenario.frames.map((f) => fill(f.welsh)),
       recentFixes,
+      lesson,
     }),
   }
 

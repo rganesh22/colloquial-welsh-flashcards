@@ -30,8 +30,16 @@ export const UNIT_SKILLS: Record<string, string> = {
   '12': 'Perfect (dw i wedi) and pluperfect (ro’n i wedi)',
   '13': 'Passive with cael, “who” with sy, wedi/heb/newydd',
   '14': 'Conditional (baswn i / byddwn i), “if” (os / taswn i)',
-  '15': 'Fronting for emphasis, gwybod vs nabod, impersonal -wyd',
+  '15': 'Fronting for emphasis, gwybod, impersonal -wyd',
   mix: 'Mixed B1 review',
+}
+
+/** Plain description of a session's grammar: one unit, a unit test, or the mix. */
+export function grammarLabel(pattern: string): string {
+  return pattern
+    .split('+')
+    .map((u) => UNIT_SKILLS[u] ?? u)
+    .join('; ')
 }
 
 export interface GrammarRule {

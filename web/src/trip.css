@@ -1320,3 +1320,32 @@
   gap: 0.35rem;
   font-size: 0.92rem;
 }
+
+/* Course outline: one row per lesson */
+.trip-lessons {
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.trip-lessons li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+.trip-lessons li.done .trip-lesson-text > span:first-child {
+  opacity: 0.6;
+}
+.trip-lessons li.current .trip-lesson-text > span:first-child {
+  font-weight: 600;
+}
+.trip-lesson-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.trip-lesson-text .muted-line {
+  font-size: 0.85rem;
+}
