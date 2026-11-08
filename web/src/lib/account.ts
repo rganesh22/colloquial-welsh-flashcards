@@ -164,7 +164,9 @@ async function syncOnce(quiet: boolean): Promise<void> {
     const cloudChanged = stableJson(cloudComparable) !== stableJson(merged)
     if (cloudChanged) {
       const settings = { ...merged.settings }
+      // API keys never leave this device.
       delete settings.apiKey
+      delete settings.claudeKey
       const chunks = chunkProgress(merged.progress)
       tx.set(userRef, {
         settings,

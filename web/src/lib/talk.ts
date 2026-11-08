@@ -1,13 +1,19 @@
 import type { ThinkingLevel } from '@google/genai'
 import { blobToBase64 } from './recorder'
-import { clampAskModel, DEFAULT_ASK_MODEL } from './gemini'
+import { GEMINI_TEXT_MODEL, type AiKeys } from './gemini'
+import { claudeGenerate } from './claude'
 import type { Scenario } from '../data/trip/scenarios'
 import { WEEK_PLANS, weekPlan } from '../data/trip/plan'
 import { cardsForLesson } from '../data/deck'
 
-// JSON Schema (responseJsonSchema) keeps the Gemini SDK out of the main bundle.
-// Temperatures here are below Google's recommended 1.0 for Gemini 3 on purpose:
-// we want steady, level-appropriate replies and repeatable scoring.
+// Text runs on Claude when there's an Anthropic key; audio (hearing the
+// learner) needs Gemini or the browser's own speech recognition.
+// Temperatures only reach the Gemini fallback (Claude takes none): they sit
+// below Google's 1.0 on purpose, for steady replies and repeatable scoring.
+
+/** Shown when a recording can't be turned into text. */
+export const NEED_VOICE =
+  'Couldn’t turn that recording into text here. Type it instead, or add a Gemini key in Settings to use your voice.'
 
 /**
  * AI conversation partner. Feedback follows the corrective-feedback research
@@ -443,39 +449,46 @@ type Part = { text: string } | { inlineData: { mimeType: string; data: string } 
 type Content = { role: 'user' | 'model'; parts: Part[] }
 
 /**
- * Talk needs Gemini 3 (thinking levels, audio, JSON schema): any older Ask
- * model, or an alias we can't date, falls back to the default 3 Flash.
+ * One model call. Text goes to Claude (opts.model is a Claude model) when
+ * there's an Anthropic key; audio, or no Anthropic key, goes to Gemini.
  */
-function talkModel(model: string | undefined): string {
-  const m = clampAskModel(model)
-  return m.startsWith('gemini-3') ? m : DEFAULT_ASK_MODEL
-}
-
-/** Gemini 3 takes a thinking level; older models ignore this helper. */
-function thinkingFor(model: string, level: 'MINIMAL' | 'LOW') {
-  if (!model.startsWith('gemini-3')) return undefined
-  return { thinkingLevel: level as unknown as ThinkingLevel }
-}
-
 async function generate(opts: {
-  apiKey: string
+  keys: AiKeys
   model?: string
   contents: Content[]
   system?: string
   temperature: number
-  thinking: 'MINIMAL' | 'LOW'
+  /** MEDIUM for careful scoring; turns stay LOW so replies come fast. */
+  thinking: 'MINIMAL' | 'LOW' | 'MEDIUM'
   schema?: object
 }): Promise<string> {
+  const hasAudio = opts.contents.some((c) => c.parts.some((p) => 'inlineData' in p))
+  if (!hasAudio && opts.keys.claude) {
+    return claudeGenerate({
+      apiKey: opts.keys.claude,
+      model: opts.model,
+      system: opts.system,
+      effort: opts.thinking === 'MEDIUM' ? 'medium' : 'low',
+      schema: opts.schema,
+      messages: opts.contents.map((c) => ({
+        role: c.role === 'model' ? ('assistant' as const) : ('user' as const),
+        text: c.parts.map((p) => ('text' in p ? p.text : '')).join('\n\n'),
+      })),
+    })
+  }
+  if (!opts.keys.gemini) {
+    throw new Error(hasAudio ? NEED_VOICE : 'Add an Anthropic key in Settings.')
+  }
   const { GoogleGenAI } = await import('@google/genai')
-  const ai = new GoogleGenAI({ apiKey: opts.apiKey })
-  const model = talkModel(opts.model)
+  const ai = new GoogleGenAI({ apiKey: opts.keys.gemini })
+  const level = opts.thinking === 'MINIMAL' ? 'MINIMAL' : 'LOW'
   const res = await ai.models.generateContent({
-    model,
+    model: GEMINI_TEXT_MODEL,
     contents: opts.contents,
     config: {
       systemInstruction: opts.system,
       temperature: opts.temperature,
-      thinkingConfig: thinkingFor(model, opts.thinking),
+      thinkingConfig: { thinkingLevel: level as unknown as ThinkingLevel },
       ...(opts.schema
         ? { responseMimeType: 'application/json', responseJsonSchema: opts.schema }
         : {}),
@@ -486,7 +499,7 @@ async function generate(opts: {
 
 function parseJson<T>(text: string | undefined): T {
   const raw = (text ?? '').trim()
-  if (!raw) throw new Error('Empty reply from Gemini')
+  if (!raw) throw new Error('Empty reply from the model')
   return JSON.parse(raw.replace(/^```json\s*|```$/g, '')) as T
 }
 
@@ -640,7 +653,7 @@ function normalizeReply(
 }
 
 interface PartnerOpts {
-  apiKey: string
+  keys: AiKeys
   model?: string
   scenario: Scenario
   week: number
@@ -668,7 +681,7 @@ async function partnerReply(
       ? [...contents.slice(0, -1), { ...last, parts: [...last.parts, { text: extra }] }]
       : contents
     const text = await generate({
-      apiKey: o.apiKey,
+      keys: o.keys,
       model: o.model,
       contents: withExtra,
       system: partnerSystem(o),
@@ -718,13 +731,13 @@ export async function talkOpen(opts: PartnerOpts): Promise<TalkReply> {
  * `context` (what they were answering, or trying to say) only helps hearing.
  */
 export async function talkTranscribe(opts: {
-  apiKey: string
+  keys: AiKeys
   model?: string
   audio: Blob
   context?: string
 }): Promise<{ transcript: string; uncertain: string[] }> {
   const text = await generate({
-    apiKey: opts.apiKey,
+    keys: opts.keys,
     model: opts.model,
     temperature: 0,
     thinking: 'MINIMAL',
@@ -755,6 +768,29 @@ export async function talkTranscribe(opts: {
   }
 }
 
+/**
+ * What the learner said: Gemini transcribes the recording verbatim when
+ * there's a Gemini key; otherwise the browser's live Welsh recognition
+ * (`spoken`), which tends to tidy mistakes, so feedback can miss some.
+ */
+async function hear(opts: {
+  keys: AiKeys
+  audio?: Blob
+  spoken?: string
+  text?: string
+  context?: string
+}): Promise<{ transcript: string; uncertain: string[] }> {
+  if (opts.audio && opts.keys.gemini) {
+    return talkTranscribe({ keys: opts.keys, audio: opts.audio, context: opts.context })
+  }
+  if (opts.audio) {
+    const spoken = opts.spoken?.trim()
+    if (!spoken) throw new Error(NEED_VOICE)
+    return { transcript: spoken, uncertain: [] }
+  }
+  return { transcript: opts.text ?? '', uncertain: [] }
+}
+
 /** Partner's last line, for transcription context. */
 function lastPartnerLine(history: TalkTurn[]): string | undefined {
   for (let i = history.length - 1; i >= 0; i--) {
@@ -772,19 +808,17 @@ export async function talkTurn(
     history: TalkTurn[]
     text?: string
     audio?: Blob
+    /** The browser's transcript of `audio`, used when there's no Gemini key. */
+    spoken?: string
     /** "I can't say this": what they wanted to say. */
     stuck?: string
   },
 ): Promise<TalkReply> {
   const before = lastPartnerLine(opts.history)
-  const heard = opts.audio
-    ? await talkTranscribe({
-        apiKey: opts.apiKey,
-        model: opts.model,
-        audio: opts.audio,
-        context: before ? `they were answering: "${before}"` : undefined,
-      })
-    : { transcript: opts.text ?? '', uncertain: [] }
+  const heard = await hear({
+    ...opts,
+    context: before ? `they were answering: "${before}"` : undefined,
+  })
   const turn: TalkTurn = {
     role: 'me',
     welsh: heard.transcript,
@@ -831,7 +865,7 @@ export async function talkFeedback(
   if (opts.checkpoint) return NO_FEEDBACK
   const turn: TalkTurn = { role: 'me', welsh: opts.text, typed: opts.typed }
   const text = await generate({
-    apiKey: opts.apiKey,
+    keys: opts.keys,
     model: opts.model,
     system: partnerSystem(opts),
     temperature: 0.2,
@@ -854,7 +888,7 @@ export async function talkFeedback(
 
 /** Second try after a feedback prompt: did they fix the targeted form? */
 export async function talkRetry(opts: {
-  apiKey: string
+  keys: AiKeys
   model?: string
   original: string
   prompt: string
@@ -865,17 +899,14 @@ export async function talkRetry(opts: {
   target?: string
   text?: string
   audio?: Blob
+  spoken?: string
 }): Promise<TalkRetry> {
-  const { transcript: heard, uncertain } = opts.audio
-    ? await talkTranscribe({
-        apiKey: opts.apiKey,
-        model: opts.model,
-        audio: opts.audio,
-        context: `they are repeating: "${opts.original}"`,
-      })
-    : { transcript: opts.text ?? '', uncertain: [] as string[] }
+  const { transcript: heard, uncertain } = await hear({
+    ...opts,
+    context: `they are repeating: "${opts.original}"`,
+  })
   const text = await generate({
-    apiKey: opts.apiKey,
+    keys: opts.keys,
     model: opts.model,
     temperature: 0.2,
     thinking: 'LOW',
@@ -1057,7 +1088,7 @@ LEARNER (spoken, 8 s): Mae’n hyfryd. Mae’r te yn flasus iawn! Ers pryd dych 
 
 /** End-of-conversation coaching report (and checkpoint scores). */
 export async function talkReport(opts: {
-  apiKey: string
+  keys: AiKeys
   model?: string
   scenario: Scenario
   week: number
@@ -1067,10 +1098,10 @@ export async function talkReport(opts: {
 }): Promise<TalkReport> {
   const transcript = opts.history.map(transcriptLine).join('\n')
   const text = await generate({
-    apiKey: opts.apiKey,
+    keys: opts.keys,
     model: opts.model,
     temperature: 0,
-    thinking: 'LOW',
+    thinking: 'MEDIUM',
     schema: REPORT_SCHEMA,
     contents: [
       {
@@ -1145,28 +1176,42 @@ export interface RetellFeedback {
 
 /** Feedback on the 4/3/2 retell: round 1 and the final round, side by side. */
 export async function retellFeedback(opts: {
-  apiKey: string
+  keys: AiKeys
   model?: string
   topic: string
   week: number
-  /** Round 1 and the final round (or just one take). */
-  takes: { audio: Blob; seconds: number; round: number }[]
+  /**
+   * Round 1 and the final round (or just one take). `spoken` is the browser's
+   * transcript, used when there's no Gemini key.
+   */
+  takes: { audio: Blob; spoken?: string; seconds: number; round: number }[]
 }): Promise<RetellFeedback> {
-  const parts: Part[] = []
+  // Hear each take first, then coach on the transcripts as text.
+  const heardTakes: string[] = []
   for (const t of opts.takes) {
-    parts.push({ text: `Take from round ${t.round} (${Math.round(t.seconds)} s):` })
-    parts.push({ inlineData: { mimeType: 'audio/wav', data: await blobToBase64(t.audio) } })
+    const h = await hear({
+      keys: opts.keys,
+      audio: t.audio,
+      spoken: t.spoken,
+      context: `they are talking about "${opts.topic}"`,
+    })
+    heardTakes.push(h.transcript)
   }
   const two = opts.takes.length > 1
+  const takesText = opts.takes
+    .map((t, i) => `Take from round ${t.round} (${Math.round(t.seconds)} s): ${heardTakes[i]}`)
+    .join('\n')
+  const parts: Part[] = []
   parts.push({
-    text: `A Welsh learner in week ${opts.week} of an 8-week plan just talked about "${opts.topic}"${two ? ', first in a longer round and then again with less time' : ''}.
-- heard: one verbatim transcript per take, in order. Do NOT fix mutations, word order or grammar; write English/Spanish words inside «»; mark unclear words with (?).
+    text: `A Welsh learner in week ${opts.week} of an 8-week plan just talked about "${opts.topic}"${two ? ', first in a longer round and then again with less time' : ''}. Verbatim transcripts («» = English/Spanish words, (?) = unclear):
+${takesText}
+
 - change: ${two ? 'one short English tip on what changed between the first and last take (more fluent? dropped content? new mistakes?) and what to keep doing.' : 'empty string.'}
 - tips: up to 3 short English tips (fluency first, then the single most useful grammar fix). Never correct valid regional variants (${VARIANTS}) or style.
 - better: a corrected, natural version of what they tried to say in the last take, in simple Welsh, keeping their content.`,
   })
   const text = await generate({
-    apiKey: opts.apiKey,
+    keys: opts.keys,
     model: opts.model,
     temperature: 0.3,
     thinking: 'LOW',
@@ -1174,20 +1219,17 @@ export async function retellFeedback(opts: {
     schema: {
       type: 'object',
       properties: {
-        heard: { type: 'array', items: { type: 'string' } },
         change: { type: 'string' },
         tips: { type: 'array', items: { type: 'string' } },
         better: { type: 'string' },
       },
-      required: ['heard', 'change', 'tips', 'better'],
+      required: ['change', 'tips', 'better'],
     },
   })
-  const r = parseJson<{ heard?: string[]; change?: string; tips?: string[]; better?: string }>(
-    text,
-  )
+  const r = parseJson<{ change?: string; tips?: string[]; better?: string }>(text)
   return {
     takes: opts.takes.map((t, i) => {
-      const heard = r.heard?.[i] ?? ''
+      const heard = heardTakes[i] ?? ''
       return {
         heard,
         seconds: t.seconds,

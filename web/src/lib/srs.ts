@@ -241,8 +241,10 @@ export interface AppSettings {
   /** cy→en, en→cy, or both (separate FSRS schedules). */
   direction: DirectionMode
   theme: ThemeMode
-  /** Gemini API key (optional if env key is set). */
+  /** Gemini API key: optional, for hearing your voice and natural TTS. */
   apiKey: string
+  /** Anthropic API key: Claude runs the partner, feedback and Ask. */
+  claudeKey: string
   /** New cards introduced per learn wave. */
   learnBatchSize: number
   /** New headwords to introduce per calendar day (curriculum order). */
@@ -255,7 +257,7 @@ export interface AppSettings {
   learnActivities: boolean
   /** Include listen & choose (TTS) in Learn breaks and lesson practice. */
   listenActivities: boolean
-  /** Gemini model for Ask chat. */
+  /** Claude model for Ask chat and the conversation partner. */
   askModel: string
   /** Sampling temperature for Ask chat (0–1.2). */
   askTemperature: number
@@ -265,6 +267,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   direction: 'both',
   theme: 'dark',
   apiKey: '',
+  claudeKey: '',
   learnBatchSize: DEFAULT_LEARN_BATCH_SIZE,
   dailyWordGoal: DEFAULT_DAILY_WORD_GOAL,
   dailySessions: 1,
@@ -414,6 +417,7 @@ export function settingsFromPartial(
     direction,
     theme,
     apiKey,
+    claudeKey: parsed.claudeKey ?? '',
     learnBatchSize: clampLearnBatchSize(
       // Migrate the old too-large default (15) down to a gentler set size.
       parsed.learnBatchSize === 15 || parsed.learnBatchSize == null
@@ -452,7 +456,7 @@ export function loadSettings(): AppSettings {
 
 export function settingsLookDefault(settings: AppSettings): boolean {
   const baseline = settingsFromPartial({})
-  const current = settingsFromPartial({ ...settings, apiKey: '' })
+  const current = settingsFromPartial({ ...settings, apiKey: '', claudeKey: '' })
   return (
     current.direction === baseline.direction &&
     current.theme === baseline.theme &&
@@ -495,9 +499,9 @@ function asObject(value: unknown): Record<string, unknown> {
   return value as Record<string, unknown>
 }
 
-/** Local study state, without the Gemini key, ready to merge with an account. */
+/** Local study state, without the API keys, ready to merge with an account. */
 export function readAccountPayload(): AccountPayload {
-  const { apiKey: _apiKey, ...prefs } = loadSettings()
+  const { apiKey: _apiKey, claudeKey: _claudeKey, ...prefs } = loadSettings()
   return {
     progress: asObject(readStoredJson(STORAGE_KEY)),
     settings: asObject(prefs),
@@ -530,9 +534,9 @@ export function applyAccountPayload(payload: AccountPayload): {
   let settings = loadSettings()
   runWithoutLocalChangeHook(() => {
     progress = writeProgressRaw(payload.progress)
-    const apiKey = loadSettings().apiKey
+    const { apiKey, claudeKey } = loadSettings()
     settings = settingsFromPartial(
-      { ...(payload.settings as SettingsInput), apiKey },
+      { ...(payload.settings as SettingsInput), apiKey, claudeKey },
       apiKey,
     )
     saveSettings(settings, payload.settingsUpdatedAt ?? undefined)

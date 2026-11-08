@@ -69,7 +69,8 @@ import {
 } from './lib/srs'
 import { BOOKS, getBook, getLesson, LESSONS } from './lib/lessons'
 import { cardsForLesson } from './data/deck'
-import { getApiKey, ASK_MODELS, clampAskModel, clampAskTemperature } from './lib/gemini'
+import { getApiKey, aiKeys, ASK_MODELS, clampAskModel } from './lib/gemini'
+import { getClaudeKey } from './lib/claude'
 import { speakWelsh } from './lib/tts'
 import { useKeydown } from './lib/keys'
 import { formatElapsed } from './lib/format'
@@ -678,7 +679,7 @@ export default function App() {
         open={askOpen}
         onClose={() => setAskOpen(false)}
         onOpen={() => setAskOpen(true)}
-        apiKeyStored={settings.apiKey}
+        keys={aiKeys(settings)}
         context={askContext}
         model={settings.askModel}
         temperature={settings.askTemperature}
@@ -761,7 +762,7 @@ function TripBlockView({
         topic={retell.topic}
         prompts={retell.prompts}
         week={week}
-        apiKey={settings.apiKey}
+        keys={aiKeys(settings)}
         model={settings.askModel}
         short={view.short}
         onClose={onClose}
@@ -781,7 +782,7 @@ function TripBlockView({
       week={week}
       learner={learnerLine(trip)}
       name={trip.profile.name}
-      apiKey={settings.apiKey}
+      keys={aiKeys(settings)}
       model={settings.askModel}
       checkpoint={checkpoint}
       recentFixes={trip.recentFixes}
@@ -848,6 +849,7 @@ function SettingsBar({
   onImportProgress: (progress: ProgressMap) => void
 }) {
   const envReady = Boolean(getApiKey(''))
+  const claudeEnvReady = Boolean(getClaudeKey(''))
   const fileRef = useRef<HTMLInputElement>(null)
   const savedCount = progressCardCount(loadProgress())
 
@@ -1006,29 +1008,26 @@ function SettingsBar({
           ))}
         </select>
       </label>
-      <label>
-        Ask creativity
+      <label className="grow">
+        Anthropic key
         <input
-          type="number"
-          min={0}
-          max={1.2}
-          step={0.1}
-          value={clampAskTemperature(settings.askTemperature)}
-          onChange={(e) =>
-            onSettings({
-              askTemperature: clampAskTemperature(Number(e.target.value)),
-            })
-          }
+          type="password"
+          autoComplete="off"
+          placeholder={claudeEnvReady ? 'Using env key' : 'sk-ant-…'}
+          value={settings.claudeKey}
+          onChange={(e) => onSettings({ claudeKey: e.target.value })}
+          title="Claude runs the conversation partner, feedback and Ask. Stays on this device."
         />
       </label>
       <label className="grow">
-        Gemini key
+        Gemini key (optional, for voice)
         <input
           type="password"
           autoComplete="off"
           placeholder={envReady ? 'Using env key' : 'AIza…'}
           value={settings.apiKey}
           onChange={(e) => onSettings({ apiKey: e.target.value })}
+          title="Hears your recordings word for word and reads replies aloud in natural voices. Stays on this device."
         />
       </label>
       <div className="settings-backup">

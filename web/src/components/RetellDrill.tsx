@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { getApiKey } from '../lib/gemini'
-import { micSupported, startMic, type MicSession, type Recording } from '../lib/recorder'
+import type { AiKeys } from '../lib/gemini'
+import { liveTranscriptSupported, micSupported, startMic, type MicSession, type Recording } from '../lib/recorder'
 import { retellFeedback, type RetellFeedback } from '../lib/talk'
 
 /** Nation's 4/3/2, scaled for beginners: the same talk in 2:00, 1:30, 1:00. */
@@ -10,7 +10,7 @@ export function RetellDrill({
   topic,
   prompts,
   week,
-  apiKey,
+  keys,
   model,
   short = false,
   onDone,
@@ -20,7 +20,7 @@ export function RetellDrill({
   prompts: string[]
   /** Plan week, so feedback matches the level. */
   week: number
-  apiKey: string
+  keys: AiKeys
   model: string
   /** 10-minute day: one 2-minute round only. */
   short?: boolean
@@ -28,7 +28,8 @@ export function RetellDrill({
   onClose: () => void
 }) {
   const rounds = short ? [ROUNDS[0]!] : ROUNDS
-  const key = getApiKey(apiKey)
+  /** Feedback needs a model for the coaching and a way to hear the takes. */
+  const key = (keys.claude ?? keys.gemini) && (keys.gemini || liveTranscriptSupported())
   const [round, setRound] = useState(0)
   const [left, setLeft] = useState<number | null>(null)
   const [mic, setMic] = useState<MicSession | null>(null)
@@ -56,7 +57,7 @@ export function RetellDrill({
     setError(null)
     if (micSupported()) {
       try {
-        setMic(await startMic())
+        setMic(await startMic({ listen: !keys.gemini }))
       } catch {
         setError('Mic blocked — you can still speak along with the timer.')
       }
@@ -91,11 +92,16 @@ export function RetellDrill({
     try {
       setFeedback(
         await retellFeedback({
-          apiKey: key,
+          keys,
           model,
           topic,
           week,
-          takes: pick.map((t) => ({ audio: t.wav, seconds: t.seconds, round: t.round })),
+          takes: pick.map((t) => ({
+            audio: t.wav,
+            spoken: t.spoken,
+            seconds: t.seconds,
+            round: t.round,
+          })),
         }),
       )
     } catch (err) {

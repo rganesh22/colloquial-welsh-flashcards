@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Scenario } from '../data/trip/scenarios'
-import { getApiKey } from '../lib/gemini'
-import { micSupported, startMic, type MicSession } from '../lib/recorder'
+import type { AiKeys } from '../lib/gemini'
+import {
+  liveTranscriptSupported,
+  micSupported,
+  startMic,
+  type MicSession,
+} from '../lib/recorder'
 import {
   isWladfaLocal,
   mostlySpanish,
@@ -40,6 +45,8 @@ type SendInput = {
   audio?: Blob
   audioUrl?: string
   seconds?: number
+  /** The browser's transcript of `audio` (no Gemini key). */
+  spoken?: string
   /** "I can't say this": what they wanted to say. */
   stuck?: string
 }
@@ -54,7 +61,7 @@ export function TalkView({
   week,
   learner,
   name,
-  apiKey,
+  keys,
   model,
   checkpoint = false,
   recentFixes,
@@ -67,7 +74,8 @@ export function TalkView({
   /** Short profile line for the partner. */
   learner: string
   name: string
-  apiKey: string
+  /** Claude for the partner; Gemini (optional) to hear you and to speak. */
+  keys: AiKeys
   model: string
   checkpoint?: boolean
   /** Corrections from recent reports, for the partner to watch for. */
@@ -76,7 +84,9 @@ export function TalkView({
   onFinished: (report: TalkReport | null) => void
   onClose: () => void
 }) {
-  const key = getApiKey(apiKey)
+  /** The partner can run: Claude, or Gemini as the fallback. */
+  const key = keys.claude ?? keys.gemini
+  const voiceKey = keys.gemini
   const [phase, setPhase] = useState<'plan' | 'talk' | 'report'>('plan')
   const [planLeft, setPlanLeft] = useState(PLAN_SECONDS)
   const [turns, setTurns] = useState<TalkTurn[]>([])
@@ -99,7 +109,8 @@ export function TalkView({
   const [report, setReport] = useState<TalkReport | null>(null)
   const [startedAt] = useState(() => Date.now())
   const logRef = useRef<HTMLDivElement>(null)
-  const canRecord = micSupported()
+  /** Voice needs Gemini to transcribe, or the browser's own recognition. */
+  const canRecord = micSupported() && (Boolean(voiceKey) || liveTranscriptSupported())
 
   /** Checkpoints measure: no hints or corrections on screen. */
   const quiet = checkpoint
@@ -118,7 +129,7 @@ export function TalkView({
 
   const fill = (s: string) => s.replaceAll('{name}', name || '…')
   const partner = {
-    apiKey: key ?? '',
+    keys,
     model,
     scenario,
     week,
@@ -146,13 +157,13 @@ export function TalkView({
 
   function say(text: string) {
     if (!autoPlay) return
-    void speakWelsh({ text, apiKey: key, ...voice, accent: accentFor(text) }).catch(() => {})
+    void speakWelsh({ text, apiKey: voiceKey, ...voice, accent: accentFor(text) }).catch(() => {})
   }
 
   function replay(text: string, slow = false) {
     void speakWelsh({
       text,
-      apiKey: key,
+      apiKey: voiceKey,
       voice: voice.voice,
       style: slow ? TTS_SLOW_STYLE : voice.style,
       accent: accentFor(text),
@@ -200,6 +211,7 @@ export function TalkView({
         history: before,
         text: input.text,
         audio: input.audio,
+        spoken: input.spoken,
         stuck: input.stuck,
       })
       const mine: TalkTurn = {
@@ -231,13 +243,14 @@ export function TalkView({
     setError(null)
     try {
       const r = await talkRetry({
-        apiKey: key,
+        keys,
         model,
         original: t.stuck ? `(in English) ${t.stuck}` : t.welsh,
         prompt: t.feedback.prompt,
         target: t.feedback.better,
         text: input.text,
         audio: input.audio,
+        spoken: input.spoken,
       })
       setTurns((all) => all.map((x, j) => (j === i ? { ...x, retry: r } : x)))
       // An unclear take gets no verdict, so the correction stays hidden for another go.
@@ -269,6 +282,7 @@ export function TalkView({
           audio: rec.wav,
           audioUrl: URL.createObjectURL(rec.raw),
           seconds: rec.seconds,
+          spoken: rec.spoken,
         })
       } catch (err) {
         setError(errorText(err))
@@ -276,7 +290,7 @@ export function TalkView({
       return
     }
     try {
-      setMic(await startMic())
+      setMic(await startMic({ listen: !voiceKey }))
     } catch {
       setError('Microphone blocked. Allow mic access in the browser, or type instead.')
     }
@@ -340,7 +354,7 @@ export function TalkView({
         revealed: hideText ? shownText : null,
       })
       const r = await talkReport({
-        apiKey: key,
+        keys,
         model,
         scenario,
         week,
@@ -382,8 +396,15 @@ export function TalkView({
 
       {!key && (
         <p className="talk-warning">
-          The conversation partner needs a Gemini key. Add one under Settings → Gemini
-          key, then come back.
+          The conversation partner needs an Anthropic key. Add one under Settings →
+          Anthropic key, then come back.
+        </p>
+      )}
+      {key && !voiceKey && (
+        <p className="muted-line">
+          {canRecord
+            ? 'Your voice is turned into text by the browser, which can tidy up small mistakes. Add a Gemini key in Settings for exact transcripts and natural voices.'
+            : 'Type your replies here: this browser can’t turn Welsh speech into text. Add a Gemini key in Settings to speak instead.'}
         </p>
       )}
 
@@ -410,7 +431,7 @@ export function TalkView({
           <ul className="talk-frames">
             {scenario.frames.map((f) => (
               <li key={f.welsh}>
-                <SpeakButton text={fill(f.welsh)} apiKeyStored={apiKey} />
+                <SpeakButton text={fill(f.welsh)} apiKeyStored={voiceKey ?? ''} />
                 <span>
                   <span className="cy">{fill(f.welsh)}</span>
                   <span className="en">{fill(f.english)}</span>
@@ -866,7 +887,7 @@ export function TalkView({
               <ul className="talk-frames">
                 {report.phrases.map((p) => (
                   <li key={p.welsh}>
-                    <SpeakButton text={p.welsh} apiKeyStored={apiKey} />
+                    <SpeakButton text={p.welsh} apiKeyStored={voiceKey ?? ''} />
                     <span>
                       <span className="cy">{p.welsh}</span>
                       <span className="en">{p.english}</span>
@@ -894,8 +915,8 @@ export function TalkView({
 
 function errorText(err: unknown): string {
   const msg = err instanceof Error ? err.message : String(err)
-  if (/api key|API_KEY|permission/i.test(msg)) {
-    return 'Gemini refused the key. Check it under Settings.'
+  if (/api.?key|API_KEY|permission|authentication|401/i.test(msg)) {
+    return 'The AI refused the key. Check your keys under Settings.'
   }
-  return `Something went wrong talking to Gemini: ${msg.slice(0, 160)}`
+  return `Something went wrong: ${msg.slice(0, 160)}`
 }

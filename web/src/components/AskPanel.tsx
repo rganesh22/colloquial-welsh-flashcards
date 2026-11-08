@@ -8,10 +8,9 @@ import {
 } from 'react'
 import {
   ASK_MODELS,
-  askGeminiChat,
+  askChat,
   clampAskModel,
-  clampAskTemperature,
-  getApiKey,
+  type AiKeys,
   type ChatTurn,
 } from '../lib/gemini'
 import { MarkdownBody } from './MarkdownBody'
@@ -27,7 +26,7 @@ function newId() {
 }
 
 export function AskPanel({
-  apiKeyStored,
+  keys,
   context,
   open,
   onClose,
@@ -36,7 +35,7 @@ export function AskPanel({
   temperature,
   onSettings,
 }: {
-  apiKeyStored: string
+  keys: AiKeys
   context?: string
   open: boolean
   onClose: () => void
@@ -83,9 +82,8 @@ export function AskPanel({
   async function send(text: string) {
     const q = text.trim()
     if (!q || loading) return
-    const key = getApiKey(apiKeyStored)
-    if (!key) {
-      setError('Add a Gemini API key in Settings.')
+    if (!keys.claude && !keys.gemini) {
+      setError('Add an Anthropic key in Settings.')
       return
     }
 
@@ -100,8 +98,8 @@ export function AskPanel({
     setError(null)
 
     try {
-      const res = await askGeminiChat({
-        apiKey: key,
+      const res = await askChat({
+        keys,
         model,
         temperature,
         question: q,
@@ -216,24 +214,6 @@ export function AskPanel({
                 </option>
               ))}
             </select>
-          </label>
-          <label>
-            Creativity
-            <input
-              type="range"
-              min={0}
-              max={1.2}
-              step={0.1}
-              value={clampAskTemperature(temperature)}
-              onChange={(e) =>
-                onSettings({
-                  askTemperature: clampAskTemperature(Number(e.target.value)),
-                })
-              }
-            />
-            <span className="ask-temp-val">
-              {clampAskTemperature(temperature).toFixed(1)}
-            </span>
           </label>
           <p className="ask-config-hint muted-line">
             Chat keeps turn history so follow-ups use prior answers. Card

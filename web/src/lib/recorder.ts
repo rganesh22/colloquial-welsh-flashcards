@@ -9,6 +9,8 @@ export interface Recording {
   raw: Blob
   /** Speech length, with leading/trailing silence trimmed (0 if silent). */
   seconds: number
+  /** The browser's own Welsh transcript, when startMic was asked to listen. */
+  spoken?: string
 }
 
 export interface MicSession {
@@ -24,8 +26,76 @@ export function micSupported(): boolean {
   )
 }
 
-export async function startMic(): Promise<MicSession> {
+/** Minimal Web Speech API surface (not in TypeScript's DOM types). */
+interface Recognizer {
+  lang: string
+  continuous: boolean
+  interimResults: boolean
+  onresult: ((e: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null
+  onend: (() => void) | null
+  onerror: (() => void) | null
+  start: () => void
+  stop: () => void
+  abort: () => void
+}
+
+function newRecognizer(): Recognizer | null {
+  const w = window as unknown as Record<string, (new () => Recognizer) | undefined>
+  const Ctor = w.SpeechRecognition ?? w.webkitSpeechRecognition
+  return Ctor ? new Ctor() : null
+}
+
+/** Whether the browser can turn speech into text itself (no Gemini needed). */
+export function liveTranscriptSupported(): boolean {
+  return typeof window !== 'undefined' && newRecognizer() !== null
+}
+
+/**
+ * Live Welsh recognition alongside the recording. Support varies: Chrome
+ * sends audio to Google; Safari may not know Welsh. Never throws.
+ */
+function startListening(): { finish: () => Promise<string>; cancel: () => void } | null {
+  const rec = newRecognizer()
+  if (!rec) return null
+  const finals: string[] = []
+  let ended = false
+  let onEnded: (() => void) | null = null
+  rec.lang = 'cy-GB'
+  rec.continuous = true
+  rec.interimResults = false
+  rec.onresult = (e) => {
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const r = e.results[i]!
+      if (r.isFinal && r[0]) finals.push(r[0].transcript.trim())
+    }
+  }
+  rec.onend = () => {
+    ended = true
+    onEnded?.()
+  }
+  rec.onerror = () => {}
+  try {
+    rec.start()
+  } catch {
+    return null
+  }
+  return {
+    cancel: () => rec.abort(),
+    finish: () =>
+      new Promise<string>((resolve) => {
+        const done = () => resolve(finals.filter(Boolean).join(' '))
+        if (ended) return done()
+        onEnded = done
+        // The last result can lag behind stop(); don't wait forever.
+        window.setTimeout(done, 2500)
+        rec.stop()
+      }),
+  }
+}
+
+export async function startMic(opts: { listen?: boolean } = {}): Promise<MicSession> {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+  const listening = opts.listen ? startListening() : null
   const recorder = new MediaRecorder(stream)
   const chunks: Blob[] = []
   recorder.ondataavailable = (e) => {
@@ -38,6 +108,7 @@ export async function startMic(): Promise<MicSession> {
   return {
     cancel() {
       if (recorder.state !== 'inactive') recorder.stop()
+      listening?.cancel()
       release()
     },
     stop() {
@@ -48,9 +119,12 @@ export async function startMic(): Promise<MicSession> {
             const raw = new Blob(chunks, {
               type: recorder.mimeType || 'audio/webm',
             })
-            const { wav, seconds } = await toWav(raw)
+            const [{ wav, seconds }, spoken] = await Promise.all([
+              toWav(raw),
+              listening?.finish(),
+            ])
             // Speech length without the silence before and after.
-            resolve({ wav, raw, seconds })
+            resolve({ wav, raw, seconds, spoken })
           } catch (err) {
             reject(err)
           }

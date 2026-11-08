@@ -1,17 +1,26 @@
 import { cacheGetText, cacheSetText, hashKey } from './cache'
+import {
+  CLAUDE_MODELS,
+  DEFAULT_CLAUDE_MODEL,
+  clampClaudeModel,
+  claudeGenerate,
+  getClaudeKey,
+} from './claude'
 
-export const DEFAULT_ASK_MODEL = 'gemini-3-flash-preview'
+/** Text jobs run on Claude; this Gemini model is only the no-Claude-key fallback. */
+export const GEMINI_TEXT_MODEL = 'gemini-3-flash-preview'
 
-export const ASK_MODELS = [
-  { id: 'gemini-3-flash-preview', label: '3 Flash · default' },
-  { id: 'gemini-3.8-flash', label: '3.8 Flash · latest' },
-  { id: 'gemini-2.5-flash', label: '2.5 Flash · fast' },
-  { id: 'gemini-2.5-pro', label: '2.5 Pro · deeper' },
-  { id: 'gemini-2.0-flash', label: '2.0 Flash' },
-  { id: 'gemini-flash-latest', label: 'Flash latest' },
-] as const
+export const DEFAULT_ASK_MODEL = DEFAULT_CLAUDE_MODEL
+
+export const ASK_MODELS = CLAUDE_MODELS
 
 export type AskModelId = (typeof ASK_MODELS)[number]['id']
+
+/** Keys for the two providers: Claude for text, Gemini (optional) for voice. */
+export interface AiKeys {
+  claude: string | null
+  gemini: string | null
+}
 
 export type ChatTurn = {
   role: 'user' | 'model'
@@ -32,9 +41,7 @@ export function getApiKey(stored?: string | null): string | null {
 }
 
 export function clampAskModel(model: string | undefined | null): string {
-  const m = (model ?? '').trim()
-  if (ASK_MODELS.some((x) => x.id === m)) return m
-  return DEFAULT_ASK_MODEL
+  return clampClaudeModel((model ?? '').trim())
 }
 
 export function clampAskTemperature(n: number): number {
@@ -42,8 +49,8 @@ export function clampAskTemperature(n: number): number {
   return Math.min(1.2, Math.max(0, Math.round(n * 100) / 100))
 }
 
-export async function askGeminiChat(opts: {
-  apiKey: string
+export async function askChat(opts: {
+  keys: AiKeys
   model?: string
   temperature?: number
   question: string
@@ -53,7 +60,10 @@ export async function askGeminiChat(opts: {
   const q = opts.question.trim()
   if (!q) throw new Error('Empty question')
 
-  const model = clampAskModel(opts.model)
+  const claudeKey = opts.keys.claude
+  const geminiKey = opts.keys.gemini
+  if (!claudeKey && !geminiKey) throw new Error('Add an Anthropic key in Settings.')
+  const model = claudeKey ? clampAskModel(opts.model) : GEMINI_TEXT_MODEL
   const temperature = clampAskTemperature(opts.temperature ?? 0.7)
   const history = (opts.history ?? []).filter((t) => t.text.trim())
   const context = opts.context?.trim() || ''
@@ -69,13 +79,31 @@ export async function askGeminiChat(opts: {
   const hit = await cacheGetText(key)
   if (hit) return { text: hit, cached: true }
 
-  const { GoogleGenAI } = await import('@google/genai')
-  const ai = new GoogleGenAI({ apiKey: opts.apiKey })
-
   const systemInstruction = [
     SYSTEM,
     context ? `\n\nCurrent card / study context:\n${context}` : '',
   ].join('')
+
+  if (claudeKey) {
+    const text = await claudeGenerate({
+      apiKey: claudeKey,
+      model,
+      system: systemInstruction,
+      effort: 'medium',
+      messages: [
+        ...history.map((t) => ({
+          role: t.role === 'model' ? ('assistant' as const) : ('user' as const),
+          text: t.text,
+        })),
+        { role: 'user' as const, text: q },
+      ],
+    })
+    await cacheSetText(key, text)
+    return { text, cached: false }
+  }
+
+  const { GoogleGenAI } = await import('@google/genai')
+  const ai = new GoogleGenAI({ apiKey: geminiKey! })
 
   const contents = [
     ...history.map((t) => ({
@@ -101,12 +129,8 @@ export async function askGeminiChat(opts: {
   return { text, cached: false }
 }
 
-/** @deprecated Prefer askGeminiChat for multi-turn. */
-export async function askGemini(opts: {
-  apiKey: string
-  question: string
-  context?: string
-  model?: string
-}): Promise<{ text: string; cached: boolean }> {
-  return askGeminiChat(opts)
+
+/** Both keys from settings (or the build's env keys). */
+export function aiKeys(s: { apiKey?: string; claudeKey?: string }): AiKeys {
+  return { claude: getClaudeKey(s.claudeKey), gemini: getApiKey(s.apiKey) }
 }
