@@ -1,5 +1,7 @@
 import { cacheGetAudio, cacheSetAudio, hashKey } from './cache'
 
+import { piperWav } from './piperWeb'
+
 export const TTS_MODEL = 'gemini-3.1-flash-tts-preview'
 /** Calm deep male voice — same as wiktionary_web_scraper. */
 export const TTS_VOICE = 'Enceladus'
@@ -123,24 +125,30 @@ export function pcmToWav(
   return new Blob([buffer], { type: 'audio/wav' })
 }
 
-function speakBrowser(text: string): void {
-  if (!('speechSynthesis' in window)) {
-    throw new Error('Speech not available')
-  }
+/**
+ * The device's own Welsh voice, if it has one. Without one, browsers read
+ * Welsh with an English voice, which teaches the wrong sounds: stay silent.
+ */
+function welshSystemVoice(): SpeechSynthesisVoice | null {
+  if (!('speechSynthesis' in window)) return null
+  const voices = window.speechSynthesis.getVoices()
+  return (
+    voices.find((v) => v.lang.toLowerCase().startsWith('cy')) ??
+    voices.find((v) => /welsh|cymraeg/i.test(v.name)) ??
+    null
+  )
+}
+
+function speakBrowser(text: string): boolean {
+  const cy = welshSystemVoice()
+  if (!cy) return false
   window.speechSynthesis.cancel()
   const u = new SpeechSynthesisUtterance(text)
-  const voices = window.speechSynthesis.getVoices()
-  const cy =
-    voices.find((v) => v.lang.toLowerCase().startsWith('cy')) ??
-    voices.find((v) => /welsh|cymraeg/i.test(v.name))
-  if (cy) {
-    u.voice = cy
-    u.lang = cy.lang
-  } else {
-    u.lang = 'cy-GB'
-  }
+  u.voice = cy
+  u.lang = cy.lang
   u.rate = 0.9
   window.speechSynthesis.speak(u)
+  return true
 }
 
 let currentAudio: HTMLAudioElement | null = null
@@ -230,6 +238,41 @@ async function fetchCourseAudio(key: string): Promise<Blob | null> {
   }
 }
 
+/**
+ * Free Piper clips (scripts/local-tts.mjs) for the same course lines, same keys.
+ * Played when there's no Gemini clip, so the course never needs a key.
+ */
+let localKeysPromise: Promise<Set<string>> | null = null
+
+function loadLocalKeys(): Promise<Set<string>> {
+  if (!localKeysPromise) {
+    localKeysPromise = fetch(assetUrl('tts/local.json'))
+      .then(async (r) => (r.ok ? new Set(((await r.json()) as { keys?: string[] }).keys ?? []) : new Set<string>()))
+      .catch(() => new Set<string>())
+  }
+  return localKeysPromise
+}
+
+async function fetchLocalAudio(key: string): Promise<Blob | null> {
+  if (!(await loadLocalKeys()).has(key)) return null
+  try {
+    const res = await fetch(assetUrl(`tts/local/${key}.mp3`))
+    return res.ok ? await res.blob() : null
+  } catch {
+    return null
+  }
+}
+
+/** Set once Gemini says the key's daily quota or credits are gone, so we stop asking this session. */
+let geminiBlocked = false
+
+function isQuotaError(err: unknown): boolean {
+  const msg = String((err as { message?: string })?.message ?? err)
+  return /quota|RESOURCE_EXHAUSTED|credits|429|402|PERMISSION_DENIED|API key/i.test(msg)
+}
+
+export type TtsSource = 'gemini' | 'bundle' | 'local' | 'piper' | 'browser'
+
 function bundledUrl(hash: string): string {
   return assetUrl(`tts/${hash}.wav`)
 }
@@ -265,6 +308,7 @@ export async function hasCachedTts(text: string): Promise<boolean> {
   if (!trimmed) return false
   const key = await ttsAudioKey(trimmed)
   if ((await loadCourseKeys()).has(key)) return true
+  if ((await loadLocalKeys()).has(key)) return true
   const hit = await cacheGetAudio(key)
   if (hit) return true
   const manifest = await loadManifest()
@@ -327,11 +371,12 @@ async function generateGeminiWav(
 export async function ensureWelshAudio(opts: {
   text: string
   apiKey: string | null
-}): Promise<{ cached: boolean; source: 'gemini' | 'bundle' | 'browser' }> {
+}): Promise<{ cached: boolean; source: TtsSource }> {
   const text = opts.text.trim()
   if (!text) throw new Error('Nothing to speak')
 
-  if ((await loadCourseKeys()).has(await ttsAudioKey(text))) {
+  const audioKey = await ttsAudioKey(text)
+  if ((await loadCourseKeys()).has(audioKey)) {
     return { cached: true, source: 'bundle' }
   }
   const bundled = await fetchBundledWav(text)
@@ -345,13 +390,13 @@ export async function ensureWelshAudio(opts: {
     return { cached: true, source: 'bundle' }
   }
 
-  if (!opts.apiKey) {
-    return { cached: false, source: 'browser' }
-  }
-
-  const key = await ttsAudioKey(text)
+  const key = audioKey
   const hit = await cacheGetAudio(key)
   if (hit) return { cached: true, source: 'gemini' }
+  if ((await loadLocalKeys()).has(key)) return { cached: true, source: 'local' }
+  if (!opts.apiKey || geminiBlocked) {
+    return { cached: false, source: 'piper' }
+  }
 
   const wavBlob = await generateGeminiWav(text, opts.apiKey)
   const wavBytes = new Uint8Array(await wavBlob.arrayBuffer())
@@ -364,7 +409,13 @@ async function audioBlobFor(
   text: string,
   apiKey: string | null,
   v?: WelshVoice,
-): Promise<{ blob: Blob; cached: boolean; source: 'bundle' | 'gemini' } | null> {
+): Promise<{
+  blob: Blob
+  cached: boolean
+  source: Exclude<TtsSource, 'browser'>
+  /** Playback speed: Piper has no "slowly" style, so slow replays play slower. */
+  rate?: number
+} | null> {
   const key = await ttsAudioKey(text, v)
   // Course lines ship with the app (any voice); the browser caches the file.
   const course = await fetchCourseAudio(key)
@@ -387,20 +438,40 @@ async function audioBlobFor(
     return { blob: bundled.blob, cached: true, source: 'bundle' }
   }
 
-  if (!apiKey) return null
-  try {
-    const blob = await generateGeminiWav(text, apiKey, v)
-    const wavBytes = new Uint8Array(await blob.arrayBuffer())
-    await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
-    if (isDefaultVoice(v)) notifyTtsCached(text)
-    return { blob, cached: false, source: 'gemini' }
-  } catch (err) {
-    console.warn('Gemini TTS failed, falling back to browser', err)
-    return null
+  // Free Piper clip for every fixed course line (a slow replay reuses the normal one).
+  const local = await fetchLocalAudio(key)
+  if (local) return { blob: local, cached: true, source: 'local' }
+  const rate = styleRate(v?.style)
+  if (v?.style) {
+    const plain = await fetchLocalAudio(await ttsAudioKey(text, { ...v, style: undefined }))
+    if (plain) return { blob: plain, cached: true, source: 'local', rate }
   }
+
+  if (apiKey && !geminiBlocked) {
+    try {
+      const blob = await generateGeminiWav(text, apiKey, v)
+      const wavBytes = new Uint8Array(await blob.arrayBuffer())
+      await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
+      if (isDefaultVoice(v)) notifyTtsCached(text)
+      return { blob, cached: false, source: 'gemini' }
+    } catch (err) {
+      if (isQuotaError(err)) geminiBlocked = true
+      console.warn('Gemini TTS failed, using the free Welsh voice', err)
+    }
+  }
+
+  // Anything else (AI replies, your name): Welsh voice made in the browser.
+  const made = await piperWav(text)
+  return made ? { blob: made, cached: false, source: 'piper', rate } : null
 }
 
-function playBlob(blob: Blob, token: number): Promise<void> {
+function styleRate(style?: string): number {
+  if (style === TTS_SLOW_STYLE) return 0.75
+  if (style === TTS_CLEAR_STYLE) return 0.9
+  return 1
+}
+
+function playBlob(blob: Blob, token: number, rate = 1): Promise<void> {
   return new Promise((resolve) => {
     if (token !== playToken) {
       resolve()
@@ -408,6 +479,7 @@ function playBlob(blob: Blob, token: number): Promise<void> {
     }
     const url = URL.createObjectURL(blob)
     const audio = new Audio(url)
+    audio.playbackRate = rate
     currentAudio = audio
     const finish = () => {
       URL.revokeObjectURL(url)
@@ -424,21 +496,14 @@ function playBlob(blob: Blob, token: number): Promise<void> {
 
 function speakBrowserWait(text: string, token: number): Promise<void> {
   return new Promise((resolve) => {
-    if (token !== playToken || !('speechSynthesis' in window)) {
+    const cy = welshSystemVoice()
+    if (token !== playToken || !cy) {
       resolve()
       return
     }
     const u = new SpeechSynthesisUtterance(text)
-    const voices = window.speechSynthesis.getVoices()
-    const cy =
-      voices.find((v) => v.lang.toLowerCase().startsWith('cy')) ??
-      voices.find((v) => /welsh|cymraeg/i.test(v.name))
-    if (cy) {
-      u.voice = cy
-      u.lang = cy.lang
-    } else {
-      u.lang = 'cy-GB'
-    }
+    u.voice = cy
+    u.lang = cy.lang
     u.rate = 0.9
     const finish = () => {
       if (currentStop === finish) currentStop = null
@@ -462,7 +527,7 @@ export async function speakWelsh(opts: {
   voice?: string
   style?: string
   accent?: TtsAccent
-}): Promise<{ cached: boolean; source: 'gemini' | 'bundle' | 'browser' }> {
+}): Promise<{ cached: boolean; source: TtsSource }> {
   const text = opts.text.trim()
   if (!text) throw new Error('Nothing to speak')
 
@@ -474,10 +539,10 @@ export async function speakWelsh(opts: {
   })
   if (token !== playToken) return { cached: false, source: 'browser' }
   if (!loaded) {
-    speakBrowser(text)
+    if (!speakBrowser(text)) console.warn('No Welsh voice available yet (offline on first use?)')
     return { cached: false, source: 'browser' }
   }
-  await playBlob(loaded.blob, token)
+  await playBlob(loaded.blob, token, loaded.rate)
   return { cached: loaded.cached, source: loaded.source }
 }
 
@@ -498,6 +563,6 @@ export async function playWelshSequence(
     const loaded = await audioBlobFor(text, apiKey, line)
     if (token !== playToken) return
     if (!loaded) await speakBrowserWait(text, token)
-    else await playBlob(loaded.blob, token)
+    else await playBlob(loaded.blob, token, loaded.rate)
   }
 }

@@ -21,6 +21,7 @@ import {
   type TalkReport,
   type TalkTurn,
 } from '../lib/talk'
+import { warmPiper } from '../lib/piperWeb'
 import { speakWelsh, TTS_CLEAR_STYLE, TTS_SLOW_STYLE, TTS_VOICES } from '../lib/tts'
 import { SpeakButton } from './SpeakButton'
 
@@ -159,6 +160,9 @@ export function TalkView({
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: 'smooth' })
   }, [turns, busy])
+
+  // The partner's replies are spoken by the in-browser Welsh voice: fetch it while you plan.
+  useEffect(() => warmPiper(), [])
 
   useEffect(() => () => mic?.cancel(), [mic])
 

@@ -20,7 +20,7 @@ import { execFile } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { promisify } from 'node:util'
 import { createServer } from 'vite'
 import {
@@ -46,7 +46,7 @@ const resumeJob = resumeIdx >= 0 ? args[resumeIdx + 1] : null
 const direct = args.includes('--direct')
 const API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
 
-async function loadCourse() {
+export async function loadCourse() {
   const server = await createServer({
     root,
     logLevel: 'error',
@@ -266,7 +266,9 @@ async function generateDirect(todo, model, key, manifest, have) {
   console.log(`Done. ok=${ok} failed=${failed}. Re-run to retry any failures.`)
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}

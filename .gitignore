@@ -11,3 +11,4 @@ dist-ssr
 server/firebase-debug.log
 web/scripts/batch-jobs/*.jsonl
 web/scripts/batch-jobs/*.results.jsonl
+web/scripts/.piper/
