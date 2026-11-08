@@ -38,6 +38,9 @@ const PARTNER_VOICES: Record<string, string> = {
   disgynnydd: TTS_VOICES.female,
   'dysgwr-lleol': TTS_VOICES.femaleYoung, // Valeria
   ymwelydd: TTS_VOICES.female, // Rhian
+  'stori-taith': TTS_VOICES.male, // Dafydd
+  barn: TTS_VOICES.female, // Luned
+  'pe-bai': TTS_VOICES.maleYoung, // Tomás
 }
 
 type SendInput = {
@@ -809,6 +812,13 @@ export function TalkView({
               </div>
             ))}
           </div>
+          <p className="talk-level">
+            <span className="talk-level-badge">{report.level}</span>
+            <span>
+              <strong>Level shown in this conversation</strong>
+              {report.levelWhy ? ` — ${report.levelWhy}` : ''}
+            </span>
+          </p>
           <p className="talk-task">
             <strong>Goal:</strong> {scenario.goal}{' '}
             <span className={`talk-task-badge done-${report.taskDone}`}>

@@ -124,12 +124,22 @@ export type AppView =
   | { name: 'story' }
   | {
       name: 'trip-block'
-      block: 'listen' | 'shadow' | 'speak' | 'checkpoint' | 'retell' | 'practice' | 'clip'
+      block:
+        | 'listen'
+        | 'shadow'
+        | 'speak'
+        | 'checkpoint'
+        | 'retell'
+        | 'practice'
+        | 'clip'
+        | 'pattern'
       /** Plan session this block belongs to (none for free practice). */
       n?: number
       dialogue?: string
       scenario?: string
       clip?: string
+      /** Grammar unit (Colloquial Welsh id, or 'mix'). */
+      unit?: string
       short?: boolean
     }
 

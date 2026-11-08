@@ -127,10 +127,16 @@ export interface TalkReport {
   }
   /** Did they achieve the scenario goal: 0 no, 1 partly, 2 yes. */
   taskDone: number
+  /** CEFR estimate for spoken interaction in this conversation. */
+  level: CefrLevel
+  levelWhy: string
   metrics?: TalkMetrics
   /** Words the transcriber wasn't sure of, across the conversation. */
   uncertain: string[]
 }
+
+export const CEFR_LEVELS = ['pre-A1', 'A1', 'A2', 'B1', 'B2'] as const
+export type CefrLevel = (typeof CEFR_LEVELS)[number]
 
 /** What the partner may use, by plan week. */
 export function levelBrief(week: number): string {
@@ -143,12 +149,12 @@ export function levelBrief(week: number): string {
   if (week <= 6) {
     return 'Beginner moving to A2. You may use short past tense (es i, ges i, wnes i, -ais / -odd), future with bydd, and opinions with dw i’n meddwl bod… Keep sentences under ~12 words.'
   }
-  return 'A2 learner preparing for real conversations. Speak naturally but clearly, at a gentle pace. You may use everyday idioms and fillers (wel, chwarae teg, ti’n gwbod) and occasionally ask a follow-up the learner did not expect, to practise repair. Sometimes (about one turn in three) give a longer answer of 3–5 sentences, like a real interviewee would, then stop and let the learner check they understood.'
+  return 'Learner pushing from A2 to B1. Speak naturally at a gentle-to-normal pace. Use the full range: past, imperfect (ro’n i’n arfer…), perfect (wedi), future, conditional (baswn i / taswn i), “that” clauses and sy. Ask open questions that need stories, reasons and opinions (Pam?, Beth fasech chi’n wneud tasech chi…?, Sut oedd hi?), and follow up on their answers so they have to explain and expand. Use everyday idioms and fillers (wel, chwarae teg, ti’n gwbod) and occasionally ask a follow-up the learner did not expect, to practise repair. About one turn in three, give a longer answer of 3–5 sentences, then stop and let the learner check they understood.'
 }
 
 /** Regional and register variants that are never errors. */
-const VARIANTS =
-  'gyda/efo, nawr/rŵan, e/fe/fo, dych chi/dach chi/ydych chi, dw i/rydw i/dwi, mae gen i / mae … gyda fi; does gen i ddim / sgen i ddim / does dim … gyda fi, moyn/isio/eisiau, mas/allan, ydy/yw, shwmae/sut mae, hefyd/’fyd, gwybod/gwbod, ia/ie, be/beth, dan ni/dyn ni, sgynnoch chi/mae gyda chi'
+export const VARIANTS =
+  'gyda/efo, nawr/rŵan, e/fe/fo, dych chi/dach chi/ydych chi, dw i/rydw i/dwi, mae gen i / mae … gyda fi; does gen i ddim / sgen i ddim / does dim … gyda fi, moyn/isio/eisiau, mas/allan, ydy/yw, shwmae/sut mae, hefyd/’fyd, gwybod/gwbod, ia/ie, be/beth, dan ni/dyn ni, sgynnoch chi/mae gyda chi, ces i/ges i, gwnes i/wnes i, des i/ddes i, the fe/mi particle or none, i fi/i mi, gwneud/neud, roeddwn i/ro’n i/o’n i, byddwn i/baswn i/faswn i/swn i, taswn i/pe bawn i/petawn i, sy/sydd, achos/oherwydd'
 
 /** Interview answers from week 5; everyone gets longer turns from week 7. */
 function longAnswers(scenario: Scenario, week: number): boolean {
@@ -306,8 +312,10 @@ const REPORT_SCHEMA = {
       required: ['range', 'accuracy', 'interaction'],
     },
     taskDone: { type: 'integer', minimum: 0, maximum: 2 },
+    level: { type: 'string', enum: [...CEFR_LEVELS] },
+    levelWhy: { type: 'string' },
   },
-  required: ['summary', 'wins', 'fixes', 'phrases', 'scores', 'taskDone'],
+  required: ['summary', 'wins', 'fixes', 'phrases', 'scores', 'taskDone', 'level', 'levelWhy'],
 }
 
 const RETRY_SCHEMA = {
@@ -452,7 +460,7 @@ type Content = { role: 'user' | 'model'; parts: Part[] }
  * One model call. Text goes to Claude (opts.model is a Claude model) when
  * there's an Anthropic key; audio, or no Anthropic key, goes to Gemini.
  */
-async function generate(opts: {
+export async function generate(opts: {
   keys: AiKeys
   model?: string
   contents: Content[]
@@ -497,7 +505,7 @@ async function generate(opts: {
   return res.text ?? ''
 }
 
-function parseJson<T>(text: string | undefined): T {
+export function parseJson<T>(text: string | undefined): T {
   const raw = (text ?? '').trim()
   if (!raw) throw new Error('Empty reply from the model')
   return JSON.parse(raw.replace(/^```json\s*|```$/g, '')) as T
@@ -1124,7 +1132,15 @@ Return:
 - fixes: up to 4 of the most useful corrections (said → better → why), prioritising patterns they'll reuse. "better" is their sentence with only that error fixed. Never "fix" regional variants or style, and never list a fix on a word marked [transcript unsure].
 - phrases: up to 5 Welsh phrases that would have helped them in this conversation.
 - scores: integers 1–5 for range, accuracy and interaction, using the rubric.
-- taskDone: 0, 1 or 2.`,
+- taskDone: 0, 1 or 2.
+- level: the CEFR level this conversation shows for SPOKEN INTERACTION AND PRODUCTION, judged strictly against these descriptors (not effort or progress):
+  pre-A1: isolated words and memorised formulae only.
+  A1: simple phrases about themselves, relies on the partner repeating and rephrasing slowly.
+  A2: short exchanges on familiar routine topics; can describe family, work, past events in simple linked sentences; can't keep a conversation going alone.
+  B1: can keep going comprehensibly on familiar topics without preparation; narrates events and experiences in a connected sequence (past tense, linkers); gives brief reasons and opinions, explains plans, describes hopes and ambitions; checks and repairs misunderstandings; noticeable pauses and errors are fine if meaning is clear.
+  B2: interacts with a degree of fluency and spontaneity that makes regular interaction with fluent speakers possible without strain; gives clear, detailed descriptions and explains a viewpoint with pros and cons; errors rarely cause misunderstanding.
+  If it's between two levels, pick the lower. If the learner mostly answered with memorised frames or under 6 words a turn, it is not B1.
+- levelWhy: one sentence: the main reason for that level, and the one thing that would move them up.`,
           },
         ],
       },
@@ -1154,6 +1170,8 @@ Return:
       overall: Math.round(((fluency + range + accuracy + interaction) / 4) * 10) / 10,
     },
     taskDone: Math.min(2, Math.max(0, Math.round(Number(r.taskDone) || 0))),
+    level: CEFR_LEVELS.includes(r.level as CefrLevel) ? (r.level as CefrLevel) : 'A1',
+    levelWhy: r.levelWhy ?? '',
     metrics: opts.metrics,
     uncertain: [...new Set(opts.history.flatMap((t) => t.uncertain ?? []))],
   }

@@ -17,6 +17,8 @@ import { getDialogue } from '../data/trip/dialogues'
 import { getScenario, SCENARIOS } from '../data/trip/scenarios'
 import { getClip } from '../data/trip/listening'
 import { getLesson } from '../lib/lessons'
+import { UNIT_SKILLS } from '../lib/grammar'
+import { HybridCard } from './HybridCard'
 import { localCalendarDay } from '../lib/srs'
 import {
   daysSinceStudy,
@@ -206,6 +208,8 @@ export function TripView({
           </p>
         </section>
       )}
+
+      <HybridCard trip={trip} onTrip={onTrip} />
 
       <div className="trip-links">
         <button type="button" className="ghost-btn" onClick={onStory}>
@@ -430,7 +434,9 @@ function SessionCard({
       case 'retell':
         return session.retell.topic
       case 'pattern':
-        return pattern ? `Colloquial Welsh ${pattern.id}: ${pattern.titleCy}` : ''
+        if (session.pattern === 'mix') return UNIT_SKILLS.mix ?? ''
+        if (!pattern) return ''
+        return `${pattern.id === 'alphabet' ? 'Yr Wyddor' : `Unit ${pattern.id}`} · ${UNIT_SKILLS[pattern.id] ?? pattern.titleCy}`
       case 'story':
         return 'Your intro and the quick-fire questions, out loud'
       case 'clip': {
@@ -707,6 +713,7 @@ function WeekMap({
                 {score && (
                   <span className="trip-week-score" title={score.summary}>
                     Checkpoint {Math.round(score.overall * 10) / 10}/5
+                    {score.level ? ` · ${score.level}` : ''}
                   </span>
                 )}
               </div>
@@ -892,9 +899,21 @@ function PlanWhy() {
           words to recognise.
         </li>
         <li>
-          <strong>Chunks before grammar.</strong> Whole phrases like “Dw i’n dod o…” get you
-          talking fastest; learners trained to notice chunks are rated more fluent (Boers et
-          al. 2006). Grammar guides are optional extras.
+          <strong>Chunks first, grammar every day.</strong> Whole phrases like “Dw i’n dod
+          o…” get you talking fastest (Boers et al. 2006), but B1 means building your own
+          sentences: stories in the past, plans, opinions, “if I…”. So every session has a
+          10-minute grammar block that walks through Colloquial Welsh units 1–15 in order
+          (week 8 mixes the B1 core), and you <em>say</em> six sentences that need each
+          pattern, with feedback. Explicit teaching plus practice that makes you produce the
+          form is what works for grammar (Spada & Tomita 2010).
+        </li>
+        <li>
+          <strong>Hybrid: the app is half of it.</strong> An hour a day in the app is about
+          50 hours by January — not enough for B1 on its own. The rest comes from outside:
+          an audio course on the commute, Welsh podcasts while you cook, two online lessons a
+          week with a tutor, and real conversations. Log them on the dashboard; the plan
+          adds up to about 2½ hours a day, most of it in time you’d otherwise lose. Tap
+          each row on the dashboard for what to use.
         </li>
         <li>
           <strong>Listen without the text.</strong> Understanding people is harder than
@@ -927,12 +946,28 @@ function PlanWhy() {
       </ul>
       <h3>Honest expectations</h3>
       <p>
-        Realistically you’ll do 40–55 hours. That is below a full A1 overall (Welsh courses
-        budget about 120 hours for Mynediad), but on <em>your</em> topics — who you are,
-        why Welsh, your trip, your interview questions — you can be at a rehearsed A1–A2.
-        Your understanding will lag behind your speaking, so expect to lead most
-        conversations. In interviews you’ll catch part of each answer live and the rest from
-        the footage later.
+        B1 from zero usually takes about 350–400 hours of study (Cambridge’s estimate;
+        Welsh adult courses budget about 360 hours to reach Canolradd, which is B1). Two
+        months can’t give anyone that, so nobody can promise you a solid B1 by January.
+      </p>
+      <ul>
+        <li>App only (about 45–50 h): A1+, A2 on your own topics.</li>
+        <li>
+          Full hybrid plan (about 130–145 h): A2, strong on your topics, with B1 skills —
+          telling a story in the past, giving reasons, plans and “if I…” — practised every
+          week.
+        </li>
+        <li>
+          Push the outside hours to about 3 hours a day in total (about 180 h): A2+, and B1
+          speaking on familiar topics becomes realistic.
+        </li>
+      </ul>
+      <p>
+        Every weekly checkpoint gives a strict CEFR level for what you actually did in that
+        conversation, so you’ll see whether B1 is happening rather than guessing. Your
+        understanding will lag behind your speaking; in interviews you’ll catch part of each
+        answer live and the rest from the footage later. After the trip, the same path
+        continues: Canolradd courses take you to a full B1.
       </p>
       <p>
         That’s fine, and it’s what makes the video honest. The tactics: ask narrow

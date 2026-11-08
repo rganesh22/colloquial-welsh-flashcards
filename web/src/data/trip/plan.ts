@@ -58,7 +58,7 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Ask someone their name and how they are',
     ],
     phraseLessons: ['p1', 'p2'],
-    patterns: ['alphabet', '1a', '1a', '1b', '1b'],
+    patterns: ['alphabet', '1a', '1b', '2a', '2b'],
     dialogues: ['d1', 'd1', 'd2', 'd2', 'd2'],
     scenarios: ['te-gaiman', 'te-gaiman', 'bws-trelew', 'te-gaiman', 'bws-trelew'],
     retell: {
@@ -78,7 +78,7 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Ask “and you?” questions to keep things going',
     ],
     phraseLessons: ['p3', 'p4'],
-    patterns: ['2a', '2a', '2b', '2b', '2b'],
+    patterns: ['2b', '3', '4', '4', '5'],
     dialogues: ['d3', 'd3', 'd4', 'd4', 'd4'],
     scenarios: ['bws-trelew', 'gwesty', 'bws-trelew', 'gwesty', 'sgwrs-rydd'],
     retell: {
@@ -98,7 +98,7 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Use numbers 1–100 for prices, ages and times',
     ],
     phraseLessons: ['p5', 'p6'],
-    patterns: ['3', '3', '6', '6', '4'],
+    patterns: ['5', '6', '6', '7', '7'],
     dialogues: ['d5', 'd5', 'd6', 'd6', 'd6'],
     scenarios: ['sgwrs-rydd', 'te-gaiman', 'te-gaiman', 'sgwrs-rydd', 'te-gaiman'],
     retell: {
@@ -118,7 +118,7 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Say what you’re going to do tomorrow and this week',
     ],
     phraseLessons: ['p7', 'p8'],
-    patterns: ['5', '5', '7', '8', '8'],
+    patterns: ['8', '8', '9', '9', '9'],
     dialogues: ['d7', 'd7', 'd8', 'd8', 'd8'],
     scenarios: ['gwesty', 'gwesty', 'fferm-trevelin', 'ymwelydd', 'fferm-trevelin'],
     retell: {
@@ -136,11 +136,12 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Say what you did yesterday or last weekend',
       'Tell the story of your journey to Patagonia',
       'Ask others what they did',
+      'Tell a 2-minute story in order, linking it with wedyn, ar ôl, achos and felly (B1)',
     ],
     phraseLessons: ['p9', 'p14'],
-    patterns: ['9', '9', '9', '9', '9'],
+    patterns: ['10', '10', '11', '11', '12'],
     dialogues: ['d9', 'd9', 'd10', 'd10', 'd10'],
-    scenarios: ['dysgwr-lleol', 'bws-trelew', 'ymwelydd', 'fferm-trevelin', 'cyfweliad-iaith'],
+    scenarios: ['dysgwr-lleol', 'stori-taith', 'ymwelydd', 'stori-taith', 'cyfweliad-iaith'],
     retell: {
       topic: 'What you did last weekend',
       prompts: ['Where you went', 'Who with', 'What you ate', 'How it was'],
@@ -156,11 +157,12 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Say what you think and ask what others think',
       'React naturally: really?, of course, fair play',
       'Hold a 5-minute chat that doesn’t feel like a quiz',
+      'Give an opinion with reasons, agree and disagree politely (B1)',
     ],
     phraseLessons: ['p10', 'p11'],
-    patterns: ['10', '10', '11', '11', '11'],
+    patterns: ['12', '12', '13', '13', '14'],
     dialogues: ['d11', 'd11', 'd12', 'd12', 'd12'],
-    scenarios: ['sgwrs-rydd', 'capel', 'sbaeneg', 'cyfweliad-iaith', 'ysgol-athrawes'],
+    scenarios: ['barn', 'capel', 'sbaeneg', 'cyfweliad-iaith', 'pe-bai'],
     retell: {
       topic: 'Why you’re learning Welsh — and what you think of it',
       prompts: ['How you started', 'What’s hard', 'What you love', 'What you hope to find in Patagonia'],
@@ -176,11 +178,12 @@ export const WEEK_PLANS: WeekPlan[] = [
       'Ask locals about their family history and the settlers',
       'Run a short interview about the state of Welsh',
       'Ask permission to film, politely',
+      'Say what you would do if… and talk about hopes and plans (B1)',
     ],
     phraseLessons: ['p12'],
-    patterns: [null, null, null, null, null],
+    patterns: ['14', '14', '15', '15', 'mix'],
     dialogues: ['d13', 'd13', 'd14', 'd14', 'd14'],
-    scenarios: ['cyfweliad-iaith', 'sbaeneg', 'cyfweliad-iaith', 'disgynnydd', 'cyfweliad-iaith'],
+    scenarios: ['cyfweliad-iaith', 'pe-bai', 'cyfweliad-iaith', 'disgynnydd', 'barn'],
     retell: {
       topic: 'What you know about Y Wladfa',
       prompts: ['1865 and the Mimosa', 'Where the Welsh live now', 'Chapels and tea houses', 'Why you’re visiting'],
@@ -199,9 +202,9 @@ export const WEEK_PLANS: WeekPlan[] = [
     ],
     // Only the Patagonian words to recognise (p13); everything else is rehearsal.
     phraseLessons: ['p13'],
-    patterns: [null, null, null, null, null],
+    patterns: ['mix', 'mix', 'mix', 'mix', 'mix'],
     dialogues: ['d14', 'd2', 'd10', 'd12', 'd13'],
-    scenarios: ['cyfweliad-iaith', 'fferm-trevelin', 'sbaeneg', 'dysgwr-lleol', 'cyfweliad-iaith'],
+    scenarios: ['cyfweliad-iaith', 'stori-taith', 'sbaeneg', 'dysgwr-lleol', 'barn'],
     retell: {
       topic: 'Your whole story',
       prompts: ['Who you are', 'Why Welsh', 'Your two months', 'Why Patagonia', 'What’s next'],
@@ -279,6 +282,11 @@ function buildSessions(): PlanSession[] {
             ...(phraseIds.length
               ? [{ id: 'phrases' as const, minutes: 8, core: true }]
               : []),
+            // The grammar track: Colloquial Welsh 1a–15, then mixed B1 review,
+            // before the conversation so you can use it there.
+            ...(wk.patterns[day - 1]
+              ? [{ id: 'pattern' as const, minutes: 10, core: true }]
+              : []),
             { id: 'listen', minutes: 7, core: wk.week >= 3 },
             clip
               ? { id: 'clip' as const, minutes: 8, core: true }
@@ -289,9 +297,6 @@ function buildSessions(): PlanSession[] {
             // Line people up on day 1, then confirm them a month before the flight.
             ...(n === 1 || n === OUTREACH_CHASE || n === OUTREACH_CONFIRM
               ? [{ id: 'outreach' as const, minutes: 5, core: true }]
-              : []),
-            ...(wk.patterns[day - 1]
-              ? [{ id: 'pattern' as const, minutes: 5, core: false }]
               : []),
           ]
       sessions.push({
@@ -466,9 +471,9 @@ export const BLOCK_META: Record<
     why: 'An AI is patient and shows text; people interrupt, speed up and switch language. Book a Welsh tutor online, join an online Welsh chat group, video-call a contact in Y Wladfa — or, if none of that works this week, swap a few voice notes in Welsh with one of them.',
   },
   pattern: {
-    titleCy: 'Patrwm',
-    title: 'Grammar pattern',
-    why: 'A short guided look at the pattern behind today’s phrases, from Colloquial Welsh.',
+    titleCy: 'Gramadeg',
+    title: 'Grammar',
+    why: 'The grammar track: every Colloquial Welsh unit up to B1 (past, future, perfect, conditional, passive, “that” clauses), in order. Read the rules, then say six sentences of your own that need them — producing a pattern, with feedback, is what turns knowing a rule into using it.',
   },
   checkpoint: {
     titleCy: 'Sgwrs brawf',

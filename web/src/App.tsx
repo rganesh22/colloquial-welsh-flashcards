@@ -71,6 +71,7 @@ import { BOOKS, getBook, getLesson, LESSONS } from './lib/lessons'
 import { cardsForLesson } from './data/deck'
 import { getApiKey, aiKeys, ASK_MODELS, clampAskModel } from './lib/gemini'
 import { getClaudeKey } from './lib/claude'
+import { GrammarBlock } from './components/GrammarBlock'
 import { speakWelsh } from './lib/tts'
 import { useKeydown } from './lib/keys'
 import { formatElapsed } from './lib/format'
@@ -310,9 +311,7 @@ export default function App() {
         setView({ name: 'trip-block', block: 'retell', n: l.n, short: l.short })
         return
       case 'pattern':
-        fromTrip.current = true
-        tickTripBlock(l.n, 'pattern')
-        setView({ name: 'guide', bookId: 'colloquial', lessonId: l.lessonId })
+        setView({ name: 'trip-block', block: 'pattern', n: l.n, unit: l.lessonId })
         return
       case 'story':
         tickTripBlock(l.n, 'story')
@@ -670,6 +669,10 @@ export default function App() {
             settings={settings}
             onTrip={setTrip}
             onTick={tickTripBlock}
+            onOpenChapter={(unit) => {
+              fromTrip.current = true
+              setView({ name: 'guide', bookId: 'colloquial', lessonId: unit })
+            }}
             onClose={() => setView({ name: 'trip' })}
           />
         )}
@@ -714,6 +717,7 @@ function TripBlockView({
   settings,
   onTrip,
   onTick,
+  onOpenChapter,
   onClose,
 }: {
   view: Extract<AppView, { name: 'trip-block' }>
@@ -721,6 +725,7 @@ function TripBlockView({
   settings: AppSettings
   onTrip: (t: TripState) => void
   onTick: (n: number | undefined, block: Parameters<typeof toggleBlock>[2]) => void
+  onOpenChapter: (unit: string) => void
   onClose: () => void
 }) {
   const session = view.n != null ? getSession(view.n) : undefined
@@ -734,6 +739,23 @@ function TripBlockView({
         onClose={onClose}
         onDone={() => {
           onTick(view.n, 'clip')
+          onClose()
+        }}
+      />
+    )
+  }
+  if (view.block === 'pattern') {
+    return (
+      <GrammarBlock
+        unit={view.unit ?? 'mix'}
+        keys={aiKeys(settings)}
+        model={settings.askModel}
+        week={week}
+        learner={learnerLine(trip)}
+        onOpenChapter={onOpenChapter}
+        onClose={onClose}
+        onDone={() => {
+          onTick(view.n, 'pattern')
           onClose()
         }}
       />
@@ -808,6 +830,8 @@ function TripBlockView({
               ...report.scores,
               summary: report.summary,
               taskDone: report.taskDone,
+              level: report.level,
+              levelWhy: report.levelWhy,
               ...(m && {
                 wordsPerTurn: m.wordsPerTurn,
                 speechRate: m.speechRate,

@@ -237,6 +237,60 @@ export const SCENARIOS: Scenario[] = [
     ],
   },
   {
+    id: 'stori-taith',
+    titleCy: 'Noson yn y Gaiman',
+    title: 'Telling the story of your trip',
+    persona:
+      'You are Dafydd Hughes, about 70, a retired farmer in Gaiman who loves a good story. You have invited the learner for supper after chapel. You ask about everything that happened to them: the journey, the people they met, why they came.',
+    setting: 'Supper at Dafydd’s kitchen table in Gaiman, a pot of tea and torta negra.',
+    goal: 'Tell what happened — your journey here, your first days, how you started Welsh — with details, in the past tense. Ask about his life too.',
+    opener: 'Pasiwch i mewn! Steddwch. Rŵan, deudwch y stori i gyd — sut ddaethoch chi yma?',
+    dialect:
+      'You are a first-language heritage speaker: northern-leaning Wladfa Welsh — fo, efo, rŵan, nain/taid, “dach chi”, past tense with “nes i” and sometimes “ddaru”. Speak slowly and leave room for long answers.',
+    frames: [
+      { welsh: 'Des i o Buenos Aires ar y bws.', english: 'I came from Buenos Aires on the bus.' },
+      { welsh: 'Roedd y daith yn hir iawn, ond roedd hi’n werth chweil.', english: 'The journey was very long, but it was worth it.' },
+      { welsh: 'Ar ôl i fi gyrraedd, es i i’r tŷ te.', english: 'After I arrived, I went to the tea house.' },
+      { welsh: 'Dechreuais i ddysgu Cymraeg achos…', english: 'I started learning Welsh because…' },
+    ],
+  },
+  {
+    id: 'barn',
+    titleCy: 'Dyfodol y Gymraeg',
+    title: 'Opinions: the future of Welsh here',
+    persona:
+      'You are Luned, about 45, a Welsh teacher in Trelew who loves a friendly argument. You want the learner’s honest opinion on Welsh in Y Wladfa, Wales and India, and you push back gently so they have to give reasons.',
+    setting: 'After a Welsh class in Trelew, over mate.',
+    goal: 'Give your opinion and back it up: agree, disagree, give reasons and examples, and ask what she thinks.',
+    opener: 'Dw i eisiau gwybod eich barn chi. Oes dyfodol i’r Gymraeg yn y Wladfa, dach chi’n meddwl?',
+    dialect:
+      'You learned Welsh as a child from your nain and later taught it: clear standard Welsh with some Wladfa forms (fo, rŵan, dach chi). Speak clearly; you are a teacher.',
+    frames: [
+      { welsh: 'Dw i’n meddwl bod y Gymraeg yn bwysig achos…', english: 'I think Welsh is important because…' },
+      { welsh: 'Dw i’n cytuno, ond…', english: 'I agree, but…' },
+      { welsh: 'Dw i ddim yn siŵr. Ar y naill law…, ar y llaw arall…', english: 'I’m not sure. On the one hand…, on the other hand…' },
+      { welsh: 'Beth dych chi’n feddwl?', english: 'What do you think?' },
+    ],
+  },
+  {
+    id: 'pe-bai',
+    titleCy: 'Breuddwydion',
+    title: 'Plans, hopes and “what if”',
+    persona:
+      'You are Tomás, about 22, a student from Esquel who speaks Welsh and dreams of going to Wales. You talk about plans and dreams, and you love “what would you do if…?” questions.',
+    setting: 'Waiting for the bus in Esquel with the Andes behind you.',
+    goal: 'Talk about your plans and hopes, and say what you would do if things were different (I would…, if I…).',
+    opener: 'Taswn i’n cael mynd i unrhyw le yn y byd, baswn i’n mynd i Gymru! A chi — be fasech chi’n neud?',
+    dialect:
+      'You learned Welsh at school in Esquel from teachers from Wales and local tutors: clear standard learner Welsh (baswn i, taswn i, bydda i), plus rŵan and efo like many people in the Andes.',
+    frames: [
+      { welsh: 'Taswn i’n byw yma, baswn i’n dysgu Sbaeneg hefyd.', english: 'If I lived here, I’d learn Spanish too.' },
+      { welsh: 'Baswn i’n hoffi dod yn ôl i’r Wladfa.', english: 'I’d like to come back to Y Wladfa.' },
+      { welsh: 'Bydda i’n mynd i Gymru y flwyddyn nesa.', english: 'I’ll go to Wales next year.' },
+      { welsh: 'Gobeithio y bydda i’n siarad Cymraeg yn rhugl ryw ddiwrnod.', english: 'I hope I’ll speak Welsh fluently one day.' },
+    ],
+  },
+  {
     id: 'prawf',
     titleCy: 'Sgwrs brawf',
     title: 'Weekly checkpoint',

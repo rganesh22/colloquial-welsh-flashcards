@@ -112,6 +112,10 @@ const tripLocal = {
   light: ['2026-11-09'],
   active: ['2026-11-10'],
   checkpoints: {},
+  outside: [
+    { id: 'a', date: '2026-11-10', kind: 'audio', minutes: 30 },
+    { id: 'b', date: '2026-11-10', kind: 'tutor', minutes: 60 },
+  ],
 }
 const tripRemote = {
   tripDate: '2027-01-10',
@@ -122,6 +126,11 @@ const tripRemote = {
   light: ['2026-11-07'],
   active: ['2026-11-07'],
   checkpoints: { '1': { overall: 3 } },
+  // Newer device deleted "b" and logged "c".
+  outside: [
+    { id: 'b', date: '2026-11-10', kind: 'tutor', minutes: 0 },
+    { id: 'c', date: '2026-11-11', kind: 'listen', minutes: 20 },
+  ],
 }
 const tripMerged = mergeTrip(tripLocal, tripRemote)!
 assert.equal(tripMerged.tripDate, '2027-01-10')
@@ -133,6 +142,11 @@ assert.deepEqual(
 assert.deepEqual(tripMerged.light, ['2026-11-07', '2026-11-09'])
 assert.deepEqual(tripMerged.active, ['2026-11-07', '2026-11-10'])
 assert.ok((tripMerged.checkpoints as Record<string, unknown>)['1'])
+const outsideMerged = tripMerged.outside as { id: string; minutes: number }[]
+assert.deepEqual(
+  outsideMerged.map((o) => `${o.id}:${o.minutes}`).sort(),
+  ['a:30', 'b:0', 'c:20'],
+)
 assert.equal(mergeTrip(null, tripRemote), tripRemote)
 assert.equal(mergeTrip(tripLocal, undefined), tripLocal)
 

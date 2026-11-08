@@ -1230,3 +1230,93 @@
 .trip-task .trip-copy {
   margin-top: 0;
 }
+
+/* Grammar track */
+.grammar-rules {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 1rem;
+}
+.grammar-rules h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+.grammar-rules p {
+  margin: 0 0 0.5rem;
+  line-height: 1.5;
+}
+.grammar-prompt {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  margin: 0.25rem 0 0.75rem;
+}
+.talk-feedback.ok {
+  border-color: var(--accent, #6fbf8a);
+}
+.talk-level {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.talk-level-badge {
+  flex: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  background: var(--accent-soft, rgba(111, 191, 138, 0.18));
+}
+
+/* Hybrid plan: outside-the-app hours */
+.hybrid-kinds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hybrid-kind-head {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.hybrid-kind-head .cy {
+  font-weight: 600;
+}
+.hybrid-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(127, 127, 127, 0.2);
+  margin: 0.35rem 0;
+  overflow: hidden;
+}
+.hybrid-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent, #6fbf8a);
+}
+.hybrid-log {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.hybrid-level {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(127, 127, 127, 0.2);
+}
+.hybrid-level p {
+  margin: 0 0 0.4rem;
+}
+.hybrid-how ul {
+  margin: 0.25rem 0 0.5rem;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+}

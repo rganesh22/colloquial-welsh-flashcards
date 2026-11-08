@@ -191,8 +191,18 @@ export function mergeTrip(
       ...(Array.isArray(other.active) ? other.active : []),
     ]),
   ].sort()
+  // Outside-the-app logs: union by id; the newer copy wins (a 0 is a delete).
+  const outside = new Map<string, unknown>()
+  for (const list of [other.outside, base.outside]) {
+    if (!Array.isArray(list)) continue
+    for (const o of list) {
+      const id = asRecord(o).id
+      if (typeof id === 'string') outside.set(id, o)
+    }
+  }
   return {
     ...base,
+    outside: [...outside.values()],
     done: { ...asRecord(other.done), ...asRecord(base.done) },
     blocks,
     light,

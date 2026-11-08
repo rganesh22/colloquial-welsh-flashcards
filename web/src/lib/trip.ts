@@ -45,6 +45,9 @@ export interface CheckpointResult {
   welshShare?: number
   /** Scenario goal: 0 no, 1 partly, 2 yes. */
   taskDone?: number
+  /** CEFR estimate for spoken interaction (absent on older results). */
+  level?: string
+  levelWhy?: string
 }
 
 export interface IntroProfile {
@@ -60,6 +63,18 @@ export interface IntroProfile {
 export interface GapNote {
   date: string
   text: string
+}
+
+/** Study done outside the app (the hybrid half of the plan). */
+export type OutsideKind = 'audio' | 'listen' | 'tutor' | 'people'
+
+export interface OutsideLog {
+  id: string
+  /** Calendar day, YYYY-MM-DD. */
+  date: string
+  kind: OutsideKind
+  /** 0 marks a deleted entry, so the delete survives account sync. */
+  minutes: number
 }
 
 export interface TripState {
@@ -84,6 +99,8 @@ export interface TripState {
   updatedAt: string
   /** Latest conversation-report corrections (newest first, max 3) for the AI partner to target. */
   recentFixes?: string[]
+  /** Hours logged outside the app: audio course, radio, tutor, real people. */
+  outside: OutsideLog[]
 }
 
 export const EMPTY_PROFILE: IntroProfile = {
@@ -122,6 +139,7 @@ function defaultTrip(): TripState {
     checkpoints: {},
     profile: { ...EMPTY_PROFILE },
     gaps: [],
+    outside: [],
     updatedAt: '',
   }
 }
@@ -142,6 +160,7 @@ export function tripFromRaw(raw: unknown): TripState {
       r.checkpoints && typeof r.checkpoints === 'object' ? r.checkpoints : {},
     profile: { ...EMPTY_PROFILE, ...(r.profile ?? {}) },
     gaps: Array.isArray(r.gaps) ? r.gaps : [],
+    outside: Array.isArray(r.outside) ? r.outside : [],
     ...(Array.isArray(r.recentFixes)
       ? { recentFixes: r.recentFixes.filter((f) => typeof f === 'string').slice(0, 3) }
       : {}),
@@ -176,6 +195,19 @@ export function saveTrip(trip: TripState): TripState {
   writeTripRaw(next as unknown as Record<string, unknown>)
   notifyLocalChange()
   return next
+}
+
+export function logOutside(trip: TripState, kind: OutsideKind, minutes: number): TripState {
+  const date = localCalendarDay()
+  const id = `${date}-${kind}-${Date.now().toString(36)}`
+  return saveTrip({ ...trip, outside: [...trip.outside, { id, date, kind, minutes }] })
+}
+
+export function removeOutside(trip: TripState, id: string): TripState {
+  return saveTrip({
+    ...trip,
+    outside: trip.outside.map((o) => (o.id === id ? { ...o, minutes: 0 } : o)),
+  })
 }
 
 export function isSessionDone(trip: TripState, n: number): boolean {
