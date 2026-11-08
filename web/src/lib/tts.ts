@@ -201,6 +201,35 @@ async function loadManifest(): Promise<Manifest | null> {
   return manifestPromise
 }
 
+/**
+ * Course audio (scripts/course-tts.mjs): MP3s for every fixed line of the
+ * 8-week course, in the voice each screen plays it in, keyed like the cache.
+ */
+let courseKeysPromise: Promise<Set<string>> | null = null
+
+function loadCourseKeys(): Promise<Set<string>> {
+  if (!courseKeysPromise) {
+    courseKeysPromise = fetch(assetUrl('tts/course.json'))
+      .then(async (r) => {
+        if (!r.ok) return new Set<string>()
+        const m = (await r.json()) as { model?: string; keys?: string[] }
+        return new Set(m.model === TTS_MODEL ? (m.keys ?? []) : [])
+      })
+      .catch(() => new Set<string>())
+  }
+  return courseKeysPromise
+}
+
+async function fetchCourseAudio(key: string): Promise<Blob | null> {
+  if (!(await loadCourseKeys()).has(key)) return null
+  try {
+    const res = await fetch(assetUrl(`tts/course/${key}.mp3`))
+    return res.ok ? await res.blob() : null
+  } catch {
+    return null
+  }
+}
+
 function bundledUrl(hash: string): string {
   return assetUrl(`tts/${hash}.wav`)
 }
@@ -235,6 +264,7 @@ export async function hasCachedTts(text: string): Promise<boolean> {
   const trimmed = text.trim()
   if (!trimmed) return false
   const key = await ttsAudioKey(trimmed)
+  if ((await loadCourseKeys()).has(key)) return true
   const hit = await cacheGetAudio(key)
   if (hit) return true
   const manifest = await loadManifest()
@@ -301,6 +331,9 @@ export async function ensureWelshAudio(opts: {
   const text = opts.text.trim()
   if (!text) throw new Error('Nothing to speak')
 
+  if ((await loadCourseKeys()).has(await ttsAudioKey(text))) {
+    return { cached: true, source: 'bundle' }
+  }
   const bundled = await fetchBundledWav(text)
   if (bundled) {
     if (opts.apiKey) {
@@ -333,6 +366,9 @@ async function audioBlobFor(
   v?: WelshVoice,
 ): Promise<{ blob: Blob; cached: boolean; source: 'bundle' | 'gemini' } | null> {
   const key = await ttsAudioKey(text, v)
+  // Course lines ship with the app (any voice); the browser caches the file.
+  const course = await fetchCourseAudio(key)
+  if (course) return { blob: course, cached: true, source: 'bundle' }
   const hit = await cacheGetAudio(key)
   if (hit) {
     const bytes = base64ToBytes(hit.base64)

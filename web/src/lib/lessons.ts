@@ -157,7 +157,7 @@ const READER_LESSONS: Omit<LessonMeta, 'bookId'>[] = [
 ]
 
 /** Conversation chunks for the Patagonia trip, in plan order. */
-const PATAGONIA_LESSONS: Omit<LessonMeta, 'bookId'>[] = [
+export const PATAGONIA_LESSONS: Omit<LessonMeta, 'bookId'>[] = [
   { id: 'p1', titleCy: 'Cyfarch', titleEn: 'Greetings and politeness' },
   { id: 'p2', titleCy: 'Amdana i', titleEn: 'About me' },
   { id: 'p3', titleCy: 'Achub y sgwrs', titleEn: 'Rescuing the conversation' },

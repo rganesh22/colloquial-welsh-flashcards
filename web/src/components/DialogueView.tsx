@@ -2,24 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import type { Dialogue } from '../data/trip/dialogues'
 import { getApiKey } from '../lib/gemini'
 import { micSupported, startMic, type MicSession } from '../lib/recorder'
-import { playWelshSequence, speakWelsh, TTS_VOICES, type WelshLine } from '../lib/tts'
+import { playWelshSequence, speakWelsh } from '../lib/tts'
+import { lineVoice } from '../lib/courseAudio'
 
-/** A voice per character, so you get used to more than one speaker. */
-const CHARACTER_VOICES: Record<string, string> = {
-  Elena: TTS_VOICES.female,
-  Marta: TTS_VOICES.female,
-  Lucía: TTS_VOICES.femaleYoung,
-  Ana: TTS_VOICES.femaleYoung,
-  Ifor: TTS_VOICES.male,
-  Dafydd: TTS_VOICES.male,
-  Gwilym: TTS_VOICES.maleYoung,
-  Huw: TTS_VOICES.maleYoung,
-}
-
-function lineVoice(l: { who: string; welsh: string }): WelshLine {
-  const voice = CHARACTER_VOICES[l.who]
-  return voice ? { text: l.welsh, voice } : { text: l.welsh }
-}
 import { SpeakButton } from './SpeakButton'
 
 /**
