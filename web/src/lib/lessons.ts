@@ -1,6 +1,13 @@
 import type { BookId, BookMeta, LessonMeta } from './types'
 
+/** Y Wladfa phrase book first: its cards top the new-card queue before the trip. */
 export const BOOKS: BookMeta[] = [
+  {
+    id: 'patagonia',
+    short: 'YW',
+    title: 'Y Wladfa phrase book',
+    author: 'Patagonia trip plan',
+  },
   {
     id: 'colloquial',
     short: 'CW',
@@ -12,12 +19,6 @@ export const BOOKS: BookMeta[] = [
     short: 'IWR',
     title: 'Intermediate Welsh Reader',
     author: 'Gareth King',
-  },
-  {
-    id: 'patagonia',
-    short: 'YW',
-    title: 'Y Wladfa phrase book',
-    author: 'Patagonia trip plan',
   },
 ]
 
@@ -182,14 +183,15 @@ function withBook(
 }
 
 /** Ordered: Colloquial Welsh first, then Intermediate Welsh Reader. */
+/** New cards are introduced in this order: the trip's phrase book comes first. */
 export const LESSONS: LessonMeta[] = [
+  ...withBook('patagonia', PATAGONIA_LESSONS),
   ...withBook('colloquial', COLLOQUIAL_LESSONS),
   ...withBook('reader', READER_LESSONS),
-  ...withBook('patagonia', PATAGONIA_LESSONS),
 ]
 
 export function getBook(id: BookId): BookMeta {
-  return BOOKS.find((b) => b.id === id) ?? BOOKS[0]!
+  return BOOKS.find((b) => b.id === id) ?? BOOKS.find((b) => b.id === 'colloquial')!
 }
 
 export function lessonsForBook(bookId: BookId): LessonMeta[] {

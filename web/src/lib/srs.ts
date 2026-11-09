@@ -935,7 +935,8 @@ export function isFirstVocabIntroduction(
 }
 
 /**
- * Unseen headwords in curriculum order: alphabet → 1a → 1b → … then Reader.
+ * Unseen headwords in curriculum order: Y Wladfa phrase book, then
+ * Colloquial Welsh (alphabet → 1a → 1b → …), then Reader.
  */
 export function getOrderedNewVocab(
   progress: ProgressMap,
