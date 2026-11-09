@@ -71,6 +71,7 @@ import { BOOKS, getBook, getLesson, LESSONS } from './lib/lessons'
 import { cardsForLesson } from './data/deck'
 import { getApiKey, aiKeys, ASK_MODELS, clampAskModel } from './lib/gemini'
 import { getClaudeKey } from './lib/claude'
+import { NumberField } from './components/NumberField'
 import { GrammarBlock } from './components/GrammarBlock'
 import { grammarLabel } from './lib/grammar'
 import { speakWelsh } from './lib/tts'
@@ -938,29 +939,27 @@ function SettingsBar({
       </label>
       <label>
         New / set
-        <input
-          type="number"
+        <NumberField
           min={1}
           max={50}
           step={1}
           value={settings.learnBatchSize}
-          onChange={(e) =>
+          onCommit={(n) =>
             onSettings({
-              learnBatchSize: clampLearnBatchSize(Number(e.target.value)),
+              learnBatchSize: clampLearnBatchSize(n),
             })
           }
         />
       </label>
       <label>
         Daily word goal
-        <input
-          type="number"
+        <NumberField
           min={5}
           max={200}
           step={5}
           value={settings.dailyWordGoal}
-          onChange={(e) => {
-            const dailyWordGoal = clampDailyWordGoal(Number(e.target.value))
+          onCommit={(n) => {
+            const dailyWordGoal = clampDailyWordGoal(n)
             const prevDefault = defaultMaxDailyReviews(settings.dailyWordGoal)
             const patch: Partial<AppSettings> = { dailyWordGoal }
             if (settings.maxDailyReviews === prevDefault) {
@@ -972,15 +971,14 @@ function SettingsBar({
       </label>
       <label>
         Sessions / day
-        <input
-          type="number"
+        <NumberField
           min={1}
           max={20}
           step={1}
           value={settings.dailySessions}
-          onChange={(e) =>
+          onCommit={(n) =>
             onSettings({
-              dailySessions: clampDailySessions(Number(e.target.value)),
+              dailySessions: clampDailySessions(n),
             })
           }
           title="Split the daily word goal across this many Learn sessions"
@@ -988,15 +986,14 @@ function SettingsBar({
       </label>
       <label>
         Max reviews / day
-        <input
-          type="number"
+        <NumberField
           min={0}
           max={2000}
           step={10}
           value={settings.maxDailyReviews}
-          onChange={(e) =>
+          onCommit={(n) =>
             onSettings({
-              maxDailyReviews: clampMaxDailyReviews(Number(e.target.value)),
+              maxDailyReviews: clampMaxDailyReviews(n),
             })
           }
           title="Default is 10× daily word goal"
@@ -1146,15 +1143,14 @@ function HomeView({
             <div className="daily-goal-edits">
               <label className="daily-goal-edit">
                 <span className="sr-only">Set daily word goal</span>
-                <input
-                  type="number"
+                <NumberField
                   min={5}
                   max={200}
                   step={5}
                   value={goal}
-                  onChange={(e) => {
+                  onCommit={(n) => {
                     const dailyWordGoal = clampDailyWordGoal(
-                      Number(e.target.value),
+                      n,
                     )
                     const prevDefault = defaultMaxDailyReviews(goal)
                     const patch: Partial<AppSettings> = { dailyWordGoal }
@@ -1169,16 +1165,15 @@ function HomeView({
               </label>
               <label className="daily-goal-edit">
                 <span className="sr-only">Set max reviews per day</span>
-                <input
-                  type="number"
+                <NumberField
                   min={0}
                   max={2000}
                   step={10}
                   value={settings.maxDailyReviews}
-                  onChange={(e) =>
+                  onCommit={(n) =>
                     onSettings({
                       maxDailyReviews: clampMaxDailyReviews(
-                        Number(e.target.value),
+                        n,
                       ),
                     })
                   }
@@ -1274,15 +1269,14 @@ function HomeView({
             </div>
             <label className="session-custom">
               <span className="sr-only">Custom sessions per day</span>
-              <input
-                type="number"
+              <NumberField
                 min={1}
                 max={20}
                 step={1}
                 value={sessions}
-                onChange={(e) =>
+                onCommit={(n) =>
                   onSettings({
-                    dailySessions: clampDailySessions(Number(e.target.value)),
+                    dailySessions: clampDailySessions(n),
                   })
                 }
               />
