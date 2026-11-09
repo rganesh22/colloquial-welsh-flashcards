@@ -125,7 +125,8 @@ import './App.css'
 import './trip.css'
 
 export default function App() {
-  const [view, setView] = useState<AppView>({ name: 'trip' })
+  // Opens on Flashcards; the Patagonia course is one tap away.
+  const [view, setView] = useState<AppView>({ name: 'home' })
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress())
   const [trip, setTrip] = useState<TripState>(() => loadTrip())
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings())
@@ -450,17 +451,17 @@ export default function App() {
           />
           <button
             type="button"
-            className={`ghost-btn ${view.name === 'trip' ? 'is-on' : ''}`}
-            onClick={() => setView({ name: 'trip' })}
-          >
-            Patagonia
-          </button>
-          <button
-            type="button"
             className={`ghost-btn ${view.name === 'home' ? 'is-on' : ''}`}
             onClick={() => setView({ name: 'home' })}
           >
             Flashcards
+          </button>
+          <button
+            type="button"
+            className={`ghost-btn ${view.name === 'trip' ? 'is-on' : ''}`}
+            onClick={() => setView({ name: 'trip' })}
+          >
+            Patagonia
           </button>
           <button
             type="button"
