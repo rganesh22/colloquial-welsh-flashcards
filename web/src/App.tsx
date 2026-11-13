@@ -123,10 +123,33 @@ import {
 import { matchesSearchTokens } from './components/MultiSelect'
 import './App.css'
 import './trip.css'
+import './sprint.css'
+import { SprintView } from './components/SprintView'
+import {
+  loadSprint,
+  markBlock,
+  saveSprint,
+  SPRINT_NEW_PER_DAY,
+  SPRINT_REVIEW_CAP,
+  type SprintState,
+} from './lib/sprint'
 
 export default function App() {
-  // Opens on Flashcards; the Patagonia course is one tap away.
-  const [view, setView] = useState<AppView>({ name: 'home' })
+  // Opens on the 50-day sprint; Flashcards and the Patagonia course are one tap away.
+  const [view, setView] = useState<AppView>({ name: 'sprint' })
+  const [sprint, setSprint] = useState<SprintState>(loadSprint)
+  /** Set while a conversation was opened from the sprint, so closing it goes back there. */
+  const fromSprint = useRef(false)
+  function updateSprint(next: SprintState) {
+    saveSprint(next)
+    setSprint(next)
+  }
+  /** The sprint's daily limits (25 new, 250 reviews) become the daily targets everywhere. */
+  function applySprintTargets() {
+    if (settings.dailyWordGoal !== SPRINT_NEW_PER_DAY || settings.maxDailyReviews !== SPRINT_REVIEW_CAP) {
+      updateSettings({ dailyWordGoal: SPRINT_NEW_PER_DAY, maxDailyReviews: SPRINT_REVIEW_CAP })
+    }
+  }
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress())
   const [trip, setTrip] = useState<TripState>(() => loadTrip())
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings())
@@ -244,8 +267,10 @@ export default function App() {
   }
 
   function backTarget(v: AppView): AppView {
+    if (v.name === 'trip-block' && fromSprint.current) return { name: 'sprint' }
     if (v.name === 'trip-block' || v.name === 'story') return { name: 'trip' }
     if (v.name === 'study' && v.tripSession != null) return { name: 'trip' }
+    if (v.name === 'study' && v.sprintDay != null) return { name: 'sprint' }
     if (v.name === 'guide' && v.bookId === 'colloquial' && fromTrip.current) {
       return { name: 'trip' }
     }
@@ -451,6 +476,13 @@ export default function App() {
           />
           <button
             type="button"
+            className={`ghost-btn ${view.name === 'sprint' ? 'is-on' : ''}`}
+            onClick={() => setView({ name: 'sprint' })}
+          >
+            Sprint
+          </button>
+          <button
+            type="button"
             className={`ghost-btn ${view.name === 'home' ? 'is-on' : ''}`}
             onClick={() => setView({ name: 'home' })}
           >
@@ -640,7 +672,47 @@ export default function App() {
               if (view.tripSession != null && view.mode === 'review') {
                 tickTripBlock(view.tripSession, 'review')
               }
+              // Catch-up days: the reviews are the day's words step.
+              if (view.sprintDay != null && view.mode === 'review') {
+                updateSprint(markBlock(sprint, view.sprintDay, 'words'))
+              }
               setView(backTarget(view))
+            }}
+          />
+        )}
+        {view.name === 'sprint' && (
+          <SprintView
+            state={sprint}
+            onState={updateSprint}
+            progress={progress}
+            direction={settings.direction}
+            apiKeyStored={settings.apiKey}
+            tripDate={trip.tripDate}
+            onWords={(day, ids) => {
+              applySprintTargets()
+              setView({
+                name: 'study',
+                mode: 'learn',
+                filter: { kind: 'all' },
+                quotaCardIds: ids,
+                sessionReviewMax: SPRINT_REVIEW_CAP,
+                segmentLabel: `Sprint day ${day}`,
+                sprintDay: day,
+              })
+            }}
+            onReview={(day) => {
+              applySprintTargets()
+              setView({
+                name: 'study',
+                mode: 'review',
+                filter: { kind: 'all' },
+                sessionReviewMax: SPRINT_REVIEW_CAP,
+                sprintDay: day,
+              })
+            }}
+            onTalk={() => {
+              fromSprint.current = true
+              setView({ name: 'trip-block', block: 'practice', scenario: 'sgwrs-rydd' })
             }}
           />
         )}
@@ -676,7 +748,10 @@ export default function App() {
               fromTrip.current = true
               setView({ name: 'guide', bookId: 'colloquial', lessonId: unit })
             }}
-            onClose={() => setView({ name: 'trip' })}
+            onClose={() => {
+              setView(fromSprint.current ? { name: 'sprint' } : { name: 'trip' })
+              fromSprint.current = false
+            }}
           />
         )}
       </main>
@@ -2718,6 +2793,20 @@ function StudyView({
             )}
             {current.card.notes && (
               <p className="card-notes">{current.card.notes}</p>
+            )}
+            {current.card.example && (
+              <div className="card-example">
+                <div className="card-back-row">
+                  <SpeakButton
+                    text={current.card.example.cy}
+                    apiKeyStored={settings.apiKey}
+                    stopPropagation
+                    className="card-speak"
+                  />
+                  <p className="card-example-cy">{current.card.example.cy}</p>
+                </div>
+                <p className="card-example-en">{current.card.example.en}</p>
+              </div>
             )}
           </div>
         ) : null}

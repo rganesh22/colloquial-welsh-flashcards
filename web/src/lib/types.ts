@@ -1,6 +1,6 @@
 import type { Card as FSRSCard } from 'ts-fsrs'
 
-export type BookId = 'colloquial' | 'reader' | 'patagonia'
+export type BookId = 'colloquial' | 'reader' | 'patagonia' | 'sprint'
 
 /** Lesson id unique within a book (e.g. "1a", "7", "12"). */
 export type LessonId = string
@@ -55,6 +55,8 @@ export interface VocabCard {
   notes?: string
   tags?: string[]
   dialect?: Dialect
+  /** A sentence using the word, made only from words learned before it. */
+  example?: { cy: string; en: string }
 }
 
 export interface BookMeta {
@@ -112,6 +114,8 @@ export type AppView =
       segmentLabel?: string
       /** Started from the Patagonia plan: return there, tick this session. */
       tripSession?: number
+      /** Started from the 50-day sprint: return there afterwards. */
+      sprintDay?: number
     }
   | {
       name: 'activity'
@@ -121,6 +125,7 @@ export type AppView =
     }
   | { name: 'guide'; bookId: BookId; lessonId: LessonId }
   | { name: 'trip' }
+  | { name: 'sprint' }
   | { name: 'story' }
   | {
       name: 'trip-block'

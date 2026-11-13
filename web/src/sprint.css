@@ -1,0 +1,357 @@
+/* The 50-day sprint: one simple screen, four steps. */
+
+.sprint {
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.sprint-head {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sprint-kicker {
+  margin: 0;
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+}
+
+.sprint-title {
+  margin: 0;
+  font-size: clamp(1.35rem, 4.5vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.sprint-why {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.sprint-bar {
+  height: 6px;
+  margin: 0.4rem 0 0.1rem;
+  border-radius: 99px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.sprint-bar span {
+  display: block;
+  height: 100%;
+  background: var(--green);
+}
+
+.sprint-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.sprint-step {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2.2rem 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.sprint-step:hover {
+  border-color: color-mix(in srgb, var(--green) 50%, var(--line));
+}
+
+.sprint-step.next {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px var(--green);
+}
+
+.sprint-step.done {
+  opacity: 0.7;
+}
+
+.sprint-step-n {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  font-weight: 700;
+}
+
+.sprint-step.done .sprint-step-n {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.sprint-step-body {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.sprint-step-title {
+  font-weight: 650;
+}
+
+.sprint-step-detail {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sprint-step-min {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.sprint-done {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--green) 18%, transparent);
+}
+
+.sprint-strip {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.sprint-dot {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sprint-dot.catch {
+  border-style: dashed;
+}
+
+.sprint-dot.done {
+  background: color-mix(in srgb, var(--green) 35%, transparent);
+  color: var(--ink);
+}
+
+.sprint-dot.on {
+  border-color: var(--green-deep);
+  box-shadow: 0 0 0 1px var(--green-deep);
+}
+
+.sprint-dot:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Panels */
+
+.sprint-panel {
+  padding-bottom: 2rem;
+}
+
+.sprint-panel-head {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: start;
+}
+
+.sprint-panel-head h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.sprint-explain {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.sprint-sub {
+  margin: 0.6rem 0 0;
+  font-size: 1.05rem;
+}
+
+.sprint-lines {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sprint-line {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.sprint-play {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+  color: var(--green-deep);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.sprint-line-text {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.3rem 0.2rem;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sprint-line-text .cy {
+  font-size: 1.05rem;
+}
+
+.sprint-en {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  font-style: normal;
+}
+
+.sprint-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sprint-build,
+.sprint-speak,
+.sprint-q,
+.sprint-video {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.sprint-build-en {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.sprint-build-answer {
+  margin: 0;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px dashed var(--line);
+  font-size: 1.1rem;
+}
+
+.sprint-build-answer.right {
+  border: 1px solid var(--good);
+}
+
+.sprint-build-answer.wrong {
+  border: 1px solid var(--hard);
+}
+
+.sprint-tiles,
+.sprint-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.sprint-tile,
+.sprint-option {
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.sprint-tile:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.sprint-option.right {
+  border-color: var(--good);
+  background: color-mix(in srgb, var(--good) 25%, var(--panel-solid));
+}
+
+.sprint-option.wrong {
+  border-color: var(--again);
+  background: color-mix(in srgb, var(--again) 20%, var(--panel-solid));
+}
+
+.sprint-q p {
+  margin: 0;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.sprint-embed {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+
+.sprint-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 520px) {
+  .sprint-step {
+    grid-template-columns: 2rem 1fr auto;
+    padding: 0.8rem;
+  }
+
+  .sprint-dot {
+    border-radius: 6px;
+    font-size: 0.65rem;
+  }
+}
+
+.sprint-yt {
+  justify-self: start;
+  font-size: 0.86rem;
+  color: var(--green-deep);
+}

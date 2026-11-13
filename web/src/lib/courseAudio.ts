@@ -6,6 +6,7 @@ import { SCENARIOS } from '../data/trip/scenarios'
 import { EXPECTED_QUESTIONS } from '../data/trip/story'
 import { PATAGONIA_LESSONS } from './lessons'
 import { B1_CORE_UNITS } from './grammar'
+import { SPRINT_DAY_CONTENT, SPRINT_WORDS } from './sprint'
 import { TTS_VOICES, type WelshLine } from './tts'
 
 /** A voice per dialogue character, so you get used to more than one speaker. */
@@ -67,6 +68,17 @@ export function courseAudioLines(): WelshLine[] {
         if (b.type === 'rule') for (const e of b.examples) add(e.welsh)
       }
     }
+  }
+  // The 50-day sprint: every word, its example, and each day's Welsh.
+  for (const w of SPRINT_WORDS) {
+    add(w.cy)
+    if (w.ex) add(w.ex.cy)
+  }
+  for (const d of SPRINT_DAY_CONTENT) {
+    for (const e of d.grammar.examples) add(e.cy)
+    for (const b of d.build) add(b.cy)
+    for (const l of d.story.lines) add(l.cy)
+    for (const sp of d.speak) add(sp.cy)
   }
   return lines
 }

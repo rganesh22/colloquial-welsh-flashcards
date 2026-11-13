@@ -1,7 +1,14 @@
+import { sprintDayTitles, sprintLessons } from '../data/sprintDeck'
 import type { BookId, BookMeta, LessonMeta } from './types'
 
-/** Y Wladfa phrase book first: its cards top the new-card queue before the trip. */
+/** The sprint first, then the Y Wladfa phrase book: they top the new-card queue before the trip. */
 export const BOOKS: BookMeta[] = [
+  {
+    id: 'sprint',
+    short: '50',
+    title: '50-day sprint',
+    author: 'Easy Welsh + Y Wladfa words, 25 a day',
+  },
   {
     id: 'patagonia',
     short: 'YW',
@@ -175,6 +182,12 @@ export const PATAGONIA_LESSONS: Omit<LessonMeta, 'bookId'>[] = [
   { id: 'p14', titleCy: 'Clywed atebion', titleEn: 'Understanding answers' },
 ]
 
+/** Sprint days that teach words (catch-up days have none). */
+const SPRINT_LESSONS: Omit<LessonMeta, 'bookId'>[] = Object.keys(sprintLessons)
+  .map((id) => Number(id.slice(1)))
+  .sort((a, b) => a - b)
+  .map((day) => ({ id: `d${day}`, titleCy: `Diwrnod ${day}`, titleEn: sprintDayTitles[day] ?? `Day ${day}` }))
+
 function withBook(
   bookId: BookId,
   lessons: Omit<LessonMeta, 'bookId'>[],
@@ -183,8 +196,9 @@ function withBook(
 }
 
 /** Ordered: Colloquial Welsh first, then Intermediate Welsh Reader. */
-/** New cards are introduced in this order: the trip's phrase book comes first. */
+/** New cards are introduced in this order: the sprint, then the trip's phrase book. */
 export const LESSONS: LessonMeta[] = [
+  ...withBook('sprint', SPRINT_LESSONS),
   ...withBook('patagonia', PATAGONIA_LESSONS),
   ...withBook('colloquial', COLLOQUIAL_LESSONS),
   ...withBook('reader', READER_LESSONS),

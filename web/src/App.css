@@ -2097,6 +2097,30 @@ button.card-back.speakable {
   color: var(--ink-soft);
 }
 
+/* The word in a sentence made from words you already know. */
+.card-example {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--line);
+}
+
+.card-example .card-back-row {
+  justify-content: center;
+}
+
+.card-example-cy {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.card-example-en {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
 .reveal-btn {
   align-self: center;
   flex-direction: row;
