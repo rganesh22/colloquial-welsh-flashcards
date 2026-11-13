@@ -5,7 +5,9 @@ import {
   calendarDay,
   currentSprintDay,
   dayDone,
+  daysToFinish,
   isCatchUpDay,
+  knownFromFlashcards,
   markBlock,
   SPRINT_DAYS,
   sprintDay,
@@ -17,8 +19,6 @@ import {
   type SprintDay,
   type SprintState,
 } from '../lib/sprint'
-import { daysBetween } from '../lib/trip'
-import { localCalendarDay } from '../lib/srs'
 import { playWelshSequence, speakWelsh } from '../lib/tts'
 import type { DirectionMode, ProgressMap } from '../lib/types'
 
@@ -35,7 +35,6 @@ interface Props {
   progress: ProgressMap
   direction: DirectionMode
   apiKeyStored: string
-  tripDate: string
   /** Learn today's new words (with today's reviews). */
   onWords: (day: number, ids: string[]) => void
   /** Reviews only (catch-up days, or once the day's words are in). */
@@ -57,7 +56,8 @@ export function SprintView(props: Props) {
 
   const cal = calendarDay(state)
   const gap = current - cal
-  const toTrip = Math.max(0, daysBetween(localCalendarDay(), props.tripDate))
+  const left = Math.max(0, daysToFinish(state))
+  const finishLabel = new Date(`${state.finishBy}T12:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
   const finish = (block: SprintBlock) => {
     onState(markBlock(state, viewDay, block))
     setOpen(null)
@@ -93,6 +93,7 @@ export function SprintView(props: Props) {
 
   const catchUp = isCatchUpDay(viewDay)
   const unseen = unseenWordIds(progress, viewDay, direction)
+  const alreadyKnown = catchUp ? 0 : knownFromFlashcards(progress, viewDay, direction)
   const nextStep = STEPS.find((s) => !blockDone(state, viewDay, s.id, progress, direction))
 
   const start = (step: SprintBlock) => {
@@ -121,7 +122,7 @@ export function SprintView(props: Props) {
           <span style={{ width: `${(Math.min(current - 1, SPRINT_DAYS) / SPRINT_DAYS) * 100}%` }} />
         </div>
         <p className="muted-line">
-          {wordsByDay(current - 1)} words in · {toTrip} days to Patagonia ·{' '}
+          {wordsByDay(current - 1)} words in · {left} day{left === 1 ? '' : 's'} to {finishLabel} ·{' '}
           {gap >= 0
             ? gap > 0
               ? `${gap} day${gap > 1 ? 's' : ''} ahead`
@@ -139,8 +140,10 @@ export function SprintView(props: Props) {
               ? catchUp
                 ? 'Catch-up day: reviews only'
                 : unseen.length
-                  ? `${unseen.length} new words + today’s reviews`
-                  : 'All in. Tap for reviews.'
+                  ? `${unseen.length} new words + today’s reviews${alreadyKnown ? ` (${alreadyKnown} more you know from flashcards)` : ''}`
+                  : alreadyKnown
+                    ? `All in: ${alreadyKnown} you knew from flashcards. Tap for reviews.`
+                    : 'All in. Tap for reviews.'
               : s.id === 'pattern'
                 ? `${content.build.length} sentences to build`
                 : s.id === 'story'

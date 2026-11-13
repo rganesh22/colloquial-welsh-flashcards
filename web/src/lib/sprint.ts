@@ -2,8 +2,8 @@ import daysJson from '../data/sprint/days.json'
 import videosJson from '../data/sprint/videos.json'
 import wordsJson from '../data/sprint/words.json'
 import { cardsForLesson } from '../data/deck'
-import { isVocabUnseen, localCalendarDay } from './srs'
-import { daysBetween } from './trip'
+import { isVocabUnseen, knownFromOtherDeck, localCalendarDay } from './srs'
+import { daysBetween, type SprintBlock, type SprintState } from './trip'
 import type { DirectionMode, ProgressMap } from './types'
 
 /**
@@ -77,37 +77,8 @@ export const SPRINT_LESSON_ID = (day: number) => `d${day}`
 
 // ---------- your progress ----------
 
-export type SprintBlock = 'words' | 'pattern' | 'story' | 'speak'
+export type { SprintBlock, SprintState } from './trip'
 export const SPRINT_BLOCKS: SprintBlock[] = ['words', 'pattern', 'story', 'speak']
-
-export interface SprintState {
-  startedOn: string
-  /** Blocks finished, by day. */
-  done: Record<string, SprintBlock[]>
-}
-
-const KEY = 'cw-sprint-v1'
-
-export function loadSprint(): SprintState {
-  try {
-    const raw = localStorage.getItem(KEY)
-    if (raw) {
-      const s = JSON.parse(raw) as Partial<SprintState>
-      if (s.startedOn) return { startedOn: s.startedOn, done: s.done ?? {} }
-    }
-  } catch {
-    /* private mode or bad data */
-  }
-  return { startedOn: localCalendarDay(), done: {} }
-}
-
-export function saveSprint(s: SprintState): void {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(s))
-  } catch {
-    /* storage full or blocked */
-  }
-}
 
 export function markBlock(s: SprintState, day: number, block: SprintBlock): SprintState {
   const have = s.done[day] ?? []
@@ -115,11 +86,18 @@ export function markBlock(s: SprintState, day: number, block: SprintBlock): Spri
   return { ...s, done: { ...s.done, [day]: [...have, block] } }
 }
 
-/** Today's new sprint cards you haven't met yet. */
+/** Today's new sprint cards you haven't met yet, here or as the same word in another deck. */
 export function unseenWordIds(progress: ProgressMap, day: number, direction: DirectionMode): string[] {
   return cardsForLesson('sprint', SPRINT_LESSON_ID(day))
-    .filter((c) => isVocabUnseen(progress, c, direction))
+    .filter((c) => isVocabUnseen(progress, c, direction) && !knownFromOtherDeck(progress, c, direction))
     .map((c) => c.id)
+}
+
+/** How many of the day's words you already knew from your other flashcards. */
+export function knownFromFlashcards(progress: ProgressMap, day: number, direction: DirectionMode): number {
+  return cardsForLesson('sprint', SPRINT_LESSON_ID(day)).filter(
+    (c) => isVocabUnseen(progress, c, direction) && knownFromOtherDeck(progress, c, direction),
+  ).length
 }
 
 export function blockDone(
@@ -147,9 +125,14 @@ export function currentSprintDay(s: SprintState, progress: ProgressMap, directio
   return SPRINT_DAYS
 }
 
-/** Which day the calendar says you'd be on (day 1 = the day you started). */
+/** Calendar days left until the deadline (0 on the day itself). */
+export function daysToFinish(s: SprintState, today = localCalendarDay()): number {
+  return daysBetween(today, s.finishBy)
+}
+
+/** Which day the calendar says you should be on, so that day 50 lands on the deadline. */
 export function calendarDay(s: SprintState, today = localCalendarDay()): number {
-  return Math.min(SPRINT_DAYS, Math.max(1, daysBetween(s.startedOn, today) + 1))
+  return Math.min(SPRINT_DAYS, Math.max(1, SPRINT_DAYS - daysToFinish(s, today)))
 }
 
 /** The Easy Welsh video to watch today: the newest one you can mostly follow, and the next one. */

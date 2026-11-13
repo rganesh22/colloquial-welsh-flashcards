@@ -126,9 +126,7 @@ import './trip.css'
 import './sprint.css'
 import { SprintView } from './components/SprintView'
 import {
-  loadSprint,
   markBlock,
-  saveSprint,
   SPRINT_NEW_PER_DAY,
   SPRINT_REVIEW_CAP,
   type SprintState,
@@ -137,12 +135,11 @@ import {
 export default function App() {
   // Opens on the 50-day sprint; Flashcards and the Patagonia course are one tap away.
   const [view, setView] = useState<AppView>({ name: 'sprint' })
-  const [sprint, setSprint] = useState<SprintState>(loadSprint)
   /** Set while a conversation was opened from the sprint, so closing it goes back there. */
   const fromSprint = useRef(false)
+  /** Sprint progress lives in the trip state, which syncs with your account. */
   function updateSprint(next: SprintState) {
-    saveSprint(next)
-    setSprint(next)
+    setTrip((t) => saveTrip({ ...t, sprint: next }))
   }
   /** The sprint's daily limits (25 new, 250 reviews) become the daily targets everywhere. */
   function applySprintTargets() {
@@ -152,6 +149,7 @@ export default function App() {
   }
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress())
   const [trip, setTrip] = useState<TripState>(() => loadTrip())
+  const sprint = trip.sprint
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings())
   const [askOpen, setAskOpen] = useState(false)
   const [askContext, setAskContext] = useState<string | undefined>()
@@ -687,7 +685,6 @@ export default function App() {
             progress={progress}
             direction={settings.direction}
             apiKeyStored={settings.apiKey}
-            tripDate={trip.tripDate}
             onWords={(day, ids) => {
               applySprintTargets()
               setView({

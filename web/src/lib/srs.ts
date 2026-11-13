@@ -934,6 +934,33 @@ export function isFirstVocabIntroduction(
   return isVocabUnseen(progress, item.card, directionMode)
 }
 
+const twinKey = (s: string) =>
+  s.toLowerCase().replace(/[’‘]/g, "'").replace(/[.,!?;:"“”()]/g, '').replace(/\s+/g, ' ').trim()
+let twinIndex: Map<string, VocabCard[]> | null = null
+
+/** Cards in the other decks with the same Welsh as this sprint card. */
+function sprintTwins(card: VocabCard): VocabCard[] {
+  if (card.bookId !== 'sprint') return []
+  if (!twinIndex) {
+    twinIndex = new Map()
+    for (const c of ALL_CARDS) {
+      if (c.bookId === 'sprint') continue
+      const key = twinKey(c.welsh)
+      twinIndex.set(key, [...(twinIndex.get(key) ?? []), c])
+    }
+  }
+  return twinIndex.get(twinKey(card.welsh)) ?? []
+}
+
+/** A sprint word you already learned as a flashcard in another deck: no need to learn it again. */
+export function knownFromOtherDeck(
+  progress: ProgressMap,
+  card: VocabCard,
+  directionMode: DirectionMode,
+): boolean {
+  return sprintTwins(card).some((t) => !isVocabUnseen(progress, t, directionMode))
+}
+
 /**
  * Unseen headwords in curriculum order: Y Wladfa phrase book, then
  * Colloquial Welsh (alphabet → 1a → 1b → …), then Reader.
@@ -950,6 +977,7 @@ export function getOrderedNewVocab(
     )
     for (const card of cards) {
       if (!isVocabUnseen(progress, card, directionMode)) continue
+      if (knownFromOtherDeck(progress, card, directionMode)) continue
       out.push(card)
       if (limit != null && out.length >= limit) return out
     }

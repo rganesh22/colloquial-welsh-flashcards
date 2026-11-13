@@ -150,4 +150,15 @@ assert.deepEqual(
 assert.equal(mergeTrip(null, tripRemote), tripRemote)
 assert.equal(mergeTrip(tripLocal, undefined), tripLocal)
 
+// Sprint: steps finished on either device are kept; the newer deadline wins.
+const sprintMerged = mergeTrip(
+  { updatedAt: '2026-11-13T08:00:00.000Z', sprint: { finishBy: '2027-01-01', done: { '1': ['words', 'story'] } } },
+  { updatedAt: '2026-11-13T09:00:00.000Z', sprint: { finishBy: '2027-01-05', done: { '1': ['pattern'], '2': ['words'] } } },
+)!.sprint as { finishBy: string; done: Record<string, string[]> }
+assert.equal(sprintMerged.finishBy, '2027-01-05')
+assert.deepEqual(sprintMerged.done['1'].sort(), ['pattern', 'story', 'words'])
+assert.deepEqual(sprintMerged.done['2'], ['words'])
+const oneSided = mergeTrip({ updatedAt: '2026-11-13T09:00:00.000Z' }, { updatedAt: '2026-11-13T08:00:00.000Z', sprint: { finishBy: '2027-01-01', done: { '3': ['speak'] } } })!
+assert.deepEqual((oneSided.sprint as { done: Record<string, string[]> }).done['3'], ['speak'])
+
 console.log('trip merge ok')

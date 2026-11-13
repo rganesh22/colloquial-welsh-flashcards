@@ -101,6 +101,44 @@ export interface TripState {
   recentFixes?: string[]
   /** Hours logged outside the app: audio course, radio, tutor, real people. */
   outside: OutsideLog[]
+  /** The 50-day sprint, kept here so it syncs with the account. */
+  sprint: SprintState
+}
+
+export type SprintBlock = 'words' | 'pattern' | 'story' | 'speak'
+
+export interface SprintState {
+  /** Day 50 falls on this day, YYYY-MM-DD. */
+  finishBy: string
+  /** Blocks finished, by sprint day. */
+  done: Record<string, SprintBlock[]>
+}
+
+/** The sprint's deadline unless you set another. */
+export const SPRINT_FINISH_BY = '2027-01-01'
+const OLD_SPRINT_KEY = 'cw-sprint-v1'
+
+function sprintFromRaw(raw: unknown): SprintState {
+  const r = raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Partial<SprintState>) : {}
+  const done: Record<string, SprintBlock[]> = {}
+  if (r.done && typeof r.done === 'object') {
+    for (const [day, blocks] of Object.entries(r.done)) {
+      if (Array.isArray(blocks)) done[day] = blocks.filter((b): b is SprintBlock => typeof b === 'string')
+    }
+  }
+  // Ticks saved by the first, browser-only version of the sprint.
+  try {
+    const old = JSON.parse(localStorage.getItem(OLD_SPRINT_KEY) ?? 'null') as { done?: Record<string, SprintBlock[]> } | null
+    for (const [day, blocks] of Object.entries(old?.done ?? {})) {
+      done[day] = [...new Set([...(done[day] ?? []), ...blocks])]
+    }
+  } catch {
+    /* nothing to bring over */
+  }
+  return {
+    finishBy: typeof r.finishBy === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.finishBy) ? r.finishBy : SPRINT_FINISH_BY,
+    done,
+  }
 }
 
 export const EMPTY_PROFILE: IntroProfile = {
@@ -140,6 +178,7 @@ function defaultTrip(): TripState {
     profile: { ...EMPTY_PROFILE },
     gaps: [],
     outside: [],
+    sprint: sprintFromRaw(null),
     updatedAt: '',
   }
 }
@@ -161,6 +200,7 @@ export function tripFromRaw(raw: unknown): TripState {
     profile: { ...EMPTY_PROFILE, ...(r.profile ?? {}) },
     gaps: Array.isArray(r.gaps) ? r.gaps : [],
     outside: Array.isArray(r.outside) ? r.outside : [],
+    sprint: sprintFromRaw(r.sprint),
     ...(Array.isArray(r.recentFixes)
       ? { recentFixes: r.recentFixes.filter((f) => typeof f === 'string').slice(0, 3) }
       : {}),

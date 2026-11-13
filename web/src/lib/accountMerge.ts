@@ -200,8 +200,23 @@ export function mergeTrip(
       if (typeof id === 'string') outside.set(id, o)
     }
   }
+  // Sprint: the newer copy's deadline; finished steps unioned by day.
+  const baseSprint = asRecord(base.sprint)
+  const otherSprint = asRecord(other.sprint)
+  const sprintDone: Record<string, unknown> = {}
+  for (const src of [asRecord(otherSprint.done), asRecord(baseSprint.done)]) {
+    for (const [day, list] of Object.entries(src)) {
+      const have = Array.isArray(sprintDone[day]) ? (sprintDone[day] as unknown[]) : []
+      sprintDone[day] = [...new Set([...have, ...(Array.isArray(list) ? list : [])])]
+    }
+  }
+  const sprint =
+    base.sprint || other.sprint
+      ? { ...otherSprint, ...baseSprint, done: sprintDone }
+      : undefined
   return {
     ...base,
+    ...(sprint ? { sprint } : {}),
     outside: [...outside.values()],
     done: { ...asRecord(other.done), ...asRecord(base.done) },
     blocks,
