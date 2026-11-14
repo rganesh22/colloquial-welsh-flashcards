@@ -137,6 +137,7 @@ export default function App() {
   const [view, setView] = useState<AppView>({ name: 'sprint' })
   /** Set while a conversation was opened from the sprint, so closing it goes back there. */
   const fromSprint = useRef(false)
+  const moreRef = useRef<HTMLDetailsElement>(null)
   /** Sprint progress lives in the trip state, which syncs with your account. */
   function updateSprint(next: SprintState) {
     setTrip((t) => saveTrip({ ...t, sprint: next }))
@@ -479,45 +480,39 @@ export default function App() {
           >
             Sprint
           </button>
-          <button
-            type="button"
-            className={`ghost-btn ${view.name === 'home' ? 'is-on' : ''}`}
-            onClick={() => setView({ name: 'home' })}
+          <details
+            className="nav-more"
+            ref={moreRef}
+            onClick={(e) => {
+              // Close the menu once something in it is picked.
+              if ((e.target as HTMLElement).closest('.nav-more-menu button')) moreRef.current?.removeAttribute('open')
+            }}
           >
-            Flashcards
-          </button>
-          <button
-            type="button"
-            className={`ghost-btn ${view.name === 'trip' ? 'is-on' : ''}`}
-            onClick={() => setView({ name: 'trip' })}
-          >
-            Patagonia
-          </button>
-          <button
-            type="button"
-            className="ghost-btn"
-            onClick={() => setView({ name: 'mutations' })}
-          >
-            Mutations
-          </button>
-          <button type="button" className="ghost-btn" onClick={() => openAsk()}>
-            Ask
-          </button>
-          <button
-            type="button"
-            className="ghost-btn"
-            onClick={() => setProgressOpen(true)}
-          >
-            Progress
-          </button>
-          <button
-            type="button"
-            className="ghost-btn"
-            onClick={() => setSettingsOpen((v) => !v)}
-          >
-            Settings
-          </button>
-          {view.name !== 'home' && view.name !== 'trip' && view.name !== 'trip-block' && (
+            <summary className={`ghost-btn ${['home', 'trip', 'trip-block', 'mutations'].includes(view.name) ? 'is-on' : ''}`}>
+              Other ▾
+            </summary>
+            <div className="nav-more-menu">
+              <button type="button" className={view.name === 'home' ? 'is-on' : ''} onClick={() => setView({ name: 'home' })}>
+                Flashcards
+              </button>
+              <button type="button" className={view.name === 'trip' ? 'is-on' : ''} onClick={() => setView({ name: 'trip' })}>
+                Patagonia course
+              </button>
+              <button type="button" onClick={() => setView({ name: 'mutations' })}>
+                Mutations
+              </button>
+              <button type="button" onClick={() => openAsk()}>
+                Ask
+              </button>
+              <button type="button" onClick={() => setProgressOpen(true)}>
+                Progress
+              </button>
+              <button type="button" onClick={() => setSettingsOpen((v) => !v)}>
+                Settings
+              </button>
+            </div>
+          </details>
+          {view.name !== 'home' && view.name !== 'trip' && view.name !== 'trip-block' && view.name !== 'sprint' && (
             <button
               type="button"
               className="ghost-btn"

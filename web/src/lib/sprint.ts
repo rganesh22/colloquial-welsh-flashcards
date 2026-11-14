@@ -150,3 +150,19 @@ export function videosFor(day: number): { now?: SprintVideo; next?: SprintVideo 
 export function wordsByDay(day: number): number {
   return SPRINT_WORDS.filter((w) => w.day <= day).length
 }
+
+/** Sprint word ids you've learned (here, or as the same word in another deck). */
+export function learnedSprintIds(progress: ProgressMap, direction: DirectionMode): Set<string> {
+  const out = new Set<string>()
+  for (let d = 1; d <= SPRINT_DAYS; d++) {
+    for (const c of cardsForLesson('sprint', SPRINT_LESSON_ID(d))) {
+      if (!isVocabUnseen(progress, c, direction) || knownFromOtherDeck(progress, c, direction)) out.add(c.id)
+    }
+  }
+  return out
+}
+
+/** Videos you're ready for from this day. */
+export function videosReadyOn(day: number): SprintVideo[] {
+  return SPRINT_VIDEOS.filter((v) => v.readyDay === day)
+}

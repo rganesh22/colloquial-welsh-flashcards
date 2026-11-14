@@ -355,3 +355,194 @@
   font-size: 0.86rem;
   color: var(--green-deep);
 }
+
+/* Header: Sprint up front, everything else under "Other". */
+.nav-more {
+  position: relative;
+}
+
+.nav-more summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.nav-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-more-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 30;
+  min-width: 11rem;
+  display: grid;
+  padding: 0.35rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
+}
+
+.nav-more-menu button {
+  padding: 0.6rem 0.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nav-more-menu button:hover,
+.nav-more-menu button.is-on {
+  background: color-mix(in srgb, var(--green) 18%, transparent);
+}
+
+@media (max-width: 720px) {
+  /* Few enough buttons now to wrap; scrolling would clip the menu. */
+  .topbar .top-actions {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+/* Day plan, previews and full lists */
+.sprint-dot.later {
+  opacity: 0.55;
+}
+
+.sprint-preview {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.sprint-preview-note {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  border: 1px dashed var(--line);
+  color: var(--ink-soft);
+}
+
+.sprint-plan {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 0.75rem 1rem;
+}
+
+.sprint-plan summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.sprint-plan-body {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.4rem;
+}
+
+.sprint-preview .sprint-plan-body {
+  margin-top: 0;
+}
+
+.sprint-words {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.15rem 1rem;
+}
+
+.sprint-words li {
+  display: grid;
+  gap: 0.05rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.sprint-words li.learned .cy::before {
+  content: '✓ ';
+  color: var(--green-deep);
+}
+
+.sprint-tag {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  background: color-mix(in srgb, var(--green) 22%, transparent);
+  color: var(--ink);
+}
+
+.sprint-lists-btn {
+  justify-self: start;
+}
+
+.sprint-tabs {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  justify-self: start;
+}
+
+.sprint-tabs button,
+.sprint-chip {
+  padding: 0.45rem 0.85rem;
+  border-radius: 9px;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  cursor: pointer;
+}
+
+.sprint-chip {
+  border: 1px solid var(--line);
+  font-size: 0.86rem;
+}
+
+.sprint-tabs button.on,
+.sprint-chip.on {
+  background: color-mix(in srgb, var(--green) 25%, transparent);
+  color: var(--ink);
+}
+
+.sprint-search {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+  color: var(--ink);
+  font: inherit;
+}
+
+.sprint-list-day {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.sprint-list-head {
+  padding: 0.4rem 0 0;
+  border: 0;
+  background: none;
+  color: var(--green-deep);
+  font: inherit;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sprint-videos {
+  grid-template-columns: 1fr;
+}
+
+.sprint-videos a {
+  color: var(--ink);
+}
