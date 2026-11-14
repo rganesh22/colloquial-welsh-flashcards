@@ -962,7 +962,7 @@ export function knownFromOtherDeck(
 }
 
 /**
- * Unseen headwords in curriculum order: Y Wladfa phrase book, then
+ * Unseen headwords in curriculum order (only the sprint's while SPRINT_FOCUS): sprint, Y Wladfa phrase book, then
  * Colloquial Welsh (alphabet → 1a → 1b → …), then Reader.
  */
 export function getOrderedNewVocab(
@@ -972,6 +972,7 @@ export function getOrderedNewVocab(
 ): VocabCard[] {
   const out: VocabCard[] = []
   for (const lesson of LESSONS) {
+    if (SPRINT_FOCUS && lesson.bookId !== 'sprint') continue
     const cards = [...cardsForLesson(lesson.bookId, lesson.id)].sort(
       (a, b) => a.number - b.number,
     )
@@ -1024,8 +1025,40 @@ export function isLearningState(card: FSRSCard | undefined): boolean {
   )
 }
 
+/**
+ * During the 50-day sprint, "all cards" (the Flashcards page, its new words
+ * and reviews) means the sprint's words, plus the same words where you
+ * learned them in another deck. The phrase book and the rest of the old
+ * decks wait; you can still open any deck on purpose. Set false to bring
+ * everything back.
+ */
+export const SPRINT_FOCUS = true
+let focusCards: VocabCard[] | null = null
+
+function sprintFocusCards(): VocabCard[] {
+  if (!focusCards) {
+    const words = new Set(ALL_CARDS.filter((c) => c.bookId === 'sprint').map((c) => twinKey(c.welsh)))
+    focusCards = ALL_CARDS.filter((c) => c.bookId === 'sprint' || words.has(twinKey(c.welsh)))
+  }
+  return focusCards
+}
+
+/**
+ * In sprint focus, other decks' copies of sprint words are there only to be
+ * reviewed: new words come from the sprint, skipping ones you already know.
+ */
+function focusSkipsNew(
+  progress: ProgressMap,
+  filter: SessionFilter,
+  card: VocabCard,
+  directionMode: DirectionMode,
+): boolean {
+  if (!SPRINT_FOCUS || filter.kind !== 'all') return false
+  return card.bookId !== 'sprint' || knownFromOtherDeck(progress, card, directionMode)
+}
+
 function filterVocab(filter: SessionFilter): VocabCard[] {
-  if (filter.kind === 'all') return ALL_CARDS
+  if (filter.kind === 'all') return SPRINT_FOCUS ? sprintFocusCards() : ALL_CARDS
   if (filter.kind === 'book') {
     return ALL_CARDS.filter((c) => c.bookId === filter.bookId)
   }
@@ -1085,7 +1118,8 @@ export function getNewItems(
     expandItems(filterVocab(filter), directionMode).filter(
       (item) =>
         isNew(progress[item.progressId]) &&
-        allowCard(item.card.id, allowCardIds),
+        allowCard(item.card.id, allowCardIds) &&
+        !focusSkipsNew(progress, filter, item.card, directionMode),
     ),
   )
 }
@@ -1528,7 +1562,7 @@ export function countStats(
   for (const item of items) {
     const s = progress[item.progressId]
     if (!s || s.state === State.New) {
-      news++
+      if (!focusSkipsNew(progress, filter, item.card, directionMode)) news++
       continue
     }
     if (s.state === State.Learning || s.state === State.Relearning) learning++
