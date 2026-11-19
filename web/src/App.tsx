@@ -130,6 +130,7 @@ import {
   markBlock,
   SPRINT_NEW_PER_DAY,
   SPRINT_REVIEW_CAP,
+  sprintReviewMax,
   type SprintState,
 } from './lib/sprint'
 
@@ -689,7 +690,7 @@ export default function App() {
                 mode: 'learn',
                 filter: { kind: 'all' },
                 quotaCardIds: ids,
-                sessionReviewMax: SPRINT_REVIEW_CAP,
+                sessionReviewMax: sprintReviewMax(day, dailyReviewCount()),
                 segmentLabel: `Sprint day ${day}`,
                 sprintDay: day,
               })
@@ -700,7 +701,7 @@ export default function App() {
                 name: 'study',
                 mode: 'review',
                 filter: { kind: 'all' },
-                sessionReviewMax: SPRINT_REVIEW_CAP,
+                sessionReviewMax: sprintReviewMax(day, dailyReviewCount()),
                 sprintDay: day,
               })
             }}
@@ -2545,8 +2546,10 @@ function StudyView({
   const isNewCard =
     !!current &&
     isFirstVocabIntroduction(progress, current, settings.direction)
-  const reviewsDoneToday = dailyReviewCount()
-  const reviewCapToday = Math.max(reviewMax, 1)
+  // A sprint day shows its own share: reviews since it started, out of its cap.
+  const reviewBase = sprintDay != null ? Math.max(0, reviewMax - SPRINT_REVIEW_CAP) : 0
+  const reviewsDoneToday = Math.max(0, dailyReviewCount() - reviewBase)
+  const reviewCapToday = Math.max(reviewMax - reviewBase, 1)
   const reviewsLeftToday = remainingDailyReviews(reviewMax)
   const reviewsPct = Math.min(
     100,

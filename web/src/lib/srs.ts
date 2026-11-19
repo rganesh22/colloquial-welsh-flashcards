@@ -1318,7 +1318,9 @@ export function buildQueue(
   const due =
     mode === 'learn'
       ? [
-          ...shuffle(learningForWave).slice(0, Math.min(6, reviewBudget)),
+          // The words you're learning right now keep their steps even when
+          // the review cap is spent; otherwise they'd stall half-learned.
+          ...shuffle(learningForWave).slice(0, waveSet.size > 0 ? 6 : Math.min(6, reviewBudget)),
           ...shuffle(reviewDue).slice(0, learnReviewCap),
         ]
       : [...shuffle(reviewDue), ...shuffle(learningDue)].slice(0, reviewBudget)

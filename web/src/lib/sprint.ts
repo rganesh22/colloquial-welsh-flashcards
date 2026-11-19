@@ -166,3 +166,30 @@ export function learnedSprintIds(progress: ProgressMap, direction: DirectionMode
 export function videosReadyOn(day: number): SprintVideo[] {
   return SPRINT_VIDEOS.filter((v) => v.readyDay === day)
 }
+
+const REVIEW_BASE_KEY = 'cw-sprint-review-base'
+
+/**
+ * Review cap for a sprint day's session, as an absolute count of today's
+ * reviews. The first day you open today shares the normal daily cap; each
+ * further day you work ahead on gets its own SPRINT_REVIEW_CAP on top of
+ * the reviews already done when you started it.
+ */
+export function sprintReviewMax(day: number, reviewsToday: number, today = localCalendarDay()): number {
+  let base: Record<string, number> = {}
+  try {
+    const raw = JSON.parse(localStorage.getItem(REVIEW_BASE_KEY) ?? 'null') as { date?: string; base?: Record<string, number> } | null
+    if (raw?.date === today && raw.base) base = raw.base
+  } catch {
+    /* start fresh */
+  }
+  if (base[day] == null) {
+    base[day] = Object.keys(base).length === 0 ? 0 : reviewsToday
+    try {
+      localStorage.setItem(REVIEW_BASE_KEY, JSON.stringify({ date: today, base }))
+    } catch {
+      /* storage blocked: the day still gets its cap this session */
+    }
+  }
+  return base[day] + SPRINT_REVIEW_CAP
+}
