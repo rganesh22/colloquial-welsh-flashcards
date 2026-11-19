@@ -150,15 +150,11 @@ export function SprintView(props: Props) {
         </p>
       </header>
 
-      {viewDay > current ? (
-        <div className="sprint-preview">
-          <p className="sprint-preview-note">
-            Preview: this day opens once you finish day {current}
-            {viewDay - current > 1 ? ` and the ${viewDay - current - 1} after it` : ''}.
-          </p>
-          <DayPlan day={content} apiKey={apiKey} />
-        </div>
-      ) : (
+      {viewDay > current && (
+        <p className="sprint-preview-note">
+          Working ahead: day {current} isn’t finished yet, but you can start any step of day {viewDay} now.
+        </p>
+      )}
       <ol className="sprint-steps">
         {STEPS.map((s, i) => {
           const done = blockDone(state, viewDay, s.id, progress, direction)
@@ -201,14 +197,11 @@ export function SprintView(props: Props) {
           )
         })}
       </ol>
-      )}
 
-      {viewDay <= current && (
-        <details className="sprint-plan">
-          <summary>What day {viewDay} teaches</summary>
-          <DayPlan day={content} apiKey={apiKey} />
-        </details>
-      )}
+      <details className="sprint-plan" open={viewDay > current}>
+        <summary>What day {viewDay} teaches</summary>
+        <DayPlan day={content} apiKey={apiKey} />
+      </details>
 
       {dayDone(state, viewDay, progress, direction) && viewDay === current - 1 && (
         <p className="sprint-done">Da iawn! Day {viewDay} done. Tomorrow: {sprintDay(current)?.title}</p>
@@ -246,7 +239,7 @@ function DayStrip({
           type="button"
           className={`sprint-dot ${isDone(d) ? 'done' : ''} ${d === viewDay ? 'on' : ''} ${isCatchUpDay(d) ? 'catch' : ''} ${d > current ? 'later' : ''}`}
           onClick={() => onPick(d)}
-          title={`Day ${d}${isCatchUpDay(d) ? ' (catch-up)' : ''}${d > current ? ' (preview)' : ''}`}
+          title={`Day ${d}${isCatchUpDay(d) ? ' (catch-up)' : ''}${d > current ? ' (work ahead)' : ''}`}
         >
           {d}
         </button>

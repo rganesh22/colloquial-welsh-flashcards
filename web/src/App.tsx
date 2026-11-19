@@ -28,6 +28,7 @@ import {
   countStats,
   countHeadwordStats,
   dailyIntroCount,
+  isVocabUnseen,
   dailyReviewCount,
   defaultMaxDailyReviews,
   dialectLabel,
@@ -68,7 +69,7 @@ import {
   type DaySegment,
 } from './lib/srs'
 import { BOOKS, getBook, getLesson, LESSONS } from './lib/lessons'
-import { cardsForLesson } from './data/deck'
+import { ALL_CARDS, cardsForLesson } from './data/deck'
 import { getApiKey, aiKeys, ASK_MODELS, clampAskModel } from './lib/gemini'
 import { getClaudeKey } from './lib/claude'
 import { NumberField } from './components/NumberField'
@@ -657,6 +658,7 @@ export default function App() {
             quotaCardIds={view.quotaCardIds}
             sessionReviewMax={view.sessionReviewMax}
             segmentLabel={view.segmentLabel}
+            sprintDay={view.sprintDay}
             progress={progress}
             settings={settings}
             onProgress={updateProgress}
@@ -1958,6 +1960,7 @@ function StudyView({
   quotaCardIds,
   sessionReviewMax,
   segmentLabel,
+  sprintDay,
   progress,
   settings,
   onProgress,
@@ -1971,6 +1974,8 @@ function StudyView({
   /** Absolute review max watermark for this Learn segment. */
   sessionReviewMax?: number
   segmentLabel?: string
+  /** A sprint day's words: counted against that day's list, not the daily goal. */
+  sprintDay?: number
   progress: ProgressMap
   settings: AppSettings
   onProgress: (p: ProgressMap) => void
@@ -2056,8 +2061,17 @@ function StudyView({
     settings.direction,
     allowIds,
   )
-  const todaysIntro = dailyIntroCount()
-  const goalRemaining = remainingDailyGoal(settings.dailyWordGoal)
+  // A sprint day counts its own words (you can work ahead of the daily goal).
+  const sprintWords = sprintDay != null && quotaCardIds ? quotaCardIds : null
+  const sprintMet = sprintWords
+    ? sprintWords.filter((id) => {
+        const card = ALL_CARDS.find((c) => c.id === id)
+        return card != null && !isVocabUnseen(progress, card, settings.direction)
+      }).length
+    : 0
+  const todaysIntro = sprintWords ? sprintMet : dailyIntroCount()
+  const wordGoal = sprintWords ? sprintWords.length : settings.dailyWordGoal
+  const goalRemaining = sprintWords ? wordGoal - sprintMet : remainingDailyGoal(settings.dailyWordGoal)
   const canLearnMore = mode === 'learn' && newLeft > 0
 
   const intervals = useMemo(() => {
@@ -2405,7 +2419,7 @@ function StudyView({
         <p className="muted-line">
           {learningLeft} card{learningLeft === 1 ? '' : 's'} in learning steps
           {newLeft > 0 ? ` · ${newLeft} new ready` : ''}
-          {isQuota ? ` · goal ${todaysIntro}/${settings.dailyWordGoal}` : ''}
+          {isQuota ? ` · ${sprintWords ? `day ${sprintDay} words` : 'goal'} ${todaysIntro}/${wordGoal}` : ''}
         </p>
         <div className="action-grid" style={{ maxWidth: 280, margin: '0 auto' }}>
           {canLearnMore && (
@@ -2436,7 +2450,9 @@ function StudyView({
         <p>
           {mode === 'learn'
             ? isQuota && goalRemaining <= 0
-              ? 'Today’s word goal is done.'
+              ? sprintWords
+                ? `All of day ${sprintDay}’s words are in.`
+                : 'Today’s word goal is done.'
               : isQuota && newLeft === 0
                 ? 'Today’s quota is finished.'
                 : 'No new cards left in this chapter.'
@@ -2467,7 +2483,7 @@ function StudyView({
         <p>{reviewed} done</p>
         {isQuota && (
           <p className="muted-line">
-            Today {todaysIntro}/{settings.dailyWordGoal} new words
+            {sprintWords ? `Day ${sprintDay}` : 'Today'} {todaysIntro}/{wordGoal} new words
           </p>
         )}
         <div className="action-grid" style={{ maxWidth: 280, margin: '0 auto' }}>
@@ -2513,7 +2529,9 @@ function StudyView({
     isQuota && filter.kind === 'book' && filter.bookId === 'patagonia'
   const scopeLabel = tripPhrases
     ? (segmentLabel ?? 'phrases')
-    : isQuota
+    : sprintWords
+      ? 'new words'
+      : isQuota
       ? segmentLabel
         ? `goal · ${segmentLabel}`
         : 'today’s goal'
@@ -2536,7 +2554,7 @@ function StudyView({
   )
   const wordsPct = Math.min(
     100,
-    Math.round((todaysIntro / Math.max(settings.dailyWordGoal, 1)) * 100),
+    Math.round((todaysIntro / Math.max(wordGoal, 1)) * 100),
   )
   const showWordsBar = mode === 'learn' || isQuota
 
@@ -2556,8 +2574,10 @@ function StudyView({
           <span>
             {tripPhrases
               ? 'Patagonia'
-              : isQuota
-                ? 'Daily goal'
+              : sprintWords
+                ? `Sprint day ${sprintDay}`
+                : isQuota
+                  ? 'Daily goal'
                 : mode === 'learn'
                   ? 'Learn'
                   : 'Review'}{' '}
@@ -2586,7 +2606,7 @@ function StudyView({
               role="progressbar"
               aria-valuenow={todaysIntro}
               aria-valuemin={0}
-              aria-valuemax={settings.dailyWordGoal}
+              aria-valuemax={wordGoal}
             >
               <div
                 className="study-progress-fill"
@@ -2594,7 +2614,7 @@ function StudyView({
               />
             </div>
             <span className="study-progress-pct">
-              {todaysIntro}/{settings.dailyWordGoal}
+              {todaysIntro}/{wordGoal}
               {goalRemaining > 0 ? (
                 <em className="study-progress-left"> · {goalRemaining} left</em>
               ) : (
