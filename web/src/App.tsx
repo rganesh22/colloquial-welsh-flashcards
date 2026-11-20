@@ -705,10 +705,6 @@ export default function App() {
                 sprintDay: day,
               })
             }}
-            onTalk={() => {
-              fromSprint.current = true
-              setView({ name: 'trip-block', block: 'practice', scenario: 'sgwrs-rydd' })
-            }}
           />
         )}
         {view.name === 'trip' && (

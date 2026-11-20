@@ -31,7 +31,7 @@ const STEPS: { id: SprintBlock; cy: string; en: string; minutes: number }[] = [
   { id: 'words', cy: 'Geiriau', en: 'Words', minutes: 30 },
   { id: 'pattern', cy: 'Patrwm', en: 'Build sentences', minutes: 10 },
   { id: 'story', cy: 'Stori', en: 'Read & listen', minutes: 10 },
-  { id: 'speak', cy: 'Siarad', en: 'Speak & watch', minutes: 10 },
+  { id: 'speak', cy: 'Gwylio', en: 'Watch Easy Welsh', minutes: 10 },
 ]
 
 interface Props {
@@ -44,8 +44,6 @@ interface Props {
   onWords: (day: number, ids: string[]) => void
   /** Reviews only (catch-up days, or once the day's words are in). */
   onReview: (day: number) => void
-  /** A free conversation with the AI partner. */
-  onTalk: () => void
 }
 
 /**
@@ -102,10 +100,8 @@ export function SprintView(props: Props) {
     return (
       <SpeakPanel
         day={content}
-        apiKey={apiKey}
         onBack={() => setOpen(null)}
         onDone={() => finish('speak')}
-        onTalk={props.onTalk}
       />
     )
   }
@@ -173,8 +169,8 @@ export function SprintView(props: Props) {
                 : s.id === 'story'
                   ? content.story.title
                   : catchUp
-                    ? 'Say it out loud, then talk with a partner'
-                    : 'Say it out loud, then watch Easy Welsh'
+                    ? 'Rewatch a video you can follow'
+                    : 'Watch with Welsh subtitles, rewind what you miss'
           return (
             <li key={s.id}>
               <button
@@ -684,55 +680,21 @@ function StoryPanel({
 
 // ---------- Siarad: say it, then watch ----------
 
+// The speaking prompts and conversation are off for now; this step is watching.
 function SpeakPanel({
   day,
-  apiKey,
   onBack,
   onDone,
-  onTalk,
 }: {
   day: SprintDay
-  apiKey: string | null
   onBack: () => void
   onDone: () => void
-  onTalk: () => void
 }) {
-  const [shown, setShown] = useState<number[]>([])
   const { now, next } = videosFor(day.day)
   const known = (v: { coverage: number[] }) => Math.round((v.coverage[day.day - 1] ?? 0) * 100)
   return (
     <section className="sprint sprint-panel">
-      <PanelHead title="Siarad" sub="Say each one out loud before you look. Then say the model answer twice." onBack={onBack} />
-      {day.speak.map((s, k) => (
-        <div key={k} className="sprint-speak">
-          <p className="sprint-build-en">{s.prompt}</p>
-          {shown.includes(k) ? (
-            <Line line={s} apiKey={apiKey} />
-          ) : (
-            <button
-              type="button"
-              className="ghost-btn small"
-              onClick={() => {
-                setShown([...shown, k])
-                void speakWelsh({ text: s.cy, apiKey }).catch(() => {})
-              }}
-            >
-              I said it · show a model answer
-            </button>
-          )}
-        </div>
-      ))}
-
-      {isCatchUpDay(day.day) ? (
-        <div className="sprint-video">
-          <h3 className="sprint-sub">Sgwrs · Talk</h3>
-          <p className="muted-line">Ten minutes with the conversation partner. Use this week’s patterns.</p>
-          <button type="button" className="ghost-btn" onClick={onTalk}>
-            Start a conversation
-          </button>
-        </div>
-      ) : null}
-
+      <PanelHead title="Gwylio · Watch" sub="Watch with the Welsh subtitles. Pause and replay lines you nearly got." onBack={onBack} />
       {now ? (
         <div className="sprint-video">
           <h3 className="sprint-sub">
@@ -765,8 +727,8 @@ function SpeakPanel({
           {next.readyDay ? `, ready around day ${next.readyDay}` : ''}.
         </p>
       )}
-      <button type="button" className="primary-btn" disabled={shown.length < day.speak.length} onClick={onDone}>
-        {shown.length < day.speak.length ? `Say all ${day.speak.length} first` : 'Done'}
+      <button type="button" className="primary-btn" onClick={onDone}>
+        Done
       </button>
     </section>
   )
