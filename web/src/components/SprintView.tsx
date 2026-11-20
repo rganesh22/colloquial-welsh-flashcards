@@ -378,15 +378,25 @@ function ListsPanel({
             ))}
           </div>
           <p className="muted-line">{words.length} words. Learned ones are ticked.</p>
-          {[...byDay.entries()].map(([day, list]) => (
-            <div key={day} className="sprint-list-day">
-              <button type="button" className="sprint-list-head" onClick={() => onPickDay(day)}>
-                Day {day} · {SPRINT_DAY_CONTENT.find((d) => d.day === day)?.title}
-                {day === current && <span className="sprint-tag">today</span>}
-              </button>
-              <WordRows words={list} learned={learned} />
-            </div>
-          ))}
+          {Array.from({ length: SPRINT_DAYS }, (_, i) => i + 1).map((day) => {
+            const list = byDay.get(day)
+            const catchUp = isCatchUpDay(day)
+            // Catch-up days have no new words; show them in the unfiltered list so no day looks missing.
+            if (!list && !(catchUp && filter === 'all' && !q)) return null
+            return (
+              <div key={day} className="sprint-list-day">
+                <button type="button" className="sprint-list-head" onClick={() => onPickDay(day)}>
+                  Day {day} · {catchUp ? 'Catch-up' : SPRINT_DAY_CONTENT.find((d) => d.day === day)?.title}
+                  {day === current && <span className="sprint-tag">today</span>}
+                </button>
+                {list ? (
+                  <WordRows words={list} learned={learned} />
+                ) : (
+                  <p className="muted-line">No new words: review the week and rewatch a video.</p>
+                )}
+              </div>
+            )
+          })}
         </>
       )}
 
