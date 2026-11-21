@@ -7,8 +7,13 @@ import { piperWav } from './piperWeb'
  * (bundled Gemini, Piper, this browser's cache) still matches its line.
  */
 export const TTS_MODEL = 'gemini-3.1-flash-tts-preview'
-/** The model that actually makes new audio: the cheap one, with a far bigger daily quota. */
+/** The model that actually makes new audio in the app: the cheap one. */
 export const TTS_REQUEST_MODEL = 'gemini-3.8-flash-lite-tts'
+/**
+ * For pre-making course clips: cheap first. Each has its own daily cap
+ * (100 requests on Tier 1), so the script moves down the list as each runs out.
+ */
+export const TTS_REQUEST_MODELS = [TTS_REQUEST_MODEL, 'gemini-3.8-flash-tts', 'gemini-2.5-flash-preview-tts']
 /** Calm deep male voice — same as wiktionary_web_scraper. */
 export const TTS_VOICE = 'Enceladus'
 export const TTS_LANGUAGE = 'cy-GB'

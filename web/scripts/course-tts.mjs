@@ -59,6 +59,22 @@ export async function loadCourse() {
   try {
     const { courseAudioLines } = await server.ssrLoadModule('/src/lib/courseAudio.ts')
     const tts = await server.ssrLoadModule('/src/lib/tts.ts')
+    const sprint = await server.ssrLoadModule('/src/lib/sprint.ts')
+    // Sprint lines are made day by day, so the days you're on get Gemini audio first.
+    const dayOf = new Map()
+    const mark = (text, day) => {
+      const t = text?.trim()
+      if (t && !dayOf.has(t)) dayOf.set(t, day)
+    }
+    for (const w of sprint.SPRINT_WORDS) {
+      mark(w.cy, w.day)
+      mark(w.ex?.cy, w.day)
+    }
+    for (const d of sprint.SPRINT_DAY_CONTENT) {
+      for (const e of d.grammar.examples) mark(e.cy, d.day)
+      for (const b of d.build) mark(b.cy, d.day)
+      for (const l of d.story.lines) mark(l.cy, d.day)
+    }
     const byKey = new Map()
     for (const line of courseAudioLines()) {
       const key = await tts.ttsAudioKey(line.text, line)
@@ -68,10 +84,13 @@ export async function loadCourse() {
           text: line.text,
           voice: line.voice || tts.TTS_VOICE,
           prompt: tts.ttsSpeakPrompt(line.text, line),
+          // Sprint day, or 99 for everything else (Patagonia course, speaking prompts).
+          day: dayOf.get(line.text.trim()) ?? 99,
         })
       }
     }
-    return { lines: [...byKey.values()], model: tts.TTS_MODEL, requestModel: tts.TTS_REQUEST_MODEL }
+    const lines = [...byKey.values()].sort((a, b) => a.day - b.day)
+    return { lines, model: tts.TTS_MODEL, requestModels: tts.TTS_REQUEST_MODELS }
   } finally {
     await server.close()
   }
@@ -99,7 +118,7 @@ async function toMp3(wav, key) {
 }
 
 async function main() {
-  const { lines, model, requestModel } = await loadCourse()
+  const { lines, model, requestModels } = await loadCourse()
   const manifest = await loadManifest(model)
   const onDisk = (k) => existsSync(join(outDir, `${k}.mp3`))
   // Files from a run that stopped before saving still count.
@@ -120,7 +139,7 @@ async function main() {
   const key = apiKey()
   await mkdir(outDir, { recursive: true })
   await mkdir(jobsDir, { recursive: true })
-  if (direct) return generateDirect(todo, requestModel, key, manifest, have)
+  if (direct) return generateDirect(todo, requestModels, key, manifest, have)
 
   let jobName = resumeJob
   let metaPath
@@ -193,10 +212,18 @@ async function main() {
   manifest.keys = [...keys].sort()
   await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n')
   console.log(`Done. ok=${ok} failed=${failed}. Re-run to retry any failures.`)
+  const left = todo.filter((l) => !keys.has(l.key))
+  if (left.length) console.log(`  next sprint day without Gemini audio: ${left[0].day === 99 ? 'none (sprint done)' : left[0].day}`)
 }
 
 /** One request per line, a few at a time, backing off on rate limits. */
-async function generateDirect(todo, model, key, manifest, have) {
+/**
+ * Each model has its own daily request cap (100 on Tier 1), so when one runs
+ * out the next takes over; the run stops only when they all have.
+ */
+async function generateDirect(todo, models, key, manifest, have) {
+  let m = 0
+  const model = () => models[m]
   const keys = new Set(have)
   let ok = 0
   let failed = 0
@@ -211,7 +238,7 @@ async function generateDirect(todo, model, key, manifest, have) {
     for (let attempt = 0; attempt < 8 && !stopped; attempt++) {
       let resp
       try {
-        resp = await fetch(`${API_BASE}/models/${model}:generateContent`, {
+        resp = await fetch(`${API_BASE}/models/${model()}:generateContent`, {
           method: 'POST',
           headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -240,6 +267,15 @@ async function generateDirect(todo, model, key, manifest, have) {
       const body = await resp.text()
       // A daily cap or empty credits won't clear by waiting: stop and keep what's done.
       if (resp.status === 402 || /per day|credits are depleted/i.test(body)) {
+        const used = model()
+        if (resp.status !== 402 && models[m] === used && m < models.length - 1) {
+          m++
+          console.log(`  ${used} hit its daily cap; switching to ${model()}`)
+        }
+        if (resp.status !== 402 && models[m] !== used) {
+          attempt--
+          continue
+        }
         stopped = JSON.parse(body).error?.message ?? body
         break
       }
@@ -267,6 +303,8 @@ async function generateDirect(todo, model, key, manifest, have) {
     return
   }
   console.log(`Done. ok=${ok} failed=${failed}. Re-run to retry any failures.`)
+  const left = todo.filter((l) => !keys.has(l.key))
+  if (left.length) console.log(`  next sprint day without Gemini audio: ${left[0].day === 99 ? 'none (sprint done)' : left[0].day}`)
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
