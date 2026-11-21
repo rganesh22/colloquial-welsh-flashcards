@@ -23,7 +23,10 @@ const root = join(__dirname, '..')
 const outDir = join(root, 'public', 'tts')
 const jobsDir = join(root, 'scripts', 'batch-jobs')
 
+/** Names the voice in cache keys (matches src/lib/tts.ts); unchanged so saved clips keep matching. */
 const TTS_MODEL = 'gemini-3.1-flash-tts-preview'
+/** The model that makes the audio (matches TTS_REQUEST_MODEL in src/lib/tts.ts). */
+const TTS_REQUEST_MODEL = 'gemini-3.8-flash-lite-tts'
 const TTS_VOICE = 'Enceladus'
 const TTS_LANGUAGE = 'cy-GB'
 const TTS_ACCENT_PROMPT =
@@ -223,7 +226,7 @@ async function uploadJsonl(path, key, displayName) {
 }
 
 async function createBatchJob(fileName, key, displayName) {
-  const url = `${API_BASE}/models/${TTS_MODEL}:batchGenerateContent`
+  const url = `${API_BASE}/models/${TTS_REQUEST_MODEL}:batchGenerateContent`
   for (let attempt = 0; attempt < 8; attempt++) {
     const resp = await fetch(`${url}?key=${encodeURIComponent(key)}`, {
       method: 'POST',

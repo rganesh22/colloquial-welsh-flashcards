@@ -8,7 +8,7 @@
  *   npm run course-tts -- --dry       count lines, call nothing
  *   npm run course-tts                generate what's missing (needs GEMINI_API_KEY)
  *   npm run course-tts -- --resume <batches/…>   pick up a job that's still running
- *   npm run course-tts -- --direct    one request at a time instead of a batch
+ *   npm run course-tts -- --direct    single requests (3 at once; --jobs N for more) instead of a batch
  *                                     (for projects where batch mode is off);
  *                                     saves as it goes, so re-running resumes
  *
@@ -44,6 +44,9 @@ const dry = args.includes('--dry')
 const resumeIdx = args.indexOf('--resume')
 const resumeJob = resumeIdx >= 0 ? args[resumeIdx + 1] : null
 const direct = args.includes('--direct')
+/** Parallel requests in --direct mode (--jobs N); 429s back off on their own. */
+const jobsIdx = args.indexOf('--jobs')
+const jobs = jobsIdx >= 0 ? Math.max(1, Number(args[jobsIdx + 1]) || 3) : 3
 const API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
 
 export async function loadCourse() {
@@ -68,7 +71,7 @@ export async function loadCourse() {
         })
       }
     }
-    return { lines: [...byKey.values()], model: tts.TTS_MODEL }
+    return { lines: [...byKey.values()], model: tts.TTS_MODEL, requestModel: tts.TTS_REQUEST_MODEL }
   } finally {
     await server.close()
   }
@@ -96,7 +99,7 @@ async function toMp3(wav, key) {
 }
 
 async function main() {
-  const { lines, model } = await loadCourse()
+  const { lines, model, requestModel } = await loadCourse()
   const manifest = await loadManifest(model)
   const onDisk = (k) => existsSync(join(outDir, `${k}.mp3`))
   // Files from a run that stopped before saving still count.
@@ -117,7 +120,7 @@ async function main() {
   const key = apiKey()
   await mkdir(outDir, { recursive: true })
   await mkdir(jobsDir, { recursive: true })
-  if (direct) return generateDirect(todo, model, key, manifest, have)
+  if (direct) return generateDirect(todo, requestModel, key, manifest, have)
 
   let jobName = resumeJob
   let metaPath
@@ -252,7 +255,7 @@ async function generateDirect(todo, model, key, manifest, have) {
   }
   const queue = [...todo]
   await Promise.all(
-    Array.from({ length: 3 }, async () => {
+    Array.from({ length: jobs }, async () => {
       while (queue.length && !stopped) await one(queue.shift())
     }),
   )

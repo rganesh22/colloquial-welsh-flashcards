@@ -2,7 +2,13 @@ import { cacheGetAudio, cacheSetAudio, hashKey } from './cache'
 
 import { piperWav } from './piperWeb'
 
+/**
+ * Names the voice in audio cache keys. Kept as it was so every saved clip
+ * (bundled Gemini, Piper, this browser's cache) still matches its line.
+ */
 export const TTS_MODEL = 'gemini-3.1-flash-tts-preview'
+/** The model that actually makes new audio: the cheap one, with a far bigger daily quota. */
+export const TTS_REQUEST_MODEL = 'gemini-3.8-flash-lite-tts'
 /** Calm deep male voice — same as wiktionary_web_scraper. */
 export const TTS_VOICE = 'Enceladus'
 export const TTS_LANGUAGE = 'cy-GB'
@@ -349,7 +355,7 @@ async function generateGeminiWav(
   const { GoogleGenAI } = await import('@google/genai')
   const ai = new GoogleGenAI({ apiKey })
   const response = await ai.models.generateContent({
-    model: TTS_MODEL,
+    model: TTS_REQUEST_MODEL,
     contents: [{ parts: [{ text: ttsSpeakPrompt(text, v) }] }],
     config: {
       responseModalities: ['AUDIO'],
