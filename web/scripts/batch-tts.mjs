@@ -8,6 +8,7 @@
  */
 
 import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import {
   mkdir,
   readFile,
@@ -53,12 +54,28 @@ const TERMINAL = new Set([
   'BATCH_STATE_EXPIRED',
 ])
 
+/** A key in web/.env (private, never published) wins over the shell's. */
+function envFileKey() {
+  try {
+    const text = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', '.env'), 'utf8')
+    for (const name of ['GEMINI_API_KEY', 'VITE_GEMINI_API_KEY']) {
+      const m = text.match(new RegExp(`^${name}=(.+)$`, 'm'))
+      const v = m?.[1]?.trim().replace(/^['"]|['"]$/g, '')
+      if (v) return v
+    }
+  } catch {
+    /* no .env */
+  }
+  return ''
+}
+
 function apiKey() {
   const key =
+    envFileKey() ||
     process.env.GEMINI_API_KEY ||
     process.env.VITE_GEMINI_API_KEY ||
     process.env.GOOGLE_API_KEY
-  if (!key) throw new Error('Set GEMINI_API_KEY')
+  if (!key) throw new Error('Set GEMINI_API_KEY (in web/.env or the shell)')
   return key
 }
 

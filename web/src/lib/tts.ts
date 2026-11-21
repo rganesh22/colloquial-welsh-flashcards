@@ -393,16 +393,22 @@ export async function ensureWelshAudio(opts: {
   const key = audioKey
   const hit = await cacheGetAudio(key)
   if (hit) return { cached: true, source: 'gemini' }
-  if ((await loadLocalKeys()).has(key)) return { cached: true, source: 'local' }
+  const hasLocal = (await loadLocalKeys()).has(key)
   if (!opts.apiKey || geminiBlocked) {
-    return { cached: false, source: 'piper' }
+    return hasLocal ? { cached: true, source: 'local' } : { cached: false, source: 'piper' }
   }
 
-  const wavBlob = await generateGeminiWav(text, opts.apiKey)
-  const wavBytes = new Uint8Array(await wavBlob.arrayBuffer())
-  await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
-  notifyTtsCached(text)
-  return { cached: false, source: 'gemini' }
+  try {
+    const wavBlob = await generateGeminiWav(text, opts.apiKey)
+    const wavBytes = new Uint8Array(await wavBlob.arrayBuffer())
+    await cacheSetAudio(key, bytesToBase64(wavBytes), 'audio/wav')
+    notifyTtsCached(text)
+    return { cached: false, source: 'gemini' }
+  } catch (err) {
+    if (isQuotaError(err)) geminiBlocked = true
+    if (hasLocal) return { cached: true, source: 'local' }
+    throw err
+  }
 }
 
 async function audioBlobFor(
@@ -438,15 +444,8 @@ async function audioBlobFor(
     return { blob: bundled.blob, cached: true, source: 'bundle' }
   }
 
-  // Free Piper clip for every fixed course line (a slow replay reuses the normal one).
-  const local = await fetchLocalAudio(key)
-  if (local) return { blob: local, cached: true, source: 'local' }
-  const rate = styleRate(v?.style)
-  if (v?.style) {
-    const plain = await fetchLocalAudio(await ttsAudioKey(text, { ...v, style: undefined }))
-    if (plain) return { blob: plain, cached: true, source: 'local', rate }
-  }
-
+  // With a Gemini key, Gemini's voice comes before the free Piper clips
+  // (made once, then cached in this browser).
   if (apiKey && !geminiBlocked) {
     try {
       const blob = await generateGeminiWav(text, apiKey, v)
@@ -458,6 +457,15 @@ async function audioBlobFor(
       if (isQuotaError(err)) geminiBlocked = true
       console.warn('Gemini TTS failed, using the free Welsh voice', err)
     }
+  }
+
+  // Free Piper clip for every fixed course line (a slow replay reuses the normal one).
+  const local = await fetchLocalAudio(key)
+  if (local) return { blob: local, cached: true, source: 'local' }
+  const rate = styleRate(v?.style)
+  if (v?.style) {
+    const plain = await fetchLocalAudio(await ttsAudioKey(text, { ...v, style: undefined }))
+    if (plain) return { blob: plain, cached: true, source: 'local', rate }
   }
 
   // Anything else (AI replies, your name): Welsh voice made in the browser.
