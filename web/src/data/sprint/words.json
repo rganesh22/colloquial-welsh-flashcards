@@ -1177,34 +1177,9 @@
   }
  },
  {
-  "id": "sp-neis",
-  "day": 3,
-  "n": 3,
-  "cy": "neis",
-  "en": "nice",
-  "pos": "adjective",
-  "videos": [
-   "f3bUF4CWX50",
-   "ZROR48_kCsE",
-   "A6lwu29UIRc",
-   "9EHbcemdpd8",
-   "2wx65QIg65Q",
-   "ufKf4eORcKA",
-   "KC1zIuBKkdY",
-   "FtAjyCUDCmQ"
-  ],
-  "forms": [
-   "neis"
-  ],
-  "ex": {
-   "cy": "Mae Elen yn neis.",
-   "en": "Elen is nice."
-  }
- },
- {
   "id": "sp-da",
   "day": 3,
-  "n": 4,
+  "n": 3,
   "cy": "da",
   "en": "good",
   "pos": "adjective",
@@ -1230,7 +1205,7 @@
  {
   "id": "sp-mawr",
   "day": 3,
-  "n": 5,
+  "n": 4,
   "cy": "mawr",
   "en": "big, great",
   "pos": "adjective",
@@ -1259,7 +1234,7 @@
  {
   "id": "sp-newydd",
   "day": 3,
-  "n": 6,
+  "n": 5,
   "cy": "newydd",
   "en": "just (recently)",
   "pos": "adverb",
@@ -1286,7 +1261,7 @@
  {
   "id": "sp-prysur",
   "day": 3,
-  "n": 7,
+  "n": 6,
   "cy": "prysur",
   "en": "busy",
   "pos": "adjective",
@@ -1307,7 +1282,7 @@
  {
   "id": "sp-ifanc",
   "day": 3,
-  "n": 8,
+  "n": 7,
   "cy": "ifanc",
   "en": "young",
   "pos": "adjective",
@@ -1328,7 +1303,7 @@
  {
   "id": "sp-poeth",
   "day": 3,
-  "n": 9,
+  "n": 8,
   "cy": "poeth",
   "en": "hot",
   "pos": "adjective",
@@ -1347,7 +1322,7 @@
  {
   "id": "sp-hen",
   "day": 3,
-  "n": 10,
+  "n": 9,
   "cy": "hen",
   "en": "old",
   "pos": "adjective",
@@ -1367,7 +1342,7 @@
  {
   "id": "sp-anodd",
   "day": 3,
-  "n": 11,
+  "n": 10,
   "cy": "anodd",
   "en": "difficult",
   "pos": "adjective",
@@ -1387,7 +1362,7 @@
  {
   "id": "sp-glaw",
   "day": 3,
-  "n": 12,
+  "n": 11,
   "cy": "glaw",
   "en": "rain",
   "pos": "noun",
@@ -1407,7 +1382,7 @@
  {
   "id": "sp-oer",
   "day": 3,
-  "n": 13,
+  "n": 12,
   "cy": "oer",
   "en": "cold",
   "pos": "adjective",
@@ -1426,7 +1401,7 @@
  {
   "id": "sp-diddorol",
   "day": 3,
-  "n": 14,
+  "n": 13,
   "cy": "diddorol",
   "en": "interesting",
   "pos": "adjective",
@@ -1444,7 +1419,7 @@
  {
   "id": "sp-braf",
   "day": 3,
-  "n": 15,
+  "n": 14,
   "cy": "braf",
   "en": "lovely, nice",
   "pos": "adjective",
@@ -1462,7 +1437,7 @@
  {
   "id": "sp-drwg",
   "day": 3,
-  "n": 16,
+  "n": 15,
   "cy": "drwg",
   "en": "bad",
   "pos": "adjective",
@@ -1480,7 +1455,7 @@
  {
   "id": "sp-sal",
   "day": 3,
-  "n": 17,
+  "n": 16,
   "cy": "sâl",
   "en": "ill, sick",
   "pos": "adjective",
@@ -1498,7 +1473,7 @@
  {
   "id": "sp-hapus",
   "day": 3,
-  "n": 18,
+  "n": 17,
   "cy": "hapus",
   "en": "happy",
   "pos": "adjective",
@@ -1516,7 +1491,7 @@
  {
   "id": "sp-tywydd",
   "day": 3,
-  "n": 19,
+  "n": 18,
   "cy": "tywydd",
   "en": "weather",
   "pos": "noun",
@@ -1535,7 +1510,7 @@
  {
   "id": "sp-haul",
   "day": 3,
-  "n": 20,
+  "n": 19,
   "cy": "haul",
   "en": "sun",
   "pos": "noun",
@@ -1554,7 +1529,7 @@
  {
   "id": "sp-clen",
   "day": 3,
-  "n": 21,
+  "n": 20,
   "cy": "clên",
   "en": "kind, friendly",
   "pos": "adjective",
@@ -1573,7 +1548,7 @@
  {
   "id": "sp-gwynt",
   "day": 3,
-  "n": 22,
+  "n": 21,
   "cy": "gwynt",
   "en": "wind",
   "pos": "noun",
@@ -1590,7 +1565,7 @@
  {
   "id": "sp-caru",
   "day": 3,
-  "n": 23,
+  "n": 22,
   "cy": "caru",
   "en": "to love",
   "pos": "verb",
@@ -1605,7 +1580,7 @@
  {
   "id": "sp-blasus",
   "day": 3,
-  "n": 24,
+  "n": 23,
   "cy": "blasus",
   "en": "tasty",
   "pos": "adjective",
@@ -1620,7 +1595,7 @@
  {
   "id": "sp-isio-bwyd",
   "day": 3,
-  "n": 25,
+  "n": 24,
   "cy": "isio bwyd",
   "en": "hungry",
   "pos": "phrase",
@@ -1634,32 +1609,9 @@
   }
  },
  {
-  "id": "sp-licio",
-  "day": 4,
-  "n": 1,
-  "cy": "licio",
-  "en": "to like",
-  "pos": "verb",
-  "note": "north; also hoffi",
-  "videos": [
-   "ZROR48_kCsE",
-   "2wx65QIg65Q",
-   "ufKf4eORcKA",
-   "FtAjyCUDCmQ",
-   "PvhE4k2h4p0"
-  ],
-  "forms": [
-   "licio"
-  ],
-  "ex": {
-   "cy": "Dw i'n licio caws.",
-   "en": "I like cheese."
-  }
- },
- {
   "id": "sp-yfed",
   "day": 4,
-  "n": 2,
+  "n": 1,
   "cy": "yfed",
   "en": "to drink",
   "pos": "verb",
@@ -1679,7 +1631,7 @@
  {
   "id": "sp-hoffi",
   "day": 4,
-  "n": 3,
+  "n": 2,
   "cy": "hoffi",
   "en": "to like",
   "pos": "verb",
@@ -1707,7 +1659,7 @@
  {
   "id": "sp-angen",
   "day": 4,
-  "n": 4,
+  "n": 3,
   "cy": "angen",
   "en": "need",
   "pos": "noun",
@@ -1730,7 +1682,7 @@
  {
   "id": "sp-wrth-fy-modd",
   "day": 4,
-  "n": 5,
+  "n": 4,
   "cy": "wrth fy modd",
   "en": "love (doing)",
   "pos": "phrase",
@@ -1753,7 +1705,7 @@
  {
   "id": "sp-isio",
   "day": 4,
-  "n": 6,
+  "n": 5,
   "cy": "isio",
   "en": "to want",
   "pos": "verb",
@@ -1773,7 +1725,7 @@
  {
   "id": "sp-bara",
   "day": 4,
-  "n": 7,
+  "n": 6,
   "cy": "bara",
   "en": "bread",
   "pos": "noun",
@@ -1792,7 +1744,7 @@
  {
   "id": "sp-bwyta",
   "day": 4,
-  "n": 8,
+  "n": 7,
   "cy": "bwyta",
   "en": "to eat",
   "pos": "verb",
@@ -1810,7 +1762,7 @@
  {
   "id": "sp-caws",
   "day": 4,
-  "n": 9,
+  "n": 8,
   "cy": "caws",
   "en": "cheese",
   "pos": "noun",
@@ -1822,14 +1774,14 @@
    "caws"
   ],
   "ex": {
-   "cy": "Pa gaws dach chi'n licio?",
+   "cy": "Pa gaws dach chi'n hoffi?",
    "en": "Which cheese do you like?"
   }
  },
  {
   "id": "sp-gen-ti",
   "day": 4,
-  "n": 10,
+  "n": 9,
   "cy": "gen ti",
   "en": "you have",
   "pos": "verb-form",
@@ -1838,14 +1790,14 @@
    "gen ti"
   ],
   "ex": {
-   "cy": "Mae gen ti gath neis.",
+   "cy": "Mae gen ti gath braf.",
    "en": "You've got a nice cat."
   }
  },
  {
   "id": "sp-does-gen-i-ddim",
   "day": 4,
-  "n": 11,
+  "n": 10,
   "cy": "does gen i ddim",
   "en": "I don't have",
   "pos": "phrase",
@@ -1860,7 +1812,7 @@
  {
   "id": "sp-car",
   "day": 4,
-  "n": 12,
+  "n": 11,
   "cy": "car",
   "en": "car",
   "pos": "noun",
@@ -1876,7 +1828,7 @@
  {
   "id": "sp-cath",
   "day": 4,
-  "n": 13,
+  "n": 12,
   "cy": "cath",
   "en": "cat",
   "pos": "noun",
@@ -1892,7 +1844,7 @@
  {
   "id": "sp-pres",
   "day": 4,
-  "n": 14,
+  "n": 13,
   "cy": "pres",
   "en": "money",
   "pos": "noun",
@@ -1909,7 +1861,7 @@
  {
   "id": "sp-mab",
   "day": 4,
-  "n": 15,
+  "n": 14,
   "cy": "mab",
   "en": "son",
   "pos": "noun",
@@ -1925,7 +1877,7 @@
  {
   "id": "sp-y",
   "day": 4,
-  "n": 16,
+  "n": 15,
   "cy": "y",
   "en": "the",
   "pos": "particle",
@@ -1954,7 +1906,7 @@
  {
   "id": "sp-a",
   "day": 4,
-  "n": 17,
+  "n": 16,
   "cy": "a",
   "en": "and",
   "pos": "conjunction",
@@ -1984,7 +1936,7 @@
  {
   "id": "sp-o",
   "day": 4,
-  "n": 18,
+  "n": 17,
   "cy": "o",
   "en": "of, from",
   "pos": "preposition",
@@ -2024,7 +1976,7 @@
  {
   "id": "sp-i",
   "day": 4,
-  "n": 19,
+  "n": 18,
   "cy": "i",
   "en": "to",
   "pos": "preposition",
@@ -2058,7 +2010,7 @@
  {
   "id": "sp-neu",
   "day": 4,
-  "n": 20,
+  "n": 19,
   "cy": "neu",
   "en": "or",
   "pos": "conjunction",
@@ -2083,7 +2035,7 @@
  {
   "id": "sp-wedi",
   "day": 4,
-  "n": 21,
+  "n": 20,
   "cy": "wedi",
   "en": "has/have (perfect)",
   "pos": "particle",
@@ -2114,7 +2066,7 @@
  {
   "id": "sp-oedd",
   "day": 4,
-  "n": 22,
+  "n": 21,
   "cy": "oedd",
   "en": "was",
   "pos": "verb-form",
@@ -2139,7 +2091,7 @@
  {
   "id": "sp-efo",
   "day": 4,
-  "n": 23,
+  "n": 22,
   "cy": "efo",
   "en": "with",
   "pos": "preposition",
@@ -2170,7 +2122,7 @@
  {
   "id": "sp-cael",
   "day": 4,
-  "n": 24,
+  "n": 23,
   "cy": "cael",
   "en": "to have, to get",
   "pos": "verb",
@@ -2198,7 +2150,7 @@
  {
   "id": "sp-pobl",
   "day": 4,
-  "n": 25,
+  "n": 24,
   "cy": "pobl",
   "en": "people",
   "pos": "noun",
@@ -2681,7 +2633,7 @@
    "nhw"
   ],
   "ex": {
-   "cy": "Dw i'n licio nhw.",
+   "cy": "Dw i'n hoffi nhw.",
    "en": "I like them."
   }
  },
@@ -2711,11 +2663,11 @@
   }
  },
  {
-  "id": "sp-jyst",
+  "id": "sp-dim-ond",
   "day": 5,
   "n": 21,
-  "cy": "jyst",
-  "en": "just",
+  "cy": "dim ond",
+  "en": "just, only",
   "pos": "adverb",
   "videos": [
    "f3bUF4CWX50",
@@ -2730,10 +2682,11 @@
    "FtAjyCUDCmQ"
   ],
   "forms": [
-   "jyst"
+   "dim ond"
   ],
+  "note": "Instead of “jyst” (English loan).",
   "ex": {
-   "cy": "Dw i jyst isio coffi.",
+   "cy": "Dim ond coffi dw i isio.",
    "en": "I just want a coffee."
   }
  },
@@ -3086,7 +3039,7 @@
    "de"
   ],
   "ex": {
-   "cy": "Dw i'n licio te.",
+   "cy": "Dw i'n hoffi te.",
    "en": "I like tea."
   }
  },
@@ -3141,36 +3094,9 @@
   }
  },
  {
-  "id": "sp-lot",
-  "day": 6,
-  "n": 17,
-  "cy": "lot",
-  "en": "a lot",
-  "pos": "noun",
-  "note": "colloquial",
-  "videos": [
-   "JZC_q1ZuDik",
-   "ZROR48_kCsE",
-   "VHe9XPFHb8E",
-   "A6lwu29UIRc",
-   "9EHbcemdpd8",
-   "2wx65QIg65Q",
-   "ufKf4eORcKA",
-   "KC1zIuBKkdY",
-   "FtAjyCUDCmQ"
-  ],
-  "forms": [
-   "lot"
-  ],
-  "ex": {
-   "cy": "Dw i'n yfed lot o de.",
-   "en": "I drink a lot of tea."
-  }
- },
- {
   "id": "sp-peth",
   "day": 6,
-  "n": 18,
+  "n": 17,
   "cy": "peth",
   "en": "thing",
   "pos": "noun",
@@ -3196,14 +3122,14 @@
    "betha"
   ],
   "ex": {
-   "cy": "Mae gen i lot o bethau.",
+   "cy": "Mae gen i lawer o bethau.",
    "en": "I have a lot of things."
   }
  },
  {
   "id": "sp-gwybod",
   "day": 6,
-  "n": 19,
+  "n": 18,
   "cy": "gwybod",
   "en": "to know",
   "pos": "verb",
@@ -3231,7 +3157,7 @@
  {
   "id": "sp-pan",
   "day": 6,
-  "n": 20,
+  "n": 19,
   "cy": "pan",
   "en": "when",
   "pos": "conjunction",
@@ -3256,7 +3182,7 @@
  {
   "id": "sp-mewn",
   "day": 6,
-  "n": 21,
+  "n": 20,
   "cy": "mewn",
   "en": "in a",
   "pos": "preposition",
@@ -3283,7 +3209,7 @@
  {
   "id": "sp-heddiw",
   "day": 6,
-  "n": 22,
+  "n": 21,
   "cy": "heddiw",
   "en": "today",
   "pos": "adverb",
@@ -3312,7 +3238,7 @@
  {
   "id": "sp-hefyd",
   "day": 6,
-  "n": 23,
+  "n": 22,
   "cy": "hefyd",
   "en": "also, too",
   "pos": "adverb",
@@ -3333,14 +3259,14 @@
    "hefyd"
   ],
   "ex": {
-   "cy": "Dw i'n licio coffi hefyd.",
+   "cy": "Dw i'n hoffi coffi hefyd.",
    "en": "I like coffee too."
   }
  },
  {
   "id": "sp-gwaith",
   "day": 6,
-  "n": 24,
+  "n": 23,
   "cy": "gwaith",
   "en": "work",
   "pos": "noun",
@@ -3364,7 +3290,7 @@
  {
   "id": "sp-on-i",
   "day": 6,
-  "n": 25,
+  "n": 24,
   "cy": "o'n i",
   "en": "I was",
   "pos": "verb-form",
@@ -4156,27 +4082,9 @@
   }
  },
  {
-  "id": "sp-plis",
-  "day": 9,
-  "n": 14,
-  "cy": "plis",
-  "en": "please",
-  "pos": "adverb",
-  "videos": [
-   "RmGLWMJpZLM"
-  ],
-  "forms": [
-   "plis"
-  ],
-  "ex": {
-   "cy": "Paned i fy mam, plis.",
-   "en": "A cuppa for my mum, please."
-  }
- },
- {
   "id": "sp-os-gwelwch-yn-dda",
   "day": 9,
-  "n": 15,
+  "n": 14,
   "cy": "os gwelwch yn dda",
   "en": "please",
   "pos": "phrase",
@@ -4195,7 +4103,7 @@
  {
   "id": "sp-medru",
   "day": 9,
-  "n": 16,
+  "n": 15,
   "cy": "medru",
   "en": "to be able, can",
   "pos": "verb",
@@ -4217,7 +4125,7 @@
  {
   "id": "sp-gallu",
   "day": 9,
-  "n": 17,
+  "n": 16,
   "cy": "gallu",
   "en": "to be able, can",
   "pos": "verb",
@@ -4240,7 +4148,7 @@
  {
   "id": "sp-cinio",
   "day": 9,
-  "n": 18,
+  "n": 17,
   "cy": "cinio",
   "en": "lunch",
   "pos": "noun",
@@ -4261,7 +4169,7 @@
  {
   "id": "sp-brecwast",
   "day": 9,
-  "n": 19,
+  "n": 18,
   "cy": "brecwast",
   "en": "breakfast",
   "pos": "noun",
@@ -4281,7 +4189,7 @@
  {
   "id": "sp-esgusodwch-fi",
   "day": 9,
-  "n": 20,
+  "n": 19,
   "cy": "esgusodwch fi",
   "en": "excuse me",
   "pos": "phrase",
@@ -4300,7 +4208,7 @@
  {
   "id": "sp-diolch-yn-fawr",
   "day": 9,
-  "n": 21,
+  "n": 20,
   "cy": "diolch yn fawr",
   "en": "thank you very much",
   "pos": "phrase",
@@ -4318,7 +4226,7 @@
  {
   "id": "sp-stafell",
   "day": 9,
-  "n": 22,
+  "n": 21,
   "cy": "stafell",
   "en": "room",
   "pos": "noun",
@@ -4338,7 +4246,7 @@
  {
   "id": "sp-toiled",
   "day": 9,
-  "n": 23,
+  "n": 22,
   "cy": "toiled",
   "en": "toilet",
   "pos": "noun",
@@ -4358,7 +4266,7 @@
  {
   "id": "sp-allwch-chi",
   "day": 9,
-  "n": 24,
+  "n": 23,
   "cy": "allwch chi",
   "en": "can you? (polite)",
   "pos": "verb-form",
@@ -4366,23 +4274,24 @@
    "allwch chi"
   ],
   "ex": {
-   "cy": "Allwch chi ffilmio fy nheulu, plis?",
+   "cy": "Allwch chi ffilmio fy nheulu, os gwelwch yn dda?",
    "en": "Can you film my family, please?"
   }
  },
  {
-  "id": "sp-sori",
+  "id": "sp-maen-ddrwg-gen-i",
   "day": 9,
-  "n": 25,
-  "cy": "sori",
-  "en": "sorry",
+  "n": 24,
+  "cy": "mae'n ddrwg gen i",
+  "en": "I'm sorry",
   "pos": "phrase",
   "forms": [
-   "sori"
+   "mae'n ddrwg gen i"
   ],
+  "note": "Instead of “sori” (English loan).",
   "ex": {
-   "cy": "Sori, dw i ddim yn gwybod ei henw hi.",
-   "en": "Sorry, I don't know her name."
+   "cy": "Mae'n ddrwg gen i, dw i ddim yn gwybod ei henw hi.",
+   "en": "I'm sorry, I don't know her name."
   }
  },
  {
@@ -4397,7 +4306,7 @@
    "bwydlen"
   ],
   "ex": {
-   "cy": "Ga i'r fwydlen, plis?",
+   "cy": "Ga i'r fwydlen, os gwelwch yn dda?",
    "en": "Can I have the menu, please?"
   }
  },
@@ -5420,30 +5329,9 @@
   }
  },
  {
-  "id": "sp-so",
-  "day": 12,
-  "n": 11,
-  "cy": "so",
-  "en": "so",
-  "pos": "conjunction",
-  "note": "English loan",
-  "videos": [
-   "ZROR48_kCsE",
-   "2wx65QIg65Q",
-   "KC1zIuBKkdY"
-  ],
-  "forms": [
-   "so"
-  ],
-  "ex": {
-   "cy": "Dw i wedi blino, so dw i'n aros yma.",
-   "en": "I'm tired, so I'm staying here."
-  }
- },
- {
   "id": "sp-bore",
   "day": 12,
-  "n": 12,
+  "n": 11,
   "cy": "bore",
   "en": "morning",
   "pos": "noun",
@@ -5470,7 +5358,7 @@
  {
   "id": "sp-croeso",
   "day": 12,
-  "n": 13,
+  "n": 12,
   "cy": "croeso",
   "en": "welcome",
   "pos": "noun",
@@ -5499,7 +5387,7 @@
  {
   "id": "sp-prynhawn",
   "day": 12,
-  "n": 14,
+  "n": 13,
   "cy": "prynhawn",
   "en": "afternoon",
   "pos": "noun",
@@ -5520,7 +5408,7 @@
  {
   "id": "sp-noswaith",
   "day": 12,
-  "n": 15,
+  "n": 14,
   "cy": "noswaith",
   "en": "evening",
   "pos": "noun",
@@ -5539,7 +5427,7 @@
  {
   "id": "sp-nac",
   "day": 12,
-  "n": 16,
+  "n": 15,
   "cy": "nac",
   "en": "no, not (in answers)",
   "pos": "particle",
@@ -5558,7 +5446,7 @@
  {
   "id": "sp-rhugl",
   "day": 12,
-  "n": 17,
+  "n": 16,
   "cy": "rhugl",
   "en": "fluent",
   "pos": "adjective",
@@ -5576,7 +5464,7 @@
  {
   "id": "sp-eto",
   "day": 12,
-  "n": 18,
+  "n": 17,
   "cy": "eto",
   "en": "yet; again",
   "pos": "adverb",
@@ -5594,7 +5482,7 @@
  {
   "id": "sp-almaeneg",
   "day": 12,
-  "n": 19,
+  "n": 18,
   "cy": "Almaeneg",
   "en": "German language",
   "pos": "noun",
@@ -5613,7 +5501,7 @@
  {
   "id": "sp-deall",
   "day": 12,
-  "n": 20,
+  "n": 19,
   "cy": "deall",
   "en": "to understand",
   "pos": "verb",
@@ -5631,7 +5519,7 @@
  {
   "id": "sp-ffrangeg",
   "day": 12,
-  "n": 21,
+  "n": 20,
   "cy": "Ffrangeg",
   "en": "French language",
   "pos": "noun",
@@ -5650,7 +5538,7 @@
  {
   "id": "sp-ffrind",
   "day": 12,
-  "n": 22,
+  "n": 21,
   "cy": "ffrind",
   "en": "friend",
   "pos": "noun",
@@ -5673,7 +5561,7 @@
  {
   "id": "sp-os",
   "day": 12,
-  "n": 23,
+  "n": 22,
   "cy": "os",
   "en": "if",
   "pos": "conjunction",
@@ -5699,7 +5587,7 @@
  {
   "id": "sp-wedyn",
   "day": 12,
-  "n": 24,
+  "n": 23,
   "cy": "wedyn",
   "en": "then, afterwards",
   "pos": "adverb",
@@ -5723,7 +5611,7 @@
  {
   "id": "sp-eisiau",
   "day": 12,
-  "n": 25,
+  "n": 24,
   "cy": "eisiau",
   "en": "to want",
   "pos": "verb",
@@ -5984,7 +5872,7 @@
   }
  },
  {
-  "id": "sp-na",
+  "id": "sp-na-13",
   "day": 13,
   "n": 13,
   "cy": "'na",
@@ -6002,7 +5890,7 @@
    "na"
   ],
   "ex": {
-   "cy": "Mae 'na gaffi neis yn Nhrelew.",
+   "cy": "Mae 'na gaffi braf yn Nhrelew.",
    "en": "There's a nice café in Trelew."
   }
  },
@@ -6034,34 +5922,9 @@
   }
  },
  {
-  "id": "sp-rili",
-  "day": 13,
-  "n": 15,
-  "cy": "rili",
-  "en": "really",
-  "pos": "adverb",
-  "note": "from English",
-  "videos": [
-   "JZC_q1ZuDik",
-   "VHe9XPFHb8E",
-   "9EHbcemdpd8",
-   "2wx65QIg65Q",
-   "ufKf4eORcKA",
-   "KC1zIuBKkdY",
-   "FtAjyCUDCmQ"
-  ],
-  "forms": [
-   "rili"
-  ],
-  "ex": {
-   "cy": "Mae'r te yn rili blasus.",
-   "en": "The tea is really tasty."
-  }
- },
- {
   "id": "sp-ers",
   "day": 13,
-  "n": 16,
+  "n": 15,
   "cy": "ers",
   "en": "since, for",
   "pos": "preposition",
@@ -6084,7 +5947,7 @@
  {
   "id": "sp-hynna",
   "day": 13,
-  "n": 17,
+  "n": 16,
   "cy": "hynna",
   "en": "that",
   "pos": "pronoun",
@@ -6106,7 +5969,7 @@
  {
   "id": "sp-pawb",
   "day": 13,
-  "n": 18,
+  "n": 17,
   "cy": "pawb",
   "en": "everybody",
   "pos": "pronoun",
@@ -6132,7 +5995,7 @@
  {
   "id": "sp-mwynhau",
   "day": 13,
-  "n": 19,
+  "n": 18,
   "cy": "mwynhau",
   "en": "to enjoy",
   "pos": "verb",
@@ -6159,7 +6022,7 @@
  {
   "id": "sp-llefrith",
   "day": 13,
-  "n": 20,
+  "n": 19,
   "cy": "llefrith",
   "en": "milk",
   "pos": "noun",
@@ -6175,14 +6038,14 @@
    "lefrith"
   ],
   "ex": {
-   "cy": "Te efo llefrith, plis.",
+   "cy": "Te efo llefrith, os gwelwch yn dda.",
    "en": "Tea with milk, please."
   }
  },
  {
   "id": "sp-caffi",
   "day": 13,
-  "n": 21,
+  "n": 20,
   "cy": "caffi",
   "en": "café",
   "pos": "noun",
@@ -6210,7 +6073,7 @@
  {
   "id": "sp-baswn-i",
   "day": 13,
-  "n": 22,
+  "n": 21,
   "cy": "baswn i",
   "en": "I would",
   "pos": "verb-form",
@@ -6228,14 +6091,14 @@
    "baswn"
   ],
   "ex": {
-   "cy": "Baswn i'n licio byw yn Nhrevelin.",
+   "cy": "Baswn i'n hoffi byw yn Nhrevelin.",
    "en": "I'd like to live in Trevelin."
   }
  },
  {
   "id": "sp-gofyn",
   "day": 13,
-  "n": 23,
+  "n": 22,
   "cy": "gofyn",
   "en": "to ask",
   "pos": "verb",
@@ -6259,7 +6122,7 @@
  {
   "id": "sp-fath-a",
   "day": 13,
-  "n": 24,
+  "n": 23,
   "cy": "fath â",
   "en": "like",
   "pos": "phrase",
@@ -6281,7 +6144,7 @@
  {
   "id": "sp-person",
   "day": 13,
-  "n": 25,
+  "n": 24,
   "cy": "person",
   "en": "person",
   "pos": "noun",
@@ -7094,7 +6957,7 @@
    "ddŵr"
   ],
   "ex": {
-   "cy": "Ga i ddŵr, plis?",
+   "cy": "Ga i ddŵr, os gwelwch yn dda?",
    "en": "Can I have water, please?"
   }
  },
@@ -7422,7 +7285,7 @@
    "chwaith"
   ],
   "ex": {
-   "cy": "Dw i ddim yn licio te chwaith.",
+   "cy": "Dw i ddim yn hoffi te chwaith.",
    "en": "I don't like tea either."
   }
  },
@@ -7438,7 +7301,7 @@
    "ebrill"
   ],
   "ex": {
-   "cy": "Mae'n bwrw glaw lot yn Ebrill.",
+   "cy": "Mae'n bwrw glaw llawer yn Ebrill.",
    "en": "It rains a lot in April."
   }
  },
@@ -7518,7 +7381,7 @@
    "hydref"
   ],
   "ex": {
-   "cy": "Mae'r tywydd yn neis yn Hydref.",
+   "cy": "Mae'r tywydd yn braf yn Hydref.",
    "en": "The weather is nice in October."
   }
  },
@@ -7725,7 +7588,7 @@
    "'sa chdi"
   ],
   "ex": {
-   "cy": "Faset ti'n licio paned?",
+   "cy": "Faset ti'n hoffi paned?",
    "en": "Would you like a cuppa?"
   }
  },
@@ -7747,7 +7610,7 @@
    "hwnna'n"
   ],
   "ex": {
-   "cy": "Dw i isio hwnna, plis.",
+   "cy": "Dw i isio hwnna, os gwelwch yn dda.",
    "en": "I want that one, please."
   }
  },
@@ -7959,7 +7822,7 @@
    "wnei di"
   ],
   "ex": {
-   "cy": "Wnei di aros yma, plis?",
+   "cy": "Wnei di aros yma, os gwelwch yn dda?",
    "en": "Will you wait here, please?"
   }
  },
@@ -7994,7 +7857,7 @@
    "tŷ te"
   ],
   "ex": {
-   "cy": "Mae 'na dŷ te neis yn y pentref.",
+   "cy": "Mae 'na dŷ te braf yn y pentref.",
    "en": "There's a nice tea house in the village."
   }
  },
@@ -8157,7 +8020,7 @@
    "lagyr"
   ],
   "ex": {
-   "cy": "Ga i beint o lagyr, plis?",
+   "cy": "Ga i beint o lagyr, os gwelwch yn dda?",
    "en": "Can I have a pint of lager, please?"
   }
  },
@@ -8198,7 +8061,7 @@
    "gwrw"
   ],
   "ex": {
-   "cy": "Dw i ddim yn licio cwrw.",
+   "cy": "Dw i ddim yn hoffi cwrw.",
    "en": "I don't like beer."
   }
  },
@@ -8309,7 +8172,7 @@
    "bot"
   ],
   "ex": {
-   "cy": "Ga i bot o de, plis?",
+   "cy": "Ga i bot o de, os gwelwch yn dda?",
    "en": "Can I have a pot of tea, please?"
   }
  },
@@ -8382,7 +8245,7 @@
    "hoffwn i"
   ],
   "ex": {
-   "cy": "Hoffwn i baned, plis.",
+   "cy": "Hoffwn i baned, os gwelwch yn dda.",
    "en": "I'd like a cuppa, please."
   }
  },
@@ -8443,14 +8306,14 @@
    "llai"
   ],
   "ex": {
-   "cy": "Hoffwn i lai o siwgr, plis.",
+   "cy": "Hoffwn i lai o siwgr, os gwelwch yn dda.",
    "en": "I'd like less sugar, please."
   }
  },
  {
   "id": "sp-llawer",
-  "day": 19,
-  "n": 7,
+  "day": 6,
+  "n": 25,
   "cy": "llawer",
   "en": "a lot, much",
   "pos": "noun",
@@ -8466,14 +8329,14 @@
    "lawer"
   ],
   "ex": {
-   "cy": "Dw i wedi dysgu llawer heddiw.",
-   "en": "I've learned a lot today."
+   "cy": "Dw i'n yfed llawer o de.",
+   "en": "I drink a lot of tea."
   }
  },
  {
   "id": "sp-gwydraid",
   "day": 19,
-  "n": 8,
+  "n": 7,
   "cy": "gwydraid",
   "en": "a glassful",
   "pos": "noun",
@@ -8493,7 +8356,7 @@
  {
   "id": "sp-glasiaid",
   "day": 19,
-  "n": 9,
+  "n": 8,
   "cy": "glasiaid",
   "en": "a glassful",
   "pos": "noun",
@@ -8514,7 +8377,7 @@
  {
   "id": "sp-potel",
   "day": 19,
-  "n": 10,
+  "n": 9,
   "cy": "potel",
   "en": "bottle",
   "pos": "noun",
@@ -8536,7 +8399,7 @@
  {
   "id": "sp-wrth",
   "day": 19,
-  "n": 11,
+  "n": 10,
   "cy": "wrth",
   "en": "at, by",
   "pos": "preposition",
@@ -8557,7 +8420,7 @@
  {
   "id": "sp-a-dweud-y-gwir",
   "day": 19,
-  "n": 12,
+  "n": 11,
   "cy": "a dweud y gwir",
   "en": "to tell the truth, really",
   "pos": "phrase",
@@ -8578,7 +8441,7 @@
  {
   "id": "sp-gobeithio",
   "day": 19,
-  "n": 13,
+  "n": 12,
   "cy": "gobeithio",
   "en": "to hope",
   "pos": "verb",
@@ -8602,7 +8465,7 @@
  {
   "id": "sp-diod",
   "day": 19,
-  "n": 14,
+  "n": 13,
   "cy": "diod",
   "en": "drink",
   "pos": "noun",
@@ -8625,7 +8488,7 @@
  {
   "id": "sp-dim-diolch",
   "day": 19,
-  "n": 15,
+  "n": 14,
   "cy": "dim diolch",
   "en": "no thank you",
   "pos": "phrase",
@@ -8643,7 +8506,7 @@
  {
   "id": "sp-ochr",
   "day": 19,
-  "n": 16,
+  "n": 15,
   "cy": "ochr",
   "en": "side",
   "pos": "noun",
@@ -8665,7 +8528,7 @@
  {
   "id": "sp-treiglad",
   "day": 19,
-  "n": 17,
+  "n": 16,
   "cy": "treiglad",
   "en": "mutation",
   "pos": "noun",
@@ -8684,7 +8547,7 @@
  {
   "id": "sp-meddal",
   "day": 19,
-  "n": 18,
+  "n": 17,
   "cy": "meddal",
   "en": "soft",
   "pos": "adjective",
@@ -8704,7 +8567,7 @@
  {
   "id": "sp-hynny",
   "day": 19,
-  "n": 19,
+  "n": 18,
   "cy": "hynny",
   "en": "that",
   "pos": "pronoun",
@@ -8725,7 +8588,7 @@
  {
   "id": "sp-ychydig",
   "day": 19,
-  "n": 20,
+  "n": 19,
   "cy": "ychydig",
   "en": "a little",
   "pos": "noun",
@@ -8749,7 +8612,7 @@
  {
   "id": "sp-llawn",
   "day": 19,
-  "n": 21,
+  "n": 20,
   "cy": "llawn",
   "en": "full",
   "pos": "adjective",
@@ -8768,7 +8631,7 @@
  {
   "id": "sp-bar",
   "day": 19,
-  "n": 22,
+  "n": 21,
   "cy": "bar",
   "en": "bar",
   "pos": "noun",
@@ -8789,7 +8652,7 @@
  {
   "id": "sp-o-dan",
   "day": 19,
-  "n": 23,
+  "n": 22,
   "cy": "o dan",
   "en": "under",
   "pos": "preposition",
@@ -8811,7 +8674,7 @@
  {
   "id": "sp-yn-fanna",
   "day": 19,
-  "n": 24,
+  "n": 23,
   "cy": "yn fan'na",
   "en": "there, over there",
   "pos": "phrase",
@@ -8830,7 +8693,7 @@
  {
   "id": "sp-treiglo",
   "day": 19,
-  "n": 25,
+  "n": 24,
   "cy": "treiglo",
   "en": "to mutate",
   "pos": "verb",
@@ -9264,7 +9127,7 @@
    "fasa chdi"
   ],
   "ex": {
-   "cy": "Fasa chdi'n licio paned?",
+   "cy": "Fasa chdi'n hoffi paned?",
    "en": "Would you like a cuppa?"
   }
  },
@@ -9283,7 +9146,7 @@
    "fasech chi"
   ],
   "ex": {
-   "cy": "Fasech chi'n licio eistedd?",
+   "cy": "Fasech chi'n hoffi eistedd?",
    "en": "Would you like to sit?"
   }
  },
@@ -9381,7 +9244,7 @@
    "wnewch chi"
   ],
   "ex": {
-   "cy": "Wnewch chi helpu fi, plis?",
+   "cy": "Wnewch chi helpu fi, os gwelwch yn dda?",
    "en": "Will you help me, please?"
   }
  },
@@ -9479,7 +9342,7 @@
    "amdani hi"
   ],
   "ex": {
-   "cy": "Wnes i ddysgu lot amdani hi.",
+   "cy": "Wnes i ddysgu llawer amdani hi.",
    "en": "I learned a lot about her."
   }
  },
@@ -9586,7 +9449,7 @@
    "wydr"
   ],
   "ex": {
-   "cy": "Ga i wydr, plis?",
+   "cy": "Ga i wydr, os gwelwch yn dda?",
    "en": "Can I have a glass, please?"
   }
  },
@@ -9910,7 +9773,7 @@
    "mymryn"
   ],
   "ex": {
-   "cy": "Ga i fymryn o siwgr, plis?",
+   "cy": "Ga i fymryn o siwgr, os gwelwch yn dda?",
    "en": "Can I have a tiny bit of sugar, please?"
   }
  },
@@ -9948,7 +9811,7 @@
    "leim"
   ],
   "ex": {
-   "cy": "Hoffwn i ddŵr efo leim, plis.",
+   "cy": "Hoffwn i ddŵr efo leim, os gwelwch yn dda.",
    "en": "I'd like water with lime, please."
   }
  },
@@ -9967,7 +9830,7 @@
    "seidr"
   ],
   "ex": {
-   "cy": "Dw i'n licio seidr yn yr haf.",
+   "cy": "Dw i'n hoffi seidr yn yr haf.",
    "en": "I like cider in the summer."
   }
  },
@@ -10424,7 +10287,7 @@
   }
  },
  {
-  "id": "sp-de",
+  "id": "sp-de-24",
   "day": 24,
   "n": 12,
   "cy": "'de",
@@ -10456,7 +10319,7 @@
    "dybl"
   ],
   "ex": {
-   "cy": "Ga i ddybl, plis?",
+   "cy": "Ga i ddybl, os gwelwch yn dda?",
    "en": "Can I have a double, please?"
   }
  },
@@ -10494,7 +10357,7 @@
    "lemonêd"
   ],
   "ex": {
-   "cy": "Baswn i'n licio gwydraid o lemonêd.",
+   "cy": "Baswn i'n hoffi gwydraid o lemonêd.",
    "en": "I'd like a glass of lemonade."
   }
  },
@@ -10570,7 +10433,7 @@
    "dŷ bwyta"
   ],
   "ex": {
-   "cy": "Mae 'na dŷ bwyta neis yn y dref.",
+   "cy": "Mae 'na dŷ bwyta braf yn y dref.",
    "en": "There's a nice restaurant in town."
   }
  },
@@ -11033,7 +10896,7 @@
    "lawr"
   ],
   "ex": {
-   "cy": "Steddwch lawr, plis.",
+   "cy": "Steddwch lawr, os gwelwch yn dda.",
    "en": "Sit down, please."
   }
  },
@@ -11059,10 +10922,10 @@
   }
  },
  {
-  "id": "sp-trio",
+  "id": "sp-ceisio",
   "day": 25,
   "n": 18,
-  "cy": "trio",
+  "cy": "ceisio",
   "en": "to try",
   "pos": "verb",
   "videos": [
@@ -11073,10 +10936,11 @@
    "ufKf4eORcKA"
   ],
   "forms": [
-   "trio"
+   "ceisio"
   ],
+  "note": "Instead of “trio” (English loan).",
   "ex": {
-   "cy": "Dw i'n trio siarad Cymraeg bob dydd.",
+   "cy": "Dw i'n ceisio siarad Cymraeg bob dydd.",
    "en": "I try to speak Welsh every day."
   }
  },
@@ -11487,28 +11351,9 @@
   }
  },
  {
-  "id": "sp-lyfli",
-  "day": 26,
-  "n": 15,
-  "cy": "lyfli",
-  "en": "lovely",
-  "pos": "adjective",
-  "note": "English loan",
-  "videos": [
-   "f3bUF4CWX50"
-  ],
-  "forms": [
-   "lyfli"
-  ],
-  "ex": {
-   "cy": "Mae'r capel yn lyfli.",
-   "en": "The chapel is lovely."
-  }
- },
- {
   "id": "sp-defnyddiol",
   "day": 26,
-  "n": 16,
+  "n": 15,
   "cy": "defnyddiol",
   "en": "useful",
   "pos": "adjective",
@@ -11528,7 +11373,7 @@
  {
   "id": "sp-rhywle",
   "day": 26,
-  "n": 17,
+  "n": 16,
   "cy": "rhywle",
   "en": "somewhere",
   "pos": "adverb",
@@ -11547,7 +11392,7 @@
  {
   "id": "sp-pymtheg",
   "day": 26,
-  "n": 18,
+  "n": 17,
   "cy": "pymtheg",
   "en": "fifteen",
   "pos": "numeral",
@@ -11565,7 +11410,7 @@
  {
   "id": "sp-milltir",
   "day": 26,
-  "n": 19,
+  "n": 18,
   "cy": "milltir",
   "en": "mile",
   "pos": "noun",
@@ -11586,7 +11431,7 @@
  {
   "id": "sp-i-ffwrdd",
   "day": 26,
-  "n": 20,
+  "n": 19,
   "cy": "i ffwrdd",
   "en": "away",
   "pos": "phrase",
@@ -11605,7 +11450,7 @@
  {
   "id": "sp-heb",
   "day": 26,
-  "n": 21,
+  "n": 20,
   "cy": "heb",
   "en": "without; haven't",
   "pos": "preposition",
@@ -11625,7 +11470,7 @@
  {
   "id": "sp-or-blaen",
   "day": 26,
-  "n": 22,
+  "n": 21,
   "cy": "o'r blaen",
   "en": "before (previously)",
   "pos": "phrase",
@@ -11644,7 +11489,7 @@
  {
   "id": "sp-gyrru",
   "day": 26,
-  "n": 23,
+  "n": 22,
   "cy": "gyrru",
   "en": "to drive",
   "pos": "verb",
@@ -11663,7 +11508,7 @@
  {
   "id": "sp-heibio",
   "day": 26,
-  "n": 24,
+  "n": 23,
   "cy": "heibio",
   "en": "past, by",
   "pos": "adverb",
@@ -11682,7 +11527,7 @@
  {
   "id": "sp-tren",
   "day": 26,
-  "n": 25,
+  "n": 24,
   "cy": "trên",
   "en": "train",
   "pos": "noun",
@@ -11818,7 +11663,7 @@
    "mate"
   ],
   "ex": {
-   "cy": "Dw i'n licio mate yn fwy na choffi.",
+   "cy": "Dw i'n hoffi mate yn fwy na choffi.",
    "en": "I like maté more than coffee."
   }
  },
@@ -11986,7 +11831,7 @@
    "acen"
   ],
   "ex": {
-   "cy": "Mae gen ti acen neis.",
+   "cy": "Mae gen ti acen braf.",
    "en": "You have a nice accent."
   }
  },
@@ -12029,20 +11874,21 @@
   }
  },
  {
-  "id": "sp-ffeindio",
+  "id": "sp-dod-o-hyd-i",
   "day": 27,
   "n": 19,
-  "cy": "ffeindio",
+  "cy": "dod o hyd i",
   "en": "to find",
   "pos": "verb",
   "videos": [
    "f3bUF4CWX50"
   ],
   "forms": [
-   "ffeindio"
+   "dod o hyd i"
   ],
+  "note": "Instead of “ffeindio” (English loan).",
   "ex": {
-   "cy": "Wnes i ffeindio caffi bach neis.",
+   "cy": "Wnes i ddod o hyd i gaffi bach braf.",
    "en": "I found a nice little café."
   }
  },
@@ -12114,30 +11960,9 @@
   }
  },
  {
-  "id": "sp-boi",
-  "day": 27,
-  "n": 23,
-  "cy": "boi",
-  "en": "guy, lad",
-  "pos": "noun",
-  "gender": "m",
-  "videos": [
-   "9EHbcemdpd8",
-   "KC1zIuBKkdY"
-  ],
-  "forms": [
-   "boi",
-   "bois"
-  ],
-  "ex": {
-   "cy": "Mae o'n foi clên.",
-   "en": "He's a nice guy."
-  }
- },
- {
   "id": "sp-mwyaf",
   "day": 27,
-  "n": 24,
+  "n": 23,
   "cy": "mwyaf",
   "en": "most",
   "pos": "adjective",
@@ -12159,7 +11984,7 @@
  {
   "id": "sp-rhyw",
   "day": 27,
-  "n": 25,
+  "n": 24,
   "cy": "rhyw",
   "en": "some, about",
   "pos": "adjective",
@@ -12234,7 +12059,7 @@
    "ddawnsio"
   ],
   "ex": {
-   "cy": "Mae hi'n licio dawnsio efo fi.",
+   "cy": "Mae hi'n hoffi dawnsio efo fi.",
    "en": "She likes dancing with me."
   }
  },
@@ -12252,7 +12077,7 @@
    "empanada"
   ],
   "ex": {
-   "cy": "Ga i empanada, plis?",
+   "cy": "Ga i empanada, os gwelwch yn dda?",
    "en": "Can I have a pasty, please?"
   }
  },
@@ -12507,8 +12332,8 @@
  },
  {
   "id": "sp-hogyn",
-  "day": 29,
-  "n": 17,
+  "day": 27,
+  "n": 25,
   "cy": "hogyn",
   "en": "boy, lad",
   "pos": "noun",
@@ -12522,14 +12347,14 @@
    "hogiau"
   ],
   "ex": {
-   "cy": "Mae'r hogyn yn siarad Cymraeg a Sbaeneg.",
-   "en": "The boy speaks Welsh and Spanish."
+   "cy": "Mae o'n hogyn clên.",
+   "en": "He's a nice lad."
   }
  },
  {
   "id": "sp-rhoi",
   "day": 29,
-  "n": 18,
+  "n": 17,
   "cy": "rhoi",
   "en": "to give",
   "pos": "verb",
@@ -12554,7 +12379,7 @@
  {
   "id": "sp-gan",
   "day": 29,
-  "n": 19,
+  "n": 18,
   "cy": "gan",
   "en": "with (have)",
   "pos": "preposition",
@@ -12580,7 +12405,7 @@
  {
   "id": "sp-adra",
   "day": 29,
-  "n": 20,
+  "n": 19,
   "cy": "adra",
   "en": "at home, home",
   "pos": "adverb",
@@ -12601,7 +12426,7 @@
  {
   "id": "sp-felna",
   "day": 29,
-  "n": 21,
+  "n": 20,
   "cy": "fel'na",
   "en": "like that",
   "pos": "phrase",
@@ -12622,7 +12447,7 @@
  {
   "id": "sp-dechrau",
   "day": 29,
-  "n": 22,
+  "n": 21,
   "cy": "dechrau",
   "en": "to start",
   "pos": "verb",
@@ -12641,9 +12466,9 @@
   }
  },
  {
-  "id": "sp-a",
+  "id": "sp-a-29",
   "day": 29,
-  "n": 23,
+  "n": 22,
   "cy": "â",
   "en": "with",
   "pos": "preposition",
@@ -12666,7 +12491,7 @@
  {
   "id": "sp-rhan",
   "day": 29,
-  "n": 24,
+  "n": 23,
   "cy": "rhan",
   "en": "part",
   "pos": "noun",
@@ -12689,7 +12514,7 @@
  {
   "id": "sp-cor",
   "day": 29,
-  "n": 25,
+  "n": 24,
   "cy": "côr",
   "en": "choir",
   "pos": "noun",
@@ -12856,7 +12681,7 @@
   }
  },
  {
-  "id": "sp-on-i",
+  "id": "sp-on-i-30",
   "day": 30,
   "n": 9,
   "cy": "on i",
@@ -12919,28 +12744,9 @@
   }
  },
  {
-  "id": "sp-met",
-  "day": 30,
-  "n": 12,
-  "cy": "mêt",
-  "en": "mate",
-  "pos": "noun",
-  "gender": "m",
-  "videos": [
-   "KC1zIuBKkdY"
-  ],
-  "forms": [
-   "mêt"
-  ],
-  "ex": {
-   "cy": "Sut mae, mêt?",
-   "en": "How's it going, mate?"
-  }
- },
- {
   "id": "sp-hir",
   "day": 30,
-  "n": 13,
+  "n": 12,
   "cy": "hir",
   "en": "long",
   "pos": "adjective",
@@ -12959,7 +12765,7 @@
  {
   "id": "sp-lleol",
   "day": 30,
-  "n": 14,
+  "n": 13,
   "cy": "lleol",
   "en": "local",
   "pos": "adjective",
@@ -12973,14 +12779,14 @@
    "lleol"
   ],
   "ex": {
-   "cy": "Dw i'n licio'r caffi lleol.",
+   "cy": "Dw i'n hoffi'r caffi lleol.",
    "en": "I like the local café."
   }
  },
  {
   "id": "sp-fan-hyn",
   "day": 30,
-  "n": 15,
+  "n": 14,
   "cy": "fan hyn",
   "en": "here",
   "pos": "adverb",
@@ -12994,14 +12800,14 @@
    "fan hyn"
   ],
   "ex": {
-   "cy": "Steddwch fan hyn, plis.",
+   "cy": "Steddwch fan hyn, os gwelwch yn dda.",
    "en": "Sit here, please."
   }
  },
  {
   "id": "sp-cacen",
   "day": 30,
-  "n": 16,
+  "n": 15,
   "cy": "cacen",
   "en": "cake",
   "pos": "noun",
@@ -13018,14 +12824,14 @@
    "cêcs"
   ],
   "ex": {
-   "cy": "Ga i gacen, plis?",
+   "cy": "Ga i gacen, os gwelwch yn dda?",
    "en": "Can I have a cake, please?"
   }
  },
  {
   "id": "sp-ci",
   "day": 30,
-  "n": 17,
+  "n": 16,
   "cy": "ci",
   "en": "dog",
   "pos": "noun",
@@ -13047,7 +12853,7 @@
  {
   "id": "sp-reit",
   "day": 30,
-  "n": 18,
+  "n": 17,
   "cy": "reit",
   "en": "quite, right",
   "pos": "adverb",
@@ -13067,7 +12873,7 @@
  {
   "id": "sp-ynte",
   "day": 30,
-  "n": 19,
+  "n": 18,
   "cy": "ynte",
   "en": "isn't it, right",
   "pos": "particle",
@@ -13089,7 +12895,7 @@
  {
   "id": "sp-tbo",
   "day": 30,
-  "n": 20,
+  "n": 19,
   "cy": "t'bo",
   "en": "you know",
   "pos": "phrase",
@@ -13108,7 +12914,7 @@
  {
   "id": "sp-pennod",
   "day": 30,
-  "n": 21,
+  "n": 20,
   "cy": "pennod",
   "en": "episode, chapter",
   "pos": "noun",
@@ -13133,7 +12939,7 @@
  {
   "id": "sp-cynta",
   "day": 30,
-  "n": 22,
+  "n": 21,
   "cy": "cynta",
   "en": "first",
   "pos": "adjective",
@@ -13154,7 +12960,7 @@
  {
   "id": "sp-gwerthu",
   "day": 30,
-  "n": 23,
+  "n": 22,
   "cy": "gwerthu",
   "en": "to sell",
   "pos": "verb",
@@ -13174,7 +12980,7 @@
  {
   "id": "sp-cymuned",
   "day": 30,
-  "n": 24,
+  "n": 23,
   "cy": "cymuned",
   "en": "community",
   "pos": "noun",
@@ -13197,7 +13003,7 @@
  {
   "id": "sp-dros",
   "day": 30,
-  "n": 25,
+  "n": 24,
   "cy": "dros",
   "en": "over",
   "pos": "preposition",
@@ -13487,29 +13293,9 @@
   }
  },
  {
-  "id": "sp-lico",
-  "day": 31,
-  "n": 15,
-  "cy": "lico",
-  "en": "to like",
-  "pos": "verb",
-  "note": "colloquial (south) = hoffi",
-  "videos": [
-   "JZC_q1ZuDik",
-   "VHe9XPFHb8E"
-  ],
-  "forms": [
-   "lico"
-  ],
-  "ex": {
-   "cy": "Dw i'n lico mate rŵan.",
-   "en": "I like mate now."
-  }
- },
- {
   "id": "sp-fe",
   "day": 31,
-  "n": 16,
+  "n": 15,
   "cy": "fe",
   "en": "it, him",
   "pos": "pronoun",
@@ -13523,14 +13309,14 @@
    "e"
   ],
   "ex": {
-   "cy": "Mae'r llyfr yn neis. Dw i'n lico fe.",
+   "cy": "Mae'r llyfr yn braf. Dw i'n hoffi fe.",
    "en": "The book is nice. I like it."
   }
  },
  {
   "id": "sp-gadewch",
   "day": 31,
-  "n": 17,
+  "n": 16,
   "cy": "gadewch",
   "en": "leave! (you pl.)",
   "pos": "verb-form",
@@ -13544,14 +13330,14 @@
    "gadewch"
   ],
   "ex": {
-   "cy": "Gadewch y llyfrau yma, plis.",
+   "cy": "Gadewch y llyfrau yma, os gwelwch yn dda.",
    "en": "Leave the books here, please."
   }
  },
  {
   "id": "sp-croeson-ol",
   "day": 31,
-  "n": 18,
+  "n": 17,
   "cy": "croeso'n ôl",
   "en": "welcome back",
   "pos": "phrase",
@@ -13570,7 +13356,7 @@
  {
   "id": "sp-holl",
   "day": 31,
-  "n": 19,
+  "n": 18,
   "cy": "holl",
   "en": "all",
   "pos": "adjective",
@@ -13589,8 +13375,8 @@
  },
  {
   "id": "sp-hyfryd",
-  "day": 31,
-  "n": 20,
+  "day": 26,
+  "n": 25,
   "cy": "hyfryd",
   "en": "lovely",
   "pos": "adjective",
@@ -13602,14 +13388,14 @@
    "hyfryd"
   ],
   "ex": {
-   "cy": "Mae'r tywydd yn hyfryd heddiw.",
-   "en": "The weather is lovely today."
+   "cy": "Mae'r capel yn hyfryd.",
+   "en": "The chapel is lovely."
   }
  },
  {
   "id": "sp-wi",
   "day": 31,
-  "n": 21,
+  "n": 19,
   "cy": "wi",
   "en": "I am (south)",
   "pos": "verb-form",
@@ -13629,7 +13415,7 @@
  {
   "id": "sp-llaeth",
   "day": 31,
-  "n": 22,
+  "n": 20,
   "cy": "llaeth",
   "en": "milk",
   "pos": "noun",
@@ -13650,7 +13436,7 @@
  {
   "id": "sp-gwirfoddoli",
   "day": 31,
-  "n": 23,
+  "n": 21,
   "cy": "gwirfoddoli",
   "en": "to volunteer",
   "pos": "verb",
@@ -13668,7 +13454,7 @@
  {
   "id": "sp-yw",
   "day": 31,
-  "n": 24,
+  "n": 22,
   "cy": "yw",
   "en": "is",
   "pos": "verb-form",
@@ -13688,7 +13474,7 @@
  {
   "id": "sp-cwmni",
   "day": 31,
-  "n": 25,
+  "n": 23,
   "cy": "cwmni",
   "en": "company",
   "pos": "noun",
@@ -13872,7 +13658,7 @@
    "menyn"
   ],
   "ex": {
-   "cy": "Ga i fara a menyn, plis?",
+   "cy": "Ga i fara a menyn, os gwelwch yn dda?",
    "en": "Can I have bread and butter, please?"
   }
  },
@@ -14043,7 +13829,7 @@
    "gwario"
   ],
   "ex": {
-   "cy": "Wnes i wario lot o bres heddiw.",
+   "cy": "Wnes i wario llawer o bres heddiw.",
    "en": "I spent a lot of money today."
   }
  },
@@ -14245,7 +14031,7 @@
    "arafach"
   ],
   "ex": {
-   "cy": "Allwch chi siarad yn arafach, plis?",
+   "cy": "Allwch chi siarad yn arafach, os gwelwch yn dda?",
    "en": "Can you speak slower, please?"
   }
  },
@@ -14517,7 +14303,7 @@
    "sgwrs"
   ],
   "ex": {
-   "cy": "Ges i sgwrs neis efo Taid Elfed.",
+   "cy": "Ges i sgwrs braf efo Taid Elfed.",
    "en": "I had a nice chat with Taid Elfed."
   }
  },
@@ -14576,7 +14362,7 @@
    "banc"
   ],
   "ex": {
-   "cy": "Lle mae'r banc, plis?",
+   "cy": "Lle mae'r banc, os gwelwch yn dda?",
    "en": "Where's the bank, please?"
   }
  },
@@ -14746,7 +14532,7 @@
    "bodlon"
   ],
   "ex": {
-   "cy": "Dw i'n fodlon trio mate.",
+   "cy": "Dw i'n fodlon ceisio mate.",
    "en": "I'm willing to try mate."
   }
  },
@@ -14881,33 +14667,14 @@
    "dad"
   ],
   "ex": {
-   "cy": "Mae Dad yn licio mate.",
+   "cy": "Mae Dad yn hoffi mate.",
    "en": "Dad likes mate."
-  }
- },
- {
-  "id": "sp-retirio",
-  "day": 34,
-  "n": 15,
-  "cy": "retirio",
-  "en": "to retire",
-  "pos": "verb",
-  "note": "from English",
-  "videos": [
-   "ZROR48_kCsE"
-  ],
-  "forms": [
-   "retirio"
-  ],
-  "ex": {
-   "cy": "Mae Taid wedi retirio.",
-   "en": "Grandad has retired."
   }
  },
  {
   "id": "sp-sir",
   "day": 34,
-  "n": 16,
+  "n": 15,
   "cy": "sir",
   "en": "county",
   "pos": "noun",
@@ -14926,7 +14693,7 @@
  {
   "id": "sp-mae-rhaid-i-fi",
   "day": 34,
-  "n": 17,
+  "n": 16,
   "cy": "mae rhaid i fi",
   "en": "I have to",
   "pos": "phrase",
@@ -14945,7 +14712,7 @@
  {
   "id": "sp-hufen-ia",
   "day": 34,
-  "n": 18,
+  "n": 17,
   "cy": "hufen iâ",
   "en": "ice cream",
   "pos": "noun",
@@ -14964,7 +14731,7 @@
  {
   "id": "sp-clicio",
   "day": 34,
-  "n": 19,
+  "n": 18,
   "cy": "clicio",
   "en": "to click",
   "pos": "verb",
@@ -14977,14 +14744,14 @@
    "cliciwch"
   ],
   "ex": {
-   "cy": "Cliciwch yma, plis.",
+   "cy": "Cliciwch yma, os gwelwch yn dda.",
    "en": "Click here, please."
   }
  },
  {
   "id": "sp-blaenorol",
   "day": 34,
-  "n": 20,
+  "n": 19,
   "cy": "blaenorol",
   "en": "previous",
   "pos": "adjective",
@@ -15002,7 +14769,7 @@
  {
   "id": "sp-tanysgrifio",
   "day": 34,
-  "n": 21,
+  "n": 20,
   "cy": "tanysgrifio",
   "en": "to subscribe",
   "pos": "verb",
@@ -15015,14 +14782,14 @@
    "tanysgrifiwch"
   ],
   "ex": {
-   "cy": "Tanysgrifiwch i'r sianel, plis.",
+   "cy": "Tanysgrifiwch i'r sianel, os gwelwch yn dda.",
    "en": "Subscribe to the channel, please."
   }
  },
  {
   "id": "sp-sianel",
   "day": 34,
-  "n": 22,
+  "n": 21,
   "cy": "sianel",
   "en": "channel",
   "pos": "noun",
@@ -15041,7 +14808,7 @@
  {
   "id": "sp-o-bedwar-ban-y-byd",
   "day": 34,
-  "n": 23,
+  "n": 22,
   "cy": "o bedwar ban y byd",
   "en": "from all over the world",
   "pos": "phrase",
@@ -15059,7 +14826,7 @@
  {
   "id": "sp-y-tro-nesa",
   "day": 34,
-  "n": 24,
+  "n": 23,
   "cy": "y tro nesa",
   "en": "next time",
   "pos": "phrase",
@@ -15070,14 +14837,14 @@
    "y tro nesa"
   ],
   "ex": {
-   "cy": "Wna i drio mate y tro nesa.",
+   "cy": "Wna i geisio mate y tro nesa.",
    "en": "I'll try mate next time."
   }
  },
  {
   "id": "sp-amser",
   "day": 34,
-  "n": 25,
+  "n": 24,
   "cy": "amser",
   "en": "time",
   "pos": "noun",
@@ -15476,21 +15243,22 @@
   }
  },
  {
-  "id": "sp-lwcus",
+  "id": "sp-ffodus",
   "day": 36,
   "n": 21,
-  "cy": "lwcus",
-  "en": "lucky",
+  "cy": "ffodus",
+  "en": "lucky, fortunate",
   "pos": "adjective",
   "videos": [
    "2wx65QIg65Q",
    "ufKf4eORcKA"
   ],
   "forms": [
-   "lwcus"
+   "ffodus"
   ],
+  "note": "Instead of “lwcus” (English loan).",
   "ex": {
-   "cy": "Dw i mor lwcus heddiw.",
+   "cy": "Dw i mor ffodus heddiw.",
    "en": "I'm so lucky today."
   }
  },
@@ -15577,8 +15345,8 @@
  },
  {
   "id": "sp-go-iawn",
-  "day": 37,
-  "n": 1,
+  "day": 13,
+  "n": 25,
   "cy": "go iawn",
   "en": "properly, real",
   "pos": "phrase",
@@ -15590,14 +15358,14 @@
    "go iawn"
   ],
   "ex": {
-   "cy": "Dyna Gymraeg go iawn!",
-   "en": "That's real Welsh!"
+   "cy": "Mae'r te yn flasus go iawn.",
+   "en": "The tea is really tasty."
   }
  },
  {
   "id": "sp-llong",
   "day": 37,
-  "n": 2,
+  "n": 1,
   "cy": "llong",
   "en": "ship",
   "pos": "noun",
@@ -15614,7 +15382,7 @@
  {
   "id": "sp-mil-wyth-cant-chwe-deg-pump",
   "day": 37,
-  "n": 3,
+  "n": 2,
   "cy": "mil wyth cant chwe deg pump",
   "en": "1865",
   "pos": "phrase",
@@ -15631,7 +15399,7 @@
  {
   "id": "sp-sefydlu",
   "day": 37,
-  "n": 4,
+  "n": 3,
   "cy": "sefydlu",
   "en": "to establish, settle",
   "pos": "verb",
@@ -15647,7 +15415,7 @@
  {
   "id": "sp-cadw",
   "day": 37,
-  "n": 5,
+  "n": 4,
   "cy": "cadw",
   "en": "to keep",
   "pos": "verb",
@@ -15666,7 +15434,7 @@
  {
   "id": "sp-blodyn",
   "day": 37,
-  "n": 6,
+  "n": 5,
   "cy": "blodyn",
   "en": "flower (term of endearment)",
   "pos": "noun",
@@ -15685,7 +15453,7 @@
  {
   "id": "sp-maen-siwr",
   "day": 37,
-  "n": 7,
+  "n": 6,
   "cy": "mae'n siŵr",
   "en": "probably",
   "pos": "phrase",
@@ -15703,7 +15471,7 @@
  {
   "id": "sp-gwaethaf",
   "day": 37,
-  "n": 8,
+  "n": 7,
   "cy": "gwaethaf",
   "en": "worst",
   "pos": "adjective",
@@ -15724,7 +15492,7 @@
  {
   "id": "sp-isda",
   "day": 37,
-  "n": 9,
+  "n": 8,
   "cy": "isda",
   "en": "sit (to a dog)",
   "pos": "verb-form",
@@ -15743,7 +15511,7 @@
  {
   "id": "sp-byr",
   "day": 37,
-  "n": 10,
+  "n": 9,
   "cy": "byr",
   "en": "short",
   "pos": "adjective",
@@ -15763,7 +15531,7 @@
  {
   "id": "sp-balch",
   "day": 37,
-  "n": 11,
+  "n": 10,
   "cy": "balch",
   "en": "pleased, proud",
   "pos": "adjective",
@@ -15784,7 +15552,7 @@
  {
   "id": "sp-problem",
   "day": 37,
-  "n": 12,
+  "n": 11,
   "cy": "problem",
   "en": "problem",
   "pos": "noun",
@@ -15808,7 +15576,7 @@
  {
   "id": "sp-i-fyny",
   "day": 37,
-  "n": 13,
+  "n": 12,
   "cy": "i fyny",
   "en": "up",
   "pos": "phrase",
@@ -15828,7 +15596,7 @@
  {
   "id": "sp-yno",
   "day": 37,
-  "n": 14,
+  "n": 13,
   "cy": "yno",
   "en": "there",
   "pos": "adverb",
@@ -15847,7 +15615,7 @@
  {
   "id": "sp-ydyn-nhw",
   "day": 37,
-  "n": 15,
+  "n": 14,
   "cy": "ydyn nhw",
   "en": "are they / do they",
   "pos": "verb-form",
@@ -15867,7 +15635,7 @@
  {
   "id": "sp-peidio",
   "day": 37,
-  "n": 16,
+  "n": 15,
   "cy": "peidio",
   "en": "to not (do)",
   "pos": "verb",
@@ -15889,7 +15657,7 @@
  {
   "id": "sp-cegin",
   "day": 37,
-  "n": 17,
+  "n": 16,
   "cy": "cegin",
   "en": "kitchen",
   "pos": "noun",
@@ -15912,7 +15680,7 @@
  {
   "id": "sp-profiad",
   "day": 37,
-  "n": 18,
+  "n": 17,
   "cy": "profiad",
   "en": "experience",
   "pos": "noun",
@@ -15933,7 +15701,7 @@
  {
   "id": "sp-bisged",
   "day": 37,
-  "n": 19,
+  "n": 18,
   "cy": "bisged",
   "en": "biscuit",
   "pos": "noun",
@@ -15952,7 +15720,7 @@
  {
   "id": "sp-gilydd",
   "day": 37,
-  "n": 20,
+  "n": 19,
   "cy": "gilydd",
   "en": "each other",
   "pos": "pronoun",
@@ -15971,7 +15739,7 @@
  {
   "id": "sp-o-gwbl",
   "day": 37,
-  "n": 21,
+  "n": 20,
   "cy": "o gwbl",
   "en": "at all",
   "pos": "phrase",
@@ -15991,7 +15759,7 @@
  {
   "id": "sp-at-ei-gilydd",
   "day": 37,
-  "n": 22,
+  "n": 21,
   "cy": "at ei gilydd",
   "en": "together",
   "pos": "phrase",
@@ -16012,7 +15780,7 @@
  {
   "id": "sp-swn-i",
   "day": 37,
-  "n": 23,
+  "n": 22,
   "cy": "'swn i",
   "en": "I would",
   "pos": "verb-form",
@@ -16024,14 +15792,14 @@
    "'swn i"
   ],
   "ex": {
-   "cy": "'Swn i'n licio canu fel hi.",
+   "cy": "'Swn i'n hoffi canu fel hi.",
    "en": "I'd like to sing like her."
   }
  },
  {
   "id": "sp-oedden-ni",
   "day": 37,
-  "n": 24,
+  "n": 23,
   "cy": "oedden ni",
   "en": "we were",
   "pos": "verb-form",
@@ -16050,7 +15818,7 @@
  {
   "id": "sp-enwi",
   "day": 37,
-  "n": 25,
+  "n": 24,
   "cy": "enwi",
   "en": "to name",
   "pos": "verb",
@@ -16079,7 +15847,7 @@
    "ailadrodd"
   ],
   "ex": {
-   "cy": "Wnewch chi ailadrodd hynna, plis?",
+   "cy": "Wnewch chi ailadrodd hynna, os gwelwch yn dda?",
    "en": "Will you repeat that, please?"
   }
  },
@@ -16120,28 +15888,9 @@
   }
  },
  {
-  "id": "sp-iwsio",
-  "day": 38,
-  "n": 4,
-  "cy": "iwsio",
-  "en": "to use",
-  "pos": "verb",
-  "note": "colloquial for defnyddio",
-  "videos": [
-   "KC1zIuBKkdY"
-  ],
-  "forms": [
-   "iwsio"
-  ],
-  "ex": {
-   "cy": "Dw i'n iwsio Cymraeg bob dydd.",
-   "en": "I use Welsh every day."
-  }
- },
- {
   "id": "sp-adeg",
   "day": 38,
-  "n": 5,
+  "n": 4,
   "cy": "adeg",
   "en": "time, period",
   "pos": "noun",
@@ -16164,7 +15913,7 @@
  {
   "id": "sp-del",
   "day": 38,
-  "n": 6,
+  "n": 5,
   "cy": "del",
   "en": "pretty (one)",
   "pos": "adjective",
@@ -16180,28 +15929,9 @@
   }
  },
  {
-  "id": "sp-riteirio",
-  "day": 38,
-  "n": 7,
-  "cy": "riteirio",
-  "en": "to retire",
-  "pos": "verb",
-  "note": "colloquial; standard ymddeol",
-  "videos": [
-   "FtAjyCUDCmQ"
-  ],
-  "forms": [
-   "riteirio"
-  ],
-  "ex": {
-   "cy": "Mae fy nhad i wedi riteirio.",
-   "en": "My dad has retired."
-  }
- },
- {
   "id": "sp-swn",
   "day": 38,
-  "n": 8,
+  "n": 6,
   "cy": "sŵn",
   "en": "sound, noise",
   "pos": "noun",
@@ -16215,14 +15945,14 @@
    "synau"
   ],
   "ex": {
-   "cy": "Dw i'n licio sŵn y môr.",
+   "cy": "Dw i'n hoffi sŵn y môr.",
    "en": "I like the sound of the sea."
   }
  },
  {
   "id": "sp-llythyren",
   "day": 38,
-  "n": 9,
+  "n": 7,
   "cy": "llythyren",
   "en": "letter (of alphabet)",
   "pos": "noun",
@@ -16241,7 +15971,7 @@
  {
   "id": "sp-ydyn",
   "day": 38,
-  "n": 10,
+  "n": 8,
   "cy": "ydyn",
   "en": "yes (we/they are)",
   "pos": "verb-form",
@@ -16260,7 +15990,7 @@
  {
   "id": "sp-eitha",
   "day": 38,
-  "n": 11,
+  "n": 9,
   "cy": "eitha",
   "en": "quite",
   "pos": "adverb",
@@ -16279,7 +16009,7 @@
  {
   "id": "sp-beic",
   "day": 38,
-  "n": 12,
+  "n": 10,
   "cy": "beic",
   "en": "bike",
   "pos": "noun",
@@ -16302,7 +16032,7 @@
  {
   "id": "sp-oed",
   "day": 38,
-  "n": 13,
+  "n": 11,
   "cy": "oed",
   "en": "age",
   "pos": "noun",
@@ -16323,7 +16053,7 @@
  {
   "id": "sp-holi",
   "day": 38,
-  "n": 14,
+  "n": 12,
   "cy": "holi",
   "en": "to ask, question",
   "pos": "verb",
@@ -16343,7 +16073,7 @@
  {
   "id": "sp-hoff",
   "day": 38,
-  "n": 15,
+  "n": 13,
   "cy": "hoff",
   "en": "favourite; fond",
   "pos": "adjective",
@@ -16363,7 +16093,7 @@
  {
   "id": "sp-tua",
   "day": 38,
-  "n": 16,
+  "n": 14,
   "cy": "tua",
   "en": "about, around",
   "pos": "preposition",
@@ -16380,9 +16110,9 @@
   }
  },
  {
-  "id": "sp-ta",
+  "id": "sp-ta-38",
   "day": 38,
-  "n": 17,
+  "n": 15,
   "cy": "'ta",
   "en": "or",
   "pos": "conjunction",
@@ -16403,7 +16133,7 @@
  {
   "id": "sp-cymaint",
   "day": 38,
-  "n": 18,
+  "n": 16,
   "cy": "cymaint",
   "en": "so much, so many",
   "pos": "phrase",
@@ -16425,7 +16155,7 @@
  {
   "id": "sp-i-lawr",
   "day": 38,
-  "n": 19,
+  "n": 17,
   "cy": "i lawr",
   "en": "down",
   "pos": "phrase",
@@ -16443,7 +16173,7 @@
  {
   "id": "sp-rygbi",
   "day": 38,
-  "n": 20,
+  "n": 18,
   "cy": "rygbi",
   "en": "rugby",
   "pos": "noun",
@@ -16460,9 +16190,9 @@
   }
  },
  {
-  "id": "sp-mor",
+  "id": "sp-mor-38",
   "day": 38,
-  "n": 21,
+  "n": 19,
   "cy": "môr",
   "en": "sea",
   "pos": "noun",
@@ -16481,7 +16211,7 @@
  {
   "id": "sp-oedden-nhw",
   "day": 38,
-  "n": 22,
+  "n": 20,
   "cy": "oedden nhw",
   "en": "they were",
   "pos": "verb-form",
@@ -16498,8 +16228,8 @@
  },
  {
   "id": "sp-ymddeol",
-  "day": 38,
-  "n": 23,
+  "day": 34,
+  "n": 25,
   "cy": "ymddeol",
   "en": "to retire",
   "pos": "verb",
@@ -16511,14 +16241,14 @@
    "ymddeol"
   ],
   "ex": {
-   "cy": "Mae ei thad hi wedi ymddeol.",
-   "en": "Her father has retired."
+   "cy": "Mae Taid wedi ymddeol.",
+   "en": "Grandad has retired."
   }
  },
  {
   "id": "sp-fferm",
   "day": 38,
-  "n": 24,
+  "n": 21,
   "cy": "fferm",
   "en": "farm",
   "pos": "noun",
@@ -16538,7 +16268,7 @@
  {
   "id": "sp-clust",
   "day": 38,
-  "n": 25,
+  "n": 22,
   "cy": "clust",
   "en": "ear",
   "pos": "noun",
@@ -16924,29 +16654,9 @@
   }
  },
  {
-  "id": "sp-becso",
-  "day": 39,
-  "n": 20,
-  "cy": "becso",
-  "en": "to worry",
-  "pos": "verb",
-  "note": "south; north: poeni",
-  "videos": [
-   "VHe9XPFHb8E"
-  ],
-  "forms": [
-   "becso",
-   "besco"
-  ],
-  "ex": {
-   "cy": "Peidiwch â becso!",
-   "en": "Don't worry!"
-  }
- },
- {
   "id": "sp-rhain",
   "day": 39,
-  "n": 21,
+  "n": 20,
   "cy": "rhain",
   "en": "these (ones)",
   "pos": "pronoun",
@@ -16965,7 +16675,7 @@
  {
   "id": "sp-doniol",
   "day": 39,
-  "n": 22,
+  "n": 21,
   "cy": "doniol",
   "en": "funny",
   "pos": "adjective",
@@ -16983,7 +16693,7 @@
  {
   "id": "sp-rheswm",
   "day": 39,
-  "n": 23,
+  "n": 22,
   "cy": "rheswm",
   "en": "reason",
   "pos": "noun",
@@ -17002,7 +16712,7 @@
  {
   "id": "sp-awyrgylch",
   "day": 39,
-  "n": 24,
+  "n": 23,
   "cy": "awyrgylch",
   "en": "atmosphere",
   "pos": "noun",
@@ -17021,7 +16731,7 @@
  {
   "id": "sp-siwr-o-fod",
   "day": 39,
-  "n": 25,
+  "n": 24,
   "cy": "siŵr o fod",
   "en": "probably, I suppose",
   "pos": "phrase",
@@ -17183,7 +16893,7 @@
    "dwsin"
   ],
   "ex": {
-   "cy": "Ga i ddwsin o sgons, plis?",
+   "cy": "Ga i ddwsin o sgons, os gwelwch yn dda?",
    "en": "Can I have a dozen scones, please?"
   }
  },
@@ -17222,7 +16932,7 @@
    "dim byd"
   ],
   "ex": {
-   "cy": "Sori, dw i ddim yn deall dim byd.",
+   "cy": "Mae'n ddrwg gen i, dw i ddim yn deall dim byd.",
    "en": "Sorry, I don't understand anything."
   }
  },
@@ -17342,10 +17052,10 @@
   }
  },
  {
-  "id": "sp-syrpreis",
+  "id": "sp-syndod",
   "day": 40,
   "n": 17,
-  "cy": "syrpréis",
+  "cy": "syndod",
   "en": "surprise",
   "pos": "noun",
   "gender": "m",
@@ -17353,10 +17063,11 @@
    "A6lwu29UIRc"
   ],
   "forms": [
-   "syrpréis"
+   "syndod"
   ],
+  "note": "Instead of “syrpréis” (English loan).",
   "ex": {
-   "cy": "Mae gen i syrpréis i ti!",
+   "cy": "Mae gen i syndod i ti!",
    "en": "I've got a surprise for you!"
   }
  },
@@ -17505,7 +17216,7 @@
    "fan 'na"
   ],
   "ex": {
-   "cy": "Steddwch fan 'na, plis.",
+   "cy": "Steddwch fan 'na, os gwelwch yn dda.",
    "en": "Sit there, please."
   }
  },
@@ -17529,48 +17240,9 @@
   }
  },
  {
-  "id": "sp-weitio",
-  "day": 41,
-  "n": 2,
-  "cy": "weitio",
-  "en": "to wait",
-  "pos": "verb",
-  "note": "colloquial; = aros",
-  "videos": [
-   "A6lwu29UIRc"
-  ],
-  "forms": [
-   "weitio",
-   "weitiad"
-  ],
-  "ex": {
-   "cy": "Dw i'n weitio am fy ffrind.",
-   "en": "I'm waiting for my friend."
-  }
- },
- {
-  "id": "sp-bys",
-  "day": 41,
-  "n": 3,
-  "cy": "bys",
-  "en": "bus",
-  "pos": "noun",
-  "gender": "m",
-  "videos": [
-   "A6lwu29UIRc"
-  ],
-  "forms": [
-   "bys"
-  ],
-  "ex": {
-   "cy": "Dw i'n aros am y bys i Esquel.",
-   "en": "I'm waiting for the bus to Esquel."
-  }
- },
- {
   "id": "sp-maes",
   "day": 41,
-  "n": 4,
+  "n": 2,
   "cy": "maes",
   "en": "field, festival ground",
   "pos": "noun",
@@ -17589,7 +17261,7 @@
  {
   "id": "sp-aru",
   "day": 41,
-  "n": 5,
+  "n": 3,
   "cy": "'aru",
   "en": "did (past marker)",
   "pos": "particle",
@@ -17608,7 +17280,7 @@
  {
   "id": "sp-gwobr",
   "day": 41,
-  "n": 6,
+  "n": 4,
   "cy": "gwobr",
   "en": "prize",
   "pos": "noun",
@@ -17628,7 +17300,7 @@
  {
   "id": "sp-gawson-ni",
   "day": 41,
-  "n": 7,
+  "n": 5,
   "cy": "gawson ni",
   "en": "we got",
   "pos": "verb-form",
@@ -17640,14 +17312,14 @@
    "gawson ni"
   ],
   "ex": {
-   "cy": "Gawson ni amser grêt yn Gaiman.",
+   "cy": "Gawson ni amser gwych yn Gaiman.",
    "en": "We had a great time in Gaiman."
   }
  },
  {
   "id": "sp-lleill",
   "day": 41,
-  "n": 8,
+  "n": 6,
   "cy": "lleill",
   "en": "the others",
   "pos": "pronoun",
@@ -17665,7 +17337,7 @@
  {
   "id": "sp-proffesiynol",
   "day": 41,
-  "n": 9,
+  "n": 7,
   "cy": "proffesiynol",
   "en": "professional",
   "pos": "adjective",
@@ -17682,27 +17354,9 @@
   }
  },
  {
-  "id": "sp-gret",
-  "day": 41,
-  "n": 10,
-  "cy": "grêt",
-  "en": "great",
-  "pos": "adjective",
-  "videos": [
-   "A6lwu29UIRc"
-  ],
-  "forms": [
-   "grêt"
-  ],
-  "ex": {
-   "cy": "Mae'r tywydd yn grêt heddiw.",
-   "en": "The weather is great today."
-  }
- },
- {
   "id": "sp-gwyntog",
   "day": 41,
-  "n": 11,
+  "n": 8,
   "cy": "gwyntog",
   "en": "windy",
   "pos": "adjective",
@@ -17721,7 +17375,7 @@
  {
   "id": "sp-codi",
   "day": 41,
-  "n": 12,
+  "n": 9,
   "cy": "codi",
   "en": "to raise",
   "pos": "verb",
@@ -17742,7 +17396,7 @@
  {
   "id": "sp-mi",
   "day": 41,
-  "n": 13,
+  "n": 10,
   "cy": "mi",
   "en": "(affirmative particle)",
   "pos": "particle",
@@ -17762,7 +17416,7 @@
  {
   "id": "sp-bendigedig",
   "day": 41,
-  "n": 14,
+  "n": 11,
   "cy": "bendigedig",
   "en": "wonderful",
   "pos": "adjective",
@@ -17781,7 +17435,7 @@
  {
   "id": "sp-trefnu",
   "day": 41,
-  "n": 15,
+  "n": 12,
   "cy": "trefnu",
   "en": "to organise",
   "pos": "verb",
@@ -17800,7 +17454,7 @@
  {
   "id": "sp-cyngerdd",
   "day": 41,
-  "n": 16,
+  "n": 13,
   "cy": "cyngerdd",
   "en": "concert",
   "pos": "noun",
@@ -17821,7 +17475,7 @@
  {
   "id": "sp-canolfan",
   "day": 41,
-  "n": 17,
+  "n": 14,
   "cy": "canolfan",
   "en": "centre",
   "pos": "noun",
@@ -17841,7 +17495,7 @@
  {
   "id": "sp-edrych-ar-ol",
   "day": 41,
-  "n": 18,
+  "n": 15,
   "cy": "edrych ar ôl",
   "en": "to look after",
   "pos": "phrase",
@@ -17859,7 +17513,7 @@
  {
   "id": "sp-chwarae",
   "day": 41,
-  "n": 19,
+  "n": 16,
   "cy": "chwarae",
   "en": "to play",
   "pos": "verb",
@@ -17871,14 +17525,14 @@
    "chwarae"
   ],
   "ex": {
-   "cy": "Dw i'n licio chwarae rygbi.",
+   "cy": "Dw i'n hoffi chwarae rygbi.",
    "en": "I like playing rugby."
   }
  },
  {
   "id": "sp-golff",
   "day": 41,
-  "n": 20,
+  "n": 17,
   "cy": "golff",
   "en": "golf",
   "pos": "noun",
@@ -17897,7 +17551,7 @@
  {
   "id": "sp-ble",
   "day": 41,
-  "n": 21,
+  "n": 18,
   "cy": "ble",
   "en": "where",
   "pos": "adverb",
@@ -17915,7 +17569,7 @@
  {
   "id": "sp-symudais-i",
   "day": 41,
-  "n": 22,
+  "n": 19,
   "cy": "symudais i",
   "en": "I moved",
   "pos": "verb-form",
@@ -17933,7 +17587,7 @@
  {
   "id": "sp-clos",
   "day": 41,
-  "n": 23,
+  "n": 20,
   "cy": "clos",
   "en": "close, tight-knit",
   "pos": "adjective",
@@ -17952,7 +17606,7 @@
  {
   "id": "sp-byddwn-i",
   "day": 41,
-  "n": 24,
+  "n": 21,
   "cy": "byddwn i",
   "en": "I would",
   "pos": "verb-form",
@@ -17971,7 +17625,7 @@
  {
   "id": "sp-oddi-yma",
   "day": 41,
-  "n": 25,
+  "n": 22,
   "cy": "oddi yma",
   "en": "away from here",
   "pos": "phrase",
@@ -18151,7 +17805,7 @@
    "weithgareddau"
   ],
   "ex": {
-   "cy": "Mae 'na lot o weithgareddau yn y ganolfan.",
+   "cy": "Mae 'na lawer o weithgareddau yn y ganolfan.",
    "en": "There are lots of activities at the centre."
   }
  },
@@ -18176,27 +17830,9 @@
   }
  },
  {
-  "id": "sp-watsiad",
-  "day": 43,
-  "n": 11,
-  "cy": "watsiad",
-  "en": "to watch",
-  "pos": "verb",
-  "videos": [
-   "9EHbcemdpd8"
-  ],
-  "forms": [
-   "watsiad"
-  ],
-  "ex": {
-   "cy": "Wnes i watsiad fideo neithiwr.",
-   "en": "I watched a video last night."
-  }
- },
- {
   "id": "sp-bellach",
   "day": 43,
-  "n": 12,
+  "n": 11,
   "cy": "bellach",
   "en": "now, by now",
   "pos": "adverb",
@@ -18214,7 +17850,7 @@
  {
   "id": "sp-rhan-amla",
   "day": 43,
-  "n": 13,
+  "n": 12,
   "cy": "rhan amla",
   "en": "mostly, usually",
   "pos": "phrase",
@@ -18232,7 +17868,7 @@
  {
   "id": "sp-gwely",
   "day": 43,
-  "n": 14,
+  "n": 13,
   "cy": "gwely",
   "en": "bed",
   "pos": "noun",
@@ -18251,7 +17887,7 @@
  {
   "id": "sp-e",
   "day": 43,
-  "n": 15,
+  "n": 14,
   "cy": "e",
   "en": "it, he",
   "pos": "pronoun",
@@ -18270,7 +17906,7 @@
  {
   "id": "sp-hwnnw",
   "day": 43,
-  "n": 16,
+  "n": 15,
   "cy": "hwnnw",
   "en": "that (one)",
   "pos": "pronoun",
@@ -18288,7 +17924,7 @@
  {
   "id": "sp-blynyddol",
   "day": 43,
-  "n": 17,
+  "n": 16,
   "cy": "blynyddol",
   "en": "annual",
   "pos": "adjective",
@@ -18308,7 +17944,7 @@
  {
   "id": "sp-digwyddiad",
   "day": 43,
-  "n": 18,
+  "n": 17,
   "cy": "digwyddiad",
   "en": "event",
   "pos": "noun",
@@ -18327,7 +17963,7 @@
  {
   "id": "sp-canol",
   "day": 43,
-  "n": 19,
+  "n": 18,
   "cy": "canol",
   "en": "middle",
   "pos": "noun",
@@ -18347,7 +17983,7 @@
  {
   "id": "sp-coed",
   "day": 43,
-  "n": 20,
+  "n": 19,
   "cy": "coed",
   "en": "trees, woods",
   "pos": "noun",
@@ -18360,14 +17996,14 @@
    "coed"
   ],
   "ex": {
-   "cy": "Mae 'na lot o goed yn Nhrevelin.",
+   "cy": "Mae 'na lawer o goed yn Nhrevelin.",
    "en": "There are lots of trees in Trevelin."
   }
  },
  {
   "id": "sp-coedwig",
   "day": 43,
-  "n": 21,
+  "n": 20,
   "cy": "coedwig",
   "en": "forest",
   "pos": "noun",
@@ -18386,7 +18022,7 @@
  {
   "id": "sp-i-fod",
   "day": 43,
-  "n": 22,
+  "n": 21,
   "cy": "i fod",
   "en": "supposedly",
   "pos": "phrase",
@@ -18404,7 +18040,7 @@
  {
   "id": "sp-heulog",
   "day": 43,
-  "n": 23,
+  "n": 22,
   "cy": "heulog",
   "en": "sunny",
   "pos": "adjective",
@@ -18422,7 +18058,7 @@
  {
   "id": "sp-reidio",
   "day": 43,
-  "n": 24,
+  "n": 23,
   "cy": "reidio",
   "en": "to ride",
   "pos": "verb",
@@ -18433,14 +18069,14 @@
    "reidio"
   ],
   "ex": {
-   "cy": "Dw i'n licio reidio beic.",
+   "cy": "Dw i'n hoffi reidio beic.",
    "en": "I like riding a bike."
   }
  },
  {
   "id": "sp-rhedeg",
   "day": 43,
-  "n": 25,
+  "n": 24,
   "cy": "rhedeg",
   "en": "to run",
   "pos": "verb",
@@ -18578,7 +18214,7 @@
    "fath"
   ],
   "ex": {
-   "cy": "Pa fath o fwyd wyt ti'n licio?",
+   "cy": "Pa fath o fwyd wyt ti'n hoffi?",
    "en": "What kind of food do you like?"
   }
  },
@@ -18719,7 +18355,7 @@
    "fyg"
   ],
   "ex": {
-   "cy": "Ga i fwg o goffi, plis?",
+   "cy": "Ga i fwg o goffi, os gwelwch yn dda?",
    "en": "Can I have a mug of coffee, please?"
   }
  },
@@ -18836,27 +18472,9 @@
   }
  },
  {
-  "id": "sp-eniwe",
-  "day": 44,
-  "n": 20,
-  "cy": "eniwê",
-  "en": "anyway",
-  "pos": "adverb",
-  "videos": [
-   "2wx65QIg65Q"
-  ],
-  "forms": [
-   "eniwê"
-  ],
-  "ex": {
-   "cy": "Eniwê, be ydy dy enw?",
-   "en": "Anyway, what's your name?"
-  }
- },
- {
   "id": "sp-draw",
   "day": 44,
-  "n": 21,
+  "n": 20,
   "cy": "draw",
   "en": "over (to visit)",
   "pos": "adverb",
@@ -18874,7 +18492,7 @@
  {
   "id": "sp-tra",
   "day": 44,
-  "n": 22,
+  "n": 21,
   "cy": "tra",
   "en": "while",
   "pos": "conjunction",
@@ -18893,7 +18511,7 @@
  {
   "id": "sp-yn-enwedig",
   "day": 44,
-  "n": 23,
+  "n": 22,
   "cy": "yn enwedig",
   "en": "especially",
   "pos": "phrase",
@@ -18905,14 +18523,14 @@
    "yn enwedig"
   ],
   "ex": {
-   "cy": "Dw i'n licio'r Wladfa, yn enwedig y sgons.",
+   "cy": "Dw i'n hoffi'r Wladfa, yn enwedig y sgons.",
    "en": "I like Y Wladfa, especially the scones."
   }
  },
  {
   "id": "sp-dim-ots",
   "day": 44,
-  "n": 24,
+  "n": 23,
   "cy": "dim ots",
   "en": "doesn't matter",
   "pos": "phrase",
@@ -18931,7 +18549,7 @@
  {
   "id": "sp-cysgu",
   "day": 44,
-  "n": 25,
+  "n": 24,
   "cy": "cysgu",
   "en": "to sleep",
   "pos": "verb",
@@ -19022,20 +18640,21 @@
   }
  },
  {
-  "id": "sp-dyncio",
+  "id": "sp-trochi",
   "day": 45,
   "n": 5,
-  "cy": "dyncio",
-  "en": "to dunk",
+  "cy": "trochi",
+  "en": "to dunk, dip",
   "pos": "verb",
   "videos": [
    "2wx65QIg65Q"
   ],
   "forms": [
-   "dyncio"
+   "trochi"
   ],
+  "note": "Instead of “dyncio” (English loan).",
   "ex": {
-   "cy": "Dw i'n licio dyncio bisged yn y te.",
+   "cy": "Dw i'n hoffi trochi bisged yn y te.",
    "en": "I like dunking a biscuit in the tea."
   }
  },
@@ -19058,27 +18677,9 @@
   }
  },
  {
-  "id": "sp-sortio",
-  "day": 45,
-  "n": 7,
-  "cy": "sortio",
-  "en": "to sort (out)",
-  "pos": "verb",
-  "videos": [
-   "2wx65QIg65Q"
-  ],
-  "forms": [
-   "sortio"
-  ],
-  "ex": {
-   "cy": "Wna i sortio'r fideo fory.",
-   "en": "I'll sort the video out tomorrow."
-  }
- },
- {
   "id": "sp-berwi",
   "day": 45,
-  "n": 8,
+  "n": 7,
   "cy": "berwi",
   "en": "to boil",
   "pos": "verb",
@@ -19097,7 +18698,7 @@
  {
   "id": "sp-hel",
   "day": 45,
-  "n": 9,
+  "n": 8,
   "cy": "hel",
   "en": "to gather",
   "pos": "verb",
@@ -19115,7 +18716,7 @@
  {
   "id": "sp-bwrw-bol",
   "day": 45,
-  "n": 10,
+  "n": 9,
   "cy": "bwrw bol",
   "en": "to pour one's heart out",
   "pos": "phrase",
@@ -19134,7 +18735,7 @@
  {
   "id": "sp-troed",
   "day": 45,
-  "n": 11,
+  "n": 10,
   "cy": "troed",
   "en": "foot",
   "pos": "noun",
@@ -19153,7 +18754,7 @@
  {
   "id": "sp-camp",
   "day": 45,
-  "n": 12,
+  "n": 11,
   "cy": "camp",
   "en": "feat; (here) camp",
   "pos": "noun",
@@ -19172,7 +18773,7 @@
  {
   "id": "sp-caffin",
   "day": 45,
-  "n": 13,
+  "n": 12,
   "cy": "caffîn",
   "en": "caffeine",
   "pos": "noun",
@@ -19191,7 +18792,7 @@
  {
   "id": "sp-fanila",
   "day": 45,
-  "n": 14,
+  "n": 13,
   "cy": "fanila",
   "en": "vanilla",
   "pos": "noun",
@@ -19203,14 +18804,14 @@
    "fanila"
   ],
   "ex": {
-   "cy": "Hoffwn i hufen iâ fanila, plis.",
+   "cy": "Hoffwn i hufen iâ fanila, os gwelwch yn dda.",
    "en": "I'd like vanilla ice cream, please."
   }
  },
  {
   "id": "sp-gwaed",
   "day": 45,
-  "n": 15,
+  "n": 14,
   "cy": "gwaed",
   "en": "blood",
   "pos": "noun",
@@ -19229,7 +18830,7 @@
  {
   "id": "sp-corff",
   "day": 45,
-  "n": 16,
+  "n": 15,
   "cy": "corff",
   "en": "body",
   "pos": "noun",
@@ -19249,7 +18850,7 @@
  {
   "id": "sp-dysglaid",
   "day": 45,
-  "n": 17,
+  "n": 16,
   "cy": "dysglaid",
   "en": "cupful",
   "pos": "noun",
@@ -19261,14 +18862,14 @@
    "dysglaid"
   ],
   "ex": {
-   "cy": "Ga i ddysglaid o de, plis?",
+   "cy": "Ga i ddysglaid o de, os gwelwch yn dda?",
    "en": "Can I have a cup of tea, please?"
   }
  },
  {
   "id": "sp-swyddfa",
   "day": 45,
-  "n": 18,
+  "n": 17,
   "cy": "swyddfa",
   "en": "office",
   "pos": "noun",
@@ -19285,28 +18886,29 @@
   }
  },
  {
-  "id": "sp-brec",
+  "id": "sp-egwyl",
   "day": 45,
-  "n": 19,
-  "cy": "brêc",
-  "en": "break",
+  "n": 18,
+  "cy": "egwyl",
+  "en": "break, pause",
   "pos": "noun",
   "gender": "m",
   "videos": [
    "2wx65QIg65Q"
   ],
   "forms": [
-   "brêc"
+   "egwyl"
   ],
+  "note": "Instead of “brêc” (English loan).",
   "ex": {
-   "cy": "Dan ni'n cael brêc bob awr.",
+   "cy": "Dan ni'n cael egwyl bob awr.",
    "en": "We have a break every hour."
   }
  },
  {
   "id": "sp-cydweithiwr",
   "day": 45,
-  "n": 20,
+  "n": 19,
   "cy": "cydweithiwr",
   "en": "colleague",
   "pos": "noun",
@@ -19325,7 +18927,7 @@
  {
   "id": "sp-criw",
   "day": 45,
-  "n": 21,
+  "n": 20,
   "cy": "criw",
   "en": "group, crew",
   "pos": "noun",
@@ -19344,7 +18946,7 @@
  {
   "id": "sp-gwaith-tro",
   "day": 45,
-  "n": 22,
+  "n": 21,
   "cy": "gwaith (tro)",
   "en": "time, occasion",
   "pos": "noun",
@@ -19365,7 +18967,7 @@
  {
   "id": "sp-cyfrifiadur",
   "day": 45,
-  "n": 23,
+  "n": 22,
   "cy": "cyfrifiadur",
   "en": "computer",
   "pos": "noun",
@@ -19385,7 +18987,7 @@
  {
   "id": "sp-tegell",
   "day": 45,
-  "n": 24,
+  "n": 23,
   "cy": "tegell",
   "en": "kettle",
   "pos": "noun",
@@ -19404,7 +19006,7 @@
  {
   "id": "sp-barod",
   "day": 45,
-  "n": 25,
+  "n": 24,
   "cy": "barod",
   "en": "ready",
   "pos": "adjective",
@@ -19597,7 +19199,7 @@
    "yn arbennig"
   ],
   "ex": {
-   "cy": "Dw i'n licio'r gacen ddu yn arbennig.",
+   "cy": "Dw i'n hoffi'r gacen ddu yn arbennig.",
    "en": "I especially like the black cake."
   }
  },
@@ -19912,7 +19514,7 @@
    "cymryd rhan"
   ],
   "ex": {
-   "cy": "Dw i'n licio cymryd rhan yn y côr.",
+   "cy": "Dw i'n hoffi cymryd rhan yn y côr.",
    "en": "I like taking part in the choir."
   }
  },
@@ -20091,28 +19693,9 @@
   }
  },
  {
-  "id": "sp-watchad",
-  "day": 47,
-  "n": 11,
-  "cy": "watchad",
-  "en": "to watch",
-  "pos": "verb",
-  "note": "slang; standard gwylio",
-  "videos": [
-   "ufKf4eORcKA"
-  ],
-  "forms": [
-   "watchad"
-  ],
-  "ex": {
-   "cy": "Dan ni'n watchad y rygbi heno.",
-   "en": "We're watching the rugby tonight."
-  }
- },
- {
   "id": "sp-gem",
   "day": 47,
-  "n": 12,
+  "n": 11,
   "cy": "gêm",
   "en": "game",
   "pos": "noun",
@@ -20126,33 +19709,14 @@
    "gêms"
   ],
   "ex": {
-   "cy": "Wnest ti watchad y gêm neithiwr?",
+   "cy": "Wnest ti wylio'r gêm neithiwr?",
    "en": "Did you watch the game last night?"
-  }
- },
- {
-  "id": "sp-sbeshial",
-  "day": 47,
-  "n": 13,
-  "cy": "sbeshial",
-  "en": "special",
-  "pos": "adjective",
-  "note": "from English",
-  "videos": [
-   "ufKf4eORcKA"
-  ],
-  "forms": [
-   "sbeshial"
-  ],
-  "ex": {
-   "cy": "Mae heddiw'n ddiwrnod sbeshial.",
-   "en": "Today is a special day."
   }
  },
  {
   "id": "sp-golygfa",
   "day": 47,
-  "n": 14,
+  "n": 12,
   "cy": "golygfa",
   "en": "view",
   "pos": "noun",
@@ -20171,7 +19735,7 @@
  {
   "id": "sp-oddi-ar",
   "day": 47,
-  "n": 15,
+  "n": 13,
   "cy": "oddi ar",
   "en": "off, from",
   "pos": "preposition",
@@ -20189,7 +19753,7 @@
  {
   "id": "sp-stepan-drws",
   "day": 47,
-  "n": 16,
+  "n": 14,
   "cy": "stepan drws",
   "en": "doorstep",
   "pos": "noun",
@@ -20208,7 +19772,7 @@
  {
   "id": "sp-gwerthfawrogi",
   "day": 47,
-  "n": 17,
+  "n": 15,
   "cy": "gwerthfawrogi",
   "en": "to appreciate",
   "pos": "verb",
@@ -20227,7 +19791,7 @@
  {
   "id": "sp-mopio",
   "day": 47,
-  "n": 18,
+  "n": 16,
   "cy": "mopio",
   "en": "to mop",
   "pos": "verb",
@@ -20245,7 +19809,7 @@
  {
   "id": "sp-llawr",
   "day": 47,
-  "n": 19,
+  "n": 17,
   "cy": "llawr",
   "en": "floor",
   "pos": "noun",
@@ -20257,14 +19821,14 @@
    "llawr"
   ],
   "ex": {
-   "cy": "Sori, mae 'na de ar y llawr!",
+   "cy": "Mae'n ddrwg gen i, mae 'na de ar y llawr!",
    "en": "Sorry, there's tea on the floor!"
   }
  },
  {
   "id": "sp-wrth-ymyl",
   "day": 47,
-  "n": 20,
+  "n": 18,
   "cy": "wrth ymyl",
   "en": "next to, by",
   "pos": "phrase",
@@ -20283,7 +19847,7 @@
  {
   "id": "sp-does-dim-dwywaith",
   "day": 47,
-  "n": 21,
+  "n": 19,
   "cy": "does dim dwywaith",
   "en": "there's no doubt",
   "pos": "phrase",
@@ -20301,7 +19865,7 @@
  {
   "id": "sp-cymdeithasu",
   "day": 47,
-  "n": 22,
+  "n": 20,
   "cy": "cymdeithasu",
   "en": "to socialise",
   "pos": "verb",
@@ -20319,7 +19883,7 @@
  {
   "id": "sp-dwyn-i-fyny",
   "day": 47,
-  "n": 23,
+  "n": 21,
   "cy": "dwyn i fyny",
   "en": "to bring up, raise",
   "pos": "phrase",
@@ -20335,10 +19899,10 @@
   }
  },
  {
-  "id": "sp-fflag",
+  "id": "sp-baner",
   "day": 47,
-  "n": 24,
-  "cy": "fflag",
+  "n": 22,
+  "cy": "baner",
   "en": "flag",
   "pos": "noun",
   "gender": "f",
@@ -20346,17 +19910,18 @@
    "ufKf4eORcKA"
   ],
   "forms": [
-   "fflag"
+   "baner"
   ],
+  "note": "Instead of “fflag” (English loan).",
   "ex": {
-   "cy": "Mae fflag Cymru o flaen y capel.",
+   "cy": "Mae baner Cymru o flaen y capel.",
    "en": "The Welsh flag is in front of the chapel."
   }
  },
  {
   "id": "sp-tebyg",
   "day": 47,
-  "n": 25,
+  "n": 23,
   "cy": "tebyg",
   "en": "similar, like",
   "pos": "adjective",
@@ -20387,7 +19952,7 @@
    "hwyr"
   ],
   "ex": {
-   "cy": "Dw i'n hwyr heddiw, sori!",
+   "cy": "Dw i'n hwyr heddiw, mae'n ddrwg gen i!",
    "en": "I'm late today, sorry!"
   }
  },
@@ -20727,7 +20292,7 @@
    "resait"
   ],
   "ex": {
-   "cy": "Ga i'r rysáit, plis?",
+   "cy": "Ga i'r rysáit, os gwelwch yn dda?",
    "en": "Can I have the recipe, please?"
   }
  },
@@ -21065,28 +20630,9 @@
   }
  },
  {
-  "id": "sp-cweit",
-  "day": 50,
-  "n": 13,
-  "cy": "cweit",
-  "en": "quite",
-  "pos": "adverb",
-  "note": "from English",
-  "videos": [
-   "ufKf4eORcKA"
-  ],
-  "forms": [
-   "cweit"
-  ],
-  "ex": {
-   "cy": "Dw i ddim cweit yn rhugl eto.",
-   "en": "I'm not quite fluent yet."
-  }
- },
- {
   "id": "sp-ffenest",
   "day": 50,
-  "n": 14,
+  "n": 13,
   "cy": "ffenest",
   "en": "window",
   "pos": "noun",
@@ -21107,7 +20653,7 @@
  {
   "id": "sp-mynd-a",
   "day": 50,
-  "n": 15,
+  "n": 14,
   "cy": "mynd â",
   "en": "to take (someone/something)",
   "pos": "phrase",
@@ -21126,7 +20672,7 @@
  {
   "id": "sp-alla-i",
   "day": 50,
-  "n": 16,
+  "n": 15,
   "cy": "alla i",
   "en": "I can",
   "pos": "verb-form",
@@ -21145,7 +20691,7 @@
  {
   "id": "sp-bia",
   "day": 50,
-  "n": 17,
+  "n": 16,
   "cy": "bia",
   "en": "to own",
   "pos": "verb",
@@ -21164,7 +20710,7 @@
  {
   "id": "sp-gwasanaeth",
   "day": 50,
-  "n": 18,
+  "n": 17,
   "cy": "gwasanaeth",
   "en": "service",
   "pos": "noun",
@@ -21184,7 +20730,7 @@
  {
   "id": "sp-drws",
   "day": 50,
-  "n": 19,
+  "n": 18,
   "cy": "drws",
   "en": "door",
   "pos": "noun",
@@ -21203,7 +20749,7 @@
  {
   "id": "sp-hogan",
   "day": 50,
-  "n": 20,
+  "n": 19,
   "cy": "hogan",
   "en": "girl",
   "pos": "noun",
@@ -21223,7 +20769,7 @@
  {
   "id": "sp-hyd-at-rwan",
   "day": 50,
-  "n": 21,
+  "n": 20,
   "cy": "hyd at rŵan",
   "en": "until now, even now",
   "pos": "phrase",
@@ -21234,14 +20780,14 @@
    "hyd at rŵan"
   ],
   "ex": {
-   "cy": "Dw i wedi dysgu lot hyd at rŵan.",
+   "cy": "Dw i wedi dysgu llawer hyd at rŵan.",
    "en": "I've learned a lot until now."
   }
  },
  {
   "id": "sp-sgen-i",
   "day": 50,
-  "n": 22,
+  "n": 21,
   "cy": "sgen i",
   "en": "I have (haven't)",
   "pos": "verb-form",
@@ -21259,7 +20805,7 @@
  {
   "id": "sp-sgynnoch-chi",
   "day": 50,
-  "n": 23,
+  "n": 22,
   "cy": "sgynnoch chi",
   "en": "do you have",
   "pos": "verb-form",
@@ -21275,29 +20821,9 @@
   }
  },
  {
-  "id": "sp-syportio",
-  "day": 50,
-  "n": 24,
-  "cy": "syportio",
-  "en": "to support",
-  "pos": "verb",
-  "videos": [
-   "KC1zIuBKkdY",
-   "FtAjyCUDCmQ"
-  ],
-  "forms": [
-   "syportio",
-   "syportio'r"
-  ],
-  "ex": {
-   "cy": "Dw i'n syportio'r côr lleol.",
-   "en": "I support the local choir."
-  }
- },
- {
   "id": "sp-tueddu",
   "day": 50,
-  "n": 25,
+  "n": 23,
   "cy": "tueddu",
   "en": "to tend",
   "pos": "verb",

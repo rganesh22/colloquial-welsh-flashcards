@@ -495,7 +495,7 @@
     "en": "Why are you learning Welsh?"
    },
    {
-    "cy": "Be dach chi'n licio yfed?",
+    "cy": "Be dach chi'n hoffi yfed?",
     "en": "What do you like to drink?"
    },
    {
@@ -531,7 +531,7 @@
      "en": "Friendly people. They speak Welsh."
     },
     {
-     "cy": "Be dach chi'n licio bwyta?",
+     "cy": "Be dach chi'n hoffi bwyta?",
      "en": "What do you like to eat?"
     },
     {
@@ -599,7 +599,7 @@
   "speak": [
    {
     "prompt": "Say what you like to eat.",
-    "cy": "Dw i'n licio bara a chaws.",
+    "cy": "Dw i'n hoffi bara a chaws.",
     "en": "I like bread and cheese."
    },
    {
@@ -625,7 +625,7 @@
   "why": "Describe things and people: mae hi’n dda, mae o’n fawr.",
   "catchUp": false,
   "grammar": {
-   "explain": "To describe something, use mae + yn + adjective. After vowels yn shortens to 'n: mae'n, mae hi'n. Yn causes a soft mutation on the adjective: da → dda, mawr → fawr, poeth → boeth, bach → fach, blasus → flasus. Words starting with ll or rh don't change, and neither do words like braf, neis, hen, oer.",
+   "explain": "To describe something, use mae + yn + adjective. After vowels yn shortens to 'n: mae'n, mae hi'n. Yn causes a soft mutation on the adjective: da → dda, mawr → fawr, poeth → boeth, bach → fach, blasus → flasus. Words starting with ll or rh don't change, and neither do words like braf, hen, oer.",
    "examples": [
     {
      "cy": "Mae hi'n dda.",
@@ -691,7 +691,7 @@
      "en": "\"The sun is hot. Thirty!\""
     },
     {
-     "cy": "\"Dim glaw, jyst haul.\"",
+     "cy": "\"Dim glaw, dim ond haul.\"",
      "en": "\"No rain, just sun.\""
     },
     {
@@ -703,7 +703,7 @@
      "en": "\"And the coffee's good.\""
     },
     {
-     "cy": "Dw i'n dweud: \"Mae'n neis! Dw i isio mynd!\"",
+     "cy": "Dw i'n dweud: \"Mae'n braf! Dw i isio mynd!\"",
      "en": "I say: \"That's lovely! I want to go!\""
     },
     {
@@ -773,14 +773,14 @@
  },
  {
   "day": 6,
-  "title": "Dw i’n licio / Dw i isio / Dw i angen",
+  "title": "Dw i’n hoffi / Dw i isio / Dw i angen",
   "why": "Say what you like, want and need.",
   "catchUp": false,
   "grammar": {
-   "explain": "Dw i'n licio = I like (with 'n). Dw i isio = I want and Dw i angen = I need: in speech, no 'n before isio or angen. Just add a thing or an action after them: Dw i isio paned. Dw i'n licio yfed te. For 'not', use dw i ddim: Dw i ddim isio coffi.",
+   "explain": "Dw i'n hoffi = I like (with 'n). Dw i isio = I want and Dw i angen = I need: in speech, no 'n before isio or angen. Just add a thing or an action after them: Dw i isio paned. Dw i'n hoffi yfed te. For 'not', use dw i ddim: Dw i ddim isio coffi.",
    "examples": [
     {
-     "cy": "Dw i'n licio te.",
+     "cy": "Dw i'n hoffi te.",
      "en": "I like tea."
     },
     {
@@ -799,7 +799,7 @@
   },
   "build": [
    {
-    "cy": "Dw i'n licio te.",
+    "cy": "Dw i'n hoffi te.",
     "en": "I like tea."
    },
    {
@@ -811,7 +811,7 @@
     "en": "I need money today."
    },
    {
-    "cy": "Dw i'n licio caws hefyd.",
+    "cy": "Dw i'n hoffi caws hefyd.",
     "en": "I like cheese too."
    },
    {
@@ -819,7 +819,7 @@
     "en": "I don't want coffee."
    },
    {
-    "cy": "Dw i angen lot o bethau.",
+    "cy": "Dw i angen llawer o bethau.",
     "en": "I need a lot of things."
    }
   ],
@@ -831,19 +831,19 @@
      "en": "I'm thinking about Y Wladfa today."
     },
     {
-     "cy": "Dw i'n licio te a bara a chaws.",
+     "cy": "Dw i'n hoffi te a bara a chaws.",
      "en": "I like tea and bread and cheese."
     },
     {
-     "cy": "Mae 'na lot o de yng Ngaiman.",
+     "cy": "Mae 'na lawer o de yng Ngaiman.",
      "en": "There's a lot of tea in Gaiman."
     },
     {
-     "cy": "Dw i isio ffilmio lot o bethau.",
+     "cy": "Dw i isio ffilmio llawer o bethau.",
      "en": "I want to film a lot of things."
     },
     {
-     "cy": "Dw i angen pres. Lot o bres!",
+     "cy": "Dw i angen pres. Llawer o bres!",
      "en": "I need money. A lot of money!"
     },
     {
@@ -859,7 +859,7 @@
      "en": "Yes. I need a hundred pesos, then."
     },
     {
-     "cy": "Dw i angen coffi hefyd, a lot o baneidiau!",
+     "cy": "Dw i angen coffi hefyd, a llawer o baneidiau!",
      "en": "I need coffee too, and lots of cuppas!"
     },
     {
@@ -877,7 +877,7 @@
    ],
    "questions": [
     {
-     "q": "Be dw i'n licio?",
+     "q": "Be dw i'n hoffi?",
      "en": "What do I like?",
      "options": [
       "Te a bara a chaws",
@@ -911,7 +911,7 @@
   "speak": [
    {
     "prompt": "Say what you like to drink.",
-    "cy": "Dw i'n licio coffi, a dw i'n licio te hefyd.",
+    "cy": "Dw i'n hoffi coffi, a dw i'n hoffi te hefyd.",
     "en": "I like coffee, and I like tea too."
    },
    {
@@ -921,7 +921,7 @@
    },
    {
     "prompt": "Say what you need for the trip.",
-    "cy": "Dw i angen pres, lot o bres.",
+    "cy": "Dw i angen pres, llawer o bres.",
     "en": "I need money, a lot of money."
    },
    {
@@ -937,7 +937,7 @@
   "why": "Review, reread, rewatch.",
   "catchUp": true,
   "grammar": {
-   "explain": "Review of the week. Dw i'n + action: what you do. Mae hi'n + describing word: the weather or a person. After 'n, describing words take a soft mutation (clên → glên, cyffrous → gyffrous). Dw i isio / Dw i angen + thing: want, need. Dw i'n licio + thing: like. Mae gen i means 'I have', and the next word softens (cath → gath). Does gen i ddim means 'I don't have'.",
+   "explain": "Review of the week. Dw i'n + action: what you do. Mae hi'n + describing word: the weather or a person. After 'n, describing words take a soft mutation (clên → glên, cyffrous → gyffrous). Dw i isio / Dw i angen + thing: want, need. Dw i'n hoffi + thing: like. Mae gen i means 'I have', and the next word softens (cath → gath). Does gen i ddim means 'I don't have'.",
    "examples": [
     {
      "cy": "Dw i'n dysgu Cymraeg.",
@@ -1019,7 +1019,7 @@
      "en": "There's sun and wind too."
     },
     {
-     "cy": "Dw i'n licio te, bara a chaws.",
+     "cy": "Dw i'n hoffi te, bara a chaws.",
      "en": "I like tea, bread and cheese."
     },
     {
@@ -1057,7 +1057,7 @@
      "answer": 1
     },
     {
-     "q": "Be mae'r dysgwr yn licio?",
+     "q": "Be mae'r dysgwr yn hoffi?",
      "en": "What does the learner like?",
      "options": [
       "Te, bara a chaws.",
@@ -1081,7 +1081,7 @@
    },
    {
     "prompt": "Say what you love to eat and drink.",
-    "cy": "Dw i wrth fy modd efo bara a chaws. Dw i'n licio te hefyd.",
+    "cy": "Dw i wrth fy modd efo bara a chaws. Dw i'n hoffi te hefyd.",
     "en": "I love bread and cheese. I like tea too."
    },
    {
@@ -1339,7 +1339,7 @@
      "en": "At twelve o'clock, we have lunch."
     },
     {
-     "cy": "Mae fy nhad yn dweud, \"Ffilmia dy deulu hefyd, plis!\"",
+     "cy": "Mae fy nhad yn dweud, \"Ffilmia dy deulu hefyd, os gwelwch yn dda!\"",
      "en": "My dad says, \"Film your family too, please!\""
     },
     {
@@ -1576,7 +1576,7 @@
      "en": "May I film?"
     },
     {
-     "cy": "Ga i baned, plis?",
+     "cy": "Ga i baned, os gwelwch yn dda?",
      "en": "Can I have a cuppa, please?"
     },
     {
@@ -1595,7 +1595,7 @@
     "en": "May I film here?"
    },
    {
-    "cy": "Ga i goffi, plis?",
+    "cy": "Ga i goffi, os gwelwch yn dda?",
     "en": "Can I have a coffee, please?"
    },
    {
@@ -1647,7 +1647,7 @@
      "en": "\"Straight on, to the left, behind the hotel!\""
     },
     {
-     "cy": "Mae Elen yn siarad lot.",
+     "cy": "Mae Elen yn siarad llawer.",
      "en": "Elen talks a lot."
     },
     {
@@ -1655,7 +1655,7 @@
      "en": "I don't know what she's saying."
     },
     {
-     "cy": "\"Sori! Dw i'n dysgwr.\"",
+     "cy": "\"Mae'n ddrwg gen i! Dw i'n dysgwr.\"",
      "en": "\"Sorry! I'm a learner.\""
     },
     {
@@ -1699,7 +1699,7 @@
   "speak": [
    {
     "prompt": "Ask politely if you can film.",
-    "cy": "Ga i ffilmio, plis?",
+    "cy": "Ga i ffilmio, os gwelwch yn dda?",
     "en": "May I film, please?"
    },
    {
@@ -1803,15 +1803,15 @@
      "en": "If the weather's nice, I'm going to Esquel and Trevelin."
     },
     {
-     "cy": "Mae Trevelin yn bell, ond mae o'n wyrdd ac yn neis.",
+     "cy": "Mae Trevelin yn bell, ond mae o'n wyrdd ac yn braf.",
      "en": "Trevelin is far, but it's green and nice."
     },
     {
-     "cy": "Dw i ddim yn rhugl eto. Dw i ddim yn deall lot.",
+     "cy": "Dw i ddim yn rhugl eto. Dw i ddim yn deall llawer.",
      "en": "I'm not fluent yet. I don't understand a lot."
     },
     {
-     "cy": "Ond dw i'n mynd i ddysgu, a dw i'n mynd i siarad lot!",
+     "cy": "Ond dw i'n mynd i ddysgu, a dw i'n mynd i siarad llawer!",
      "en": "But I'm going to learn, and I'm going to speak a lot!"
     }
    ],
@@ -1963,7 +1963,7 @@
      "en": "Me: \"I'm going to film people in Trelew.\""
     },
     {
-     "cy": "Mirta: \"Croeso i Batagonia! Dach chi'n siarad Cymraeg yn rili dda.\"",
+     "cy": "Mirta: \"Croeso i Batagonia! Dach chi'n siarad Cymraeg yn dda go iawn.\"",
      "en": "Mirta: \"Welcome to Patagonia! You speak Welsh really well.\""
     },
     {
@@ -2017,7 +2017,7 @@
    },
    {
     "prompt": "Say where you'd like to live.",
-    "cy": "Baswn i'n licio byw ym Mhatagonia.",
+    "cy": "Baswn i'n hoffi byw ym Mhatagonia.",
     "en": "I'd like to live in Patagonia."
    },
    {
@@ -2036,7 +2036,7 @@
    "explain": "Catch-up day! This week's key patterns: 'Dw i'n byw yn...' and 'Dw i'n dod o...' for where you live and come from. 'Yn' changes place names with a nasal mutation (Caerdydd → yng Nghaerdydd). 'O', 'i' and 'Ga i' trigger a soft mutation (Cymru → o Gymru, Patagonia → i Batagonia, coffi → Ga i goffi?). 'Nes i' + soft mutation tells what you did.",
    "examples": [
     {
-     "cy": "Ga i goffi, plis?",
+     "cy": "Ga i goffi, os gwelwch yn dda?",
      "en": "Can I have a coffee, please?"
     },
     {
@@ -2059,7 +2059,7 @@
     "en": "I live in Cardiff."
    },
    {
-    "cy": "Ga i baned, plis?",
+    "cy": "Ga i baned, os gwelwch yn dda?",
     "en": "Can I have a cuppa, please?"
    },
    {
@@ -2103,7 +2103,7 @@
      "en": "It was expensive!"
     },
     {
-     "cy": "Dw i wedi dysgu dweud 'Ga i baned, plis?'",
+     "cy": "Dw i wedi dysgu dweud 'Ga i baned, os gwelwch yn dda?'",
      "en": "I've learned to say 'Can I have a cuppa, please?'"
     },
     {
@@ -2178,7 +2178,7 @@
    },
    {
     "prompt": "Ask politely for the menu.",
-    "cy": "Ga i fwydlen, plis?",
+    "cy": "Ga i fwydlen, os gwelwch yn dda?",
     "en": "Can I have a menu, please?"
    }
   ]
@@ -2567,7 +2567,7 @@
      "en": "I saw the old school with Mirta."
     },
     {
-     "cy": "Nes i weld caffi bach neis hefyd.",
+     "cy": "Nes i weld caffi bach braf hefyd.",
      "en": "I saw a nice little café too."
     },
     {
@@ -2703,7 +2703,7 @@
     "en": "I thought it was easy."
    },
    {
-    "cy": "Roedd y tŷ te yn neis.",
+    "cy": "Roedd y tŷ te yn braf.",
     "en": "The tea house was nice."
    }
   ],
@@ -2903,7 +2903,7 @@
      "en": "\"Do you want a cuppa? I've got scones too.\""
     },
     {
-     "cy": "\"Hoffwn i baned, plis. Ychydig o lefrith, dim siwgr.\"",
+     "cy": "\"Hoffwn i baned, os gwelwch yn dda. Ychydig o lefrith, dim siwgr.\"",
      "en": "\"I'd like a cuppa, please. A little milk, no sugar.\""
     },
     {
@@ -2965,7 +2965,7 @@
    },
    {
     "prompt": "Politely order a drink.",
-    "cy": "Hoffwn i wydraid o ddŵr, plis.",
+    "cy": "Hoffwn i wydraid o ddŵr, os gwelwch yn dda.",
     "en": "I'd like a glass of water, please."
    },
    {
@@ -3019,7 +3019,7 @@
     "en": "Don't worry about the bill."
    },
    {
-    "cy": "Arhoswch yma, plis.",
+    "cy": "Arhoswch yma, os gwelwch yn dda.",
     "en": "Wait here, please."
    },
    {
@@ -3043,11 +3043,11 @@
      "en": "Nain Gwen: \"Have a cuppa and bread and cheese.\""
     },
     {
-     "cy": "Dw i'n bwyta lot. Mae'r caws yn flasus iawn.",
+     "cy": "Dw i'n bwyta llawer. Mae'r caws yn flasus iawn.",
      "en": "I eat a lot. The cheese is very tasty."
     },
     {
-     "cy": "Nain Gwen: \"Fasech chi'n licio coffi yn lle te?\"",
+     "cy": "Nain Gwen: \"Fasech chi'n hoffi coffi yn lle te?\"",
      "en": "Nain Gwen: \"Would you like coffee instead of tea?\""
     },
     {
@@ -3111,12 +3111,12 @@
   "speak": [
    {
     "prompt": "Invite a guest in and ask them to sit.",
-    "cy": "Dewch i mewn! Steddwch, plis.",
+    "cy": "Dewch i mewn! Steddwch, os gwelwch yn dda.",
     "en": "Come in! Sit down, please."
    },
    {
     "prompt": "Offer your guest a drink.",
-    "cy": "Fasech chi'n licio paned neu goffi?",
+    "cy": "Fasech chi'n hoffi paned neu goffi?",
     "en": "Would you like a cuppa or coffee?"
    },
    {
@@ -3152,7 +3152,7 @@
      "en": "Come in! Sit down!"
     },
     {
-     "cy": "Hoffwn i baned, plis.",
+     "cy": "Hoffwn i baned, os gwelwch yn dda.",
      "en": "I'd like a cuppa, please."
     }
    ]
@@ -3179,7 +3179,7 @@
     "en": "Don't worry!"
    },
    {
-    "cy": "Hoffwn i baned, plis.",
+    "cy": "Hoffwn i baned, os gwelwch yn dda.",
     "en": "I'd like a cuppa, please."
    }
   ],
@@ -3195,7 +3195,7 @@
      "en": "I arrived at the airport in Trelew."
     },
     {
-     "cy": "Roedd hi'n boeth. Roedd 'na lot o wynt.",
+     "cy": "Roedd hi'n boeth. Roedd 'na lawer o wynt.",
      "en": "It was hot. There was a lot of wind."
     },
     {
@@ -3383,7 +3383,7 @@
      "en": "\"Very old. It's special to me.\""
     },
     {
-     "cy": "\"Taset ti'n dod, baset ti'n clywed lot o Gymraeg.\"",
+     "cy": "\"Taset ti'n dod, baset ti'n clywed llawer o Gymraeg.\"",
      "en": "\"If you came, you'd hear lots of Welsh.\""
     },
     {
@@ -3609,14 +3609,14 @@
  },
  {
   "day": 24,
-  "title": "Baswn i’n licio / Hoffwn i (I would)",
-  "why": "Polite wishes: Baswn i’n licio paned. Hoffwn i weld y capel.",
+  "title": "Baswn i’n hoffi / Hoffwn i (I would)",
+  "why": "Polite wishes: Baswn i’n hoffi paned. Hoffwn i weld y capel.",
   "catchUp": false,
   "grammar": {
-   "explain": "To ask for things politely, use 'Baswn i'n licio...' (I'd like...) or 'Hoffwn i...' (I'd like...). After 'Baswn i'n licio' there's no change. After 'Hoffwn i' the next word takes a soft mutation: paned → baned, gweld → weld. To offer: 'Hoffech chi...?' or 'Basech chi'n licio...?' Answer yes with the same verb: 'Baswn' to 'Basech chi...?' and 'Hoffwn' to 'Hoffech chi...?'",
+   "explain": "To ask for things politely, use 'Baswn i'n hoffi...' (I'd like...) or 'Hoffwn i...' (I'd like...). After 'Baswn i'n hoffi' there's no change. After 'Hoffwn i' the next word takes a soft mutation: paned → baned, gweld → weld. To offer: 'Hoffech chi...?' or 'Basech chi'n hoffi...?' Answer yes with the same verb: 'Baswn' to 'Basech chi...?' and 'Hoffwn' to 'Hoffech chi...?'",
    "examples": [
     {
-     "cy": "Baswn i'n licio paned, plis.",
+     "cy": "Baswn i'n hoffi paned, os gwelwch yn dda.",
      "en": "I'd like a cuppa, please."
     },
     {
@@ -3635,7 +3635,7 @@
   },
   "build": [
    {
-    "cy": "Baswn i'n licio gwydraid o win, plis.",
+    "cy": "Baswn i'n hoffi gwydraid o win, os gwelwch yn dda.",
     "en": "I'd like a glass of wine, please."
    },
    {
@@ -3651,11 +3651,11 @@
     "en": "I'd like to try the Welsh tea."
    },
    {
-    "cy": "Baswn i'n licio fodca dybl.",
+    "cy": "Baswn i'n hoffi fodca dybl.",
     "en": "I'd like a double vodka."
    },
    {
-    "cy": "Basech chi'n licio mynd i'r tŷ bwyta?",
+    "cy": "Basech chi'n hoffi mynd i'r tŷ bwyta?",
     "en": "Would you like to go to the restaurant?"
    }
   ],
@@ -3671,11 +3671,11 @@
      "en": "Ana: \"What would you like?\""
     },
     {
-     "cy": "Fi: \"Hoffwn i baned o de, plis.\"",
+     "cy": "Fi: \"Hoffwn i baned o de, os gwelwch yn dda.\"",
      "en": "Me: \"I'd like a cup of tea, please.\""
     },
     {
-     "cy": "Fi: \"Baswn i'n licio gweld y fwydlen hefyd.\"",
+     "cy": "Fi: \"Baswn i'n hoffi gweld y fwydlen hefyd.\"",
      "en": "Me: \"I'd like to see the menu too.\""
     },
     {
@@ -3743,7 +3743,7 @@
   "speak": [
    {
     "prompt": "Order a drink politely.",
-    "cy": "Baswn i'n licio paned o goffi, plis.",
+    "cy": "Baswn i'n hoffi paned o goffi, os gwelwch yn dda.",
     "en": "I'd like a cup of coffee, please."
    },
    {
@@ -3784,7 +3784,7 @@
      "en": "I think it's nice today."
     },
     {
-     "cy": "Dach chi'n meddwl bod Gaiman yn neis?",
+     "cy": "Dach chi'n meddwl bod Gaiman yn braf?",
      "en": "Do you think Gaiman is nice?"
     }
    ]
@@ -3847,7 +3847,7 @@
      "en": "Ana: \"Thanks! I think your Welsh is very good.\""
     },
     {
-     "cy": "\"Diolch! Dw i'n trio siarad bob dydd.\"",
+     "cy": "\"Diolch! Dw i'n ceisio siarad bob dydd.\"",
      "en": "\"Thanks! I try to speak every day.\""
     },
     {
@@ -3936,7 +3936,7 @@
      "en": "If I forget a word, I don't worry."
     },
     {
-     "cy": "Mae hi'n oer, ond mae'r capel yn lyfli.",
+     "cy": "Mae hi'n oer, ond mae'r capel yn hyfryd.",
      "en": "It's cold, but the chapel is lovely."
     }
    ]
@@ -3955,7 +3955,7 @@
     "en": "If it's raining, we drive."
    },
    {
-    "cy": "Mae'r trên yn lyfli, ond mae o'n ddrud.",
+    "cy": "Mae'r trên yn hyfryd, ond mae o'n ddrud.",
     "en": "The train is lovely, but it's expensive."
    },
    {
@@ -3991,7 +3991,7 @@
      "en": "The settlers came here every Sunday."
     },
     {
-     "cy": "Mae hi'n oer yn y capel, ond mae o'n lyfli.",
+     "cy": "Mae hi'n oer yn y capel, ond mae o'n hyfryd.",
      "en": "It's cold in the chapel, but it's lovely."
     },
     {
@@ -4218,7 +4218,7 @@
    },
    {
     "prompt": "Say what you like more.",
-    "cy": "Dw i'n licio te yn fwy na mate.",
+    "cy": "Dw i'n hoffi te yn fwy na mate.",
     "en": "I like tea more than maté."
    }
   ]
@@ -4255,11 +4255,11 @@
     "en": "I'll go to the chapel tomorrow."
    },
    {
-    "cy": "Ga i bot o de, plis?",
+    "cy": "Ga i bot o de, os gwelwch yn dda?",
     "en": "Can I have a pot of tea, please?"
    },
    {
-    "cy": "Hoffwn i gacen ddu, plis.",
+    "cy": "Hoffwn i gacen ddu, os gwelwch yn dda.",
     "en": "I'd like black cake, please."
    },
    {
@@ -4364,7 +4364,7 @@
    },
    {
     "prompt": "Order something in a tea house.",
-    "cy": "Ga i baned a sgons, plis?",
+    "cy": "Ga i baned a sgons, os gwelwch yn dda?",
     "en": "Can I have a cuppa and scones, please?"
    },
    {
@@ -4524,7 +4524,7 @@
    },
    {
     "prompt": "Say who you like sitting with.",
-    "cy": "Dw i'n licio eistedd efo fy nain.",
+    "cy": "Dw i'n hoffi eistedd efo fy nain.",
     "en": "I like sitting with my gran."
    },
    {
@@ -4615,8 +4615,8 @@
      "en": "After lunch, I film the children speaking Welsh."
     },
     {
-     "cy": "Mae geneth fach yn deud: 'Sut mae, mêt?'",
-     "en": "A little girl says: 'How's it going, mate?'"
+     "cy": "Mae geneth fach yn deud: 'Sut mae, ffrind?'",
+     "en": "A little girl says: 'How's it going, friend?'"
     },
     {
      "cy": "Mae hi'n ddiwrnod hir, ond dw i wrth fy modd.",
@@ -4787,7 +4787,7 @@
      "en": "I say: 'Every day I learn something new.'"
     },
     {
-     "cy": "Ana: 'Wyt ti'n lico mate?'",
+     "cy": "Ana: 'Wyt ti'n hoffi mate?'",
      "en": "Ana: 'Do you like mate?'"
     },
     {
@@ -4872,7 +4872,7 @@
      "en": "I should speak more Welsh."
     },
     {
-     "cy": "Ddylwn i ddim gwario lot o bres.",
+     "cy": "Ddylwn i ddim gwario llawer o bres.",
      "en": "I shouldn't spend a lot of money."
     },
     {
@@ -4895,7 +4895,7 @@
     "en": "I must be there at five."
    },
    {
-    "cy": "Ddylwn i ddim gwario lot o bres.",
+    "cy": "Ddylwn i ddim gwario llawer o bres.",
     "en": "I shouldn't spend a lot of money."
    },
    {
@@ -4931,7 +4931,7 @@
      "en": "I should bring a cake, maybe."
     },
     {
-     "cy": "Ddylwn i ddim siarad lot o Saesneg!",
+     "cy": "Ddylwn i ddim siarad llawer o Saesneg!",
      "en": "I shouldn't speak much English!"
     },
     {
@@ -4943,7 +4943,7 @@
      "en": "The staff are really friendly."
     },
     {
-     "cy": "'Cacen ddu, plis.'",
+     "cy": "'Cacen ddu, os gwelwch yn dda.'",
      "en": "'A black cake, please.'"
     },
     {
@@ -5001,7 +5001,7 @@
    },
    {
     "prompt": "Say something you shouldn't do.",
-    "cy": "Ddylwn i ddim yfed lot o goffi.",
+    "cy": "Ddylwn i ddim yfed llawer o goffi.",
     "en": "I shouldn't drink a lot of coffee."
    },
    {
@@ -5091,11 +5091,11 @@
      "en": "Taid Elfed: \"Maybe. But I don't know where the family lived first.\""
     },
     {
-     "cy": "Fi: \"Allwch chi siarad yn arafach, plis?\"",
+     "cy": "Fi: \"Allwch chi siarad yn arafach, os gwelwch yn dda?\"",
      "en": "Me: \"Can you speak slower, please?\""
     },
     {
-     "cy": "Taid Elfed: \"Sori! Wnaethon nhw symud i Ddyffryn Camwy wedyn, yndê.\"",
+     "cy": "Taid Elfed: \"Mae'n ddrwg gen i! Wnaethon nhw symud i Ddyffryn Camwy wedyn, yndê.\"",
      "en": "Taid Elfed: \"Sorry! They moved to the Camwy Valley afterwards, you know.\""
     },
     {
@@ -5156,7 +5156,7 @@
    },
    {
     "prompt": "Ask someone to speak more slowly.",
-    "cy": "Allwch chi siarad yn arafach, plis?",
+    "cy": "Allwch chi siarad yn arafach, os gwelwch yn dda?",
     "en": "Can you speak slower, please?"
    },
    {
@@ -5177,7 +5177,7 @@
   "why": "Recognise Patagonian Welsh: Spanish loans, greetings, places.",
   "catchUp": false,
   "grammar": {
-   "explain": "Welsh in Y Wladfa borrows Spanish words freely. Small words like che (hey/mate), bueno, claro and chau drop straight into Welsh sentences. Spanish nouns stay as they are: y colectivo (the bus), y kiosco. Borrowed verbs get the Welsh ending -io, so they work like any Welsh verb: retirio (to retire), just like clicio. Listen for them: they're a sign you're in Patagonia!",
+   "explain": "Welsh in Y Wladfa borrows Spanish words freely. Small words like che (hey/mate), bueno, claro and chau drop straight into Welsh sentences. Spanish nouns stay as they are: y colectivo (the bus), y kiosco. Borrowed verbs get the Welsh ending -io, so they work like any Welsh verb: clicio (to click). Listen for them: they're a sign you're in Patagonia!",
    "examples": [
     {
      "cy": "Che, ti isio mate?",
@@ -5188,7 +5188,7 @@
      "en": "We're going on the bus."
     },
     {
-     "cy": "Mae Taid wedi retirio.",
+     "cy": "Mae Taid wedi ymddeol.",
      "en": "Grandad has retired."
     },
     {
@@ -5211,7 +5211,7 @@
     "en": "What does 'che' mean?"
    },
    {
-    "cy": "Mae Dad wedi retirio.",
+    "cy": "Mae Dad wedi ymddeol.",
     "en": "Dad has retired."
    },
    {
@@ -5239,15 +5239,15 @@
      "en": "\"Of course! But what does 'che' mean?\""
     },
     {
-     "cy": "Huw: \"Mae o fel 'mêt' yn Gymraeg.\"",
-     "en": "Huw: \"It's like 'mêt' in Welsh.\""
+     "cy": "Huw: \"Mae o fel 'ffrind' yn Gymraeg.\"",
+     "en": "Huw: \"It's like 'ffrind' in Welsh.\""
     },
     {
      "cy": "Dan ni'n rhannu'r mate. Mae pawb yn yfed o'r un mate.",
      "en": "We share the mate. Everyone drinks from the same mate."
     },
     {
-     "cy": "Taid: \"Dw i wedi retirio, felly mae gen i amser.\"",
+     "cy": "Taid: \"Dw i wedi ymddeol, felly mae gen i amser.\"",
      "en": "Taid: \"I've retired, so I have time.\""
     },
     {
@@ -5259,7 +5259,7 @@
      "en": "\"A colectivo is a bus, right?\""
     },
     {
-     "cy": "Taid: \"Ia. Mae trigolion y Wladfa yn defnyddio lot o Sbaeneg.\"",
+     "cy": "Taid: \"Ia. Mae trigolion y Wladfa yn defnyddio llawer o Sbaeneg.\"",
      "en": "Taid: \"Yes. The residents of Y Wladfa use a lot of Spanish.\""
     },
     {
@@ -5311,7 +5311,7 @@
   "speak": [
    {
     "prompt": "Say you're willing to try mate.",
-    "cy": "Dw i'n fodlon trio mate.",
+    "cy": "Dw i'n fodlon ceisio mate.",
     "en": "I'm willing to try mate."
    },
    {
@@ -5379,7 +5379,7 @@
     "en": "We go on the colectivo to Trelew."
    },
    {
-    "cy": "Mae'n well gen i de, ond dw i'n licio mate hefyd.",
+    "cy": "Mae'n well gen i de, ond dw i'n hoffi mate hefyd.",
     "en": "I prefer tea, but I like mate too."
    }
   ],
@@ -5587,7 +5587,7 @@
      "en": "Grandad Elfed says: 'The Eisteddfod is important to us all.'"
     },
     {
-     "cy": "Dw i mor lwcus i fod yma.",
+     "cy": "Dw i mor ffodus i fod yma.",
      "en": "I'm so lucky to be here."
     }
    ],
@@ -5747,7 +5747,7 @@
      "en": "\"Don't stop, love!\" says Taid Elfed."
     },
     {
-     "cy": "\"'Swn i'n licio eistedd,\" dw i'n deud.",
+     "cy": "\"'Swn i'n hoffi eistedd,\" dw i'n deud.",
      "en": "\"I'd like to sit down,\" I say."
     }
    ],
@@ -5891,11 +5891,11 @@
      "en": "'Is that your grandmother?' 'Yes, and that's her sister.'"
     },
     {
-     "cy": "'Mae ei chwaer hi wedi riteirio yn Nhrelew.'",
+     "cy": "'Mae ei chwaer hi wedi ymddeol yn Nhrelew.'",
      "en": "'Her sister has retired in Trelew.'"
     },
     {
-     "cy": "'Wnewch chi ailadrodd hynna, plis? Mae 'na gymaint o bobl!'",
+     "cy": "'Wnewch chi ailadrodd hynna, os gwelwch yn dda? Mae 'na gymaint o bobl!'",
      "en": "'Will you repeat that, please? There are so many people!'"
     },
     {
@@ -5919,7 +5919,7 @@
      "answer": 0
     },
     {
-     "q": "Lle mae ei chwaer hi wedi riteirio?",
+     "q": "Lle mae ei chwaer hi wedi ymddeol?",
      "en": "Where has her sister retired?",
      "options": [
       "Yng Ngaiman",
@@ -6011,7 +6011,7 @@
     "en": "Well, I'm not sure."
    },
    {
-    "cy": "Peidiwch â becso, does dim problem.",
+    "cy": "Peidiwch â phoeni, does dim problem.",
     "en": "Don't worry, there's no problem."
    }
   ],
@@ -6063,7 +6063,7 @@
      "en": "Me: Fair play! Thank you very much."
     },
     {
-     "cy": "Carlos: Peidiwch â becso. Croeso i'r Wladfa!",
+     "cy": "Carlos: Peidiwch â phoeni. Croeso i'r Wladfa!",
      "en": "Carlos: Don't worry. Welcome to Y Wladfa!"
     }
    ],
@@ -6129,14 +6129,14 @@
   "why": "Repair a conversation when you get stuck.",
   "catchUp": false,
   "grammar": {
-   "explain": "When you get stuck, don't stop – repair! Say 'Arafach, plis' (slower, please) or 'Unwaith eto, plis' (once more). Ask 'Be ydy ystyr hwnna?' (what does that mean?). To check a word, use 'Sut dach chi'n deud …?' (how do you say …?). Welsh speakers are happy to help a learner, so ask often.",
+   "explain": "When you get stuck, don't stop – repair! Say 'Arafach, os gwelwch yn dda' (slower, please) or 'Unwaith eto, os gwelwch yn dda' (once more). Ask 'Be ydy ystyr hwnna?' (what does that mean?). To check a word, use 'Sut dach chi'n deud …?' (how do you say …?). Welsh speakers are happy to help a learner, so ask often.",
    "examples": [
     {
-     "cy": "Arafach, plis! Dw i'n ddysgwr.",
+     "cy": "Arafach, os gwelwch yn dda! Dw i'n ddysgwr.",
      "en": "Slower, please! I'm a learner."
     },
     {
-     "cy": "Unwaith eto, plis.",
+     "cy": "Unwaith eto, os gwelwch yn dda.",
      "en": "Once more, please."
     },
     {
@@ -6151,11 +6151,11 @@
   },
   "build": [
    {
-    "cy": "Arafach, plis!",
+    "cy": "Arafach, os gwelwch yn dda!",
     "en": "Slower, please!"
    },
    {
-    "cy": "Unwaith eto, plis.",
+    "cy": "Unwaith eto, os gwelwch yn dda.",
     "en": "Once more, please."
    },
    {
@@ -6167,7 +6167,7 @@
     "en": "How do you say 'cawl' in English?"
    },
    {
-    "cy": "Sori, dw i ddim yn deall dim byd.",
+    "cy": "Mae'n ddrwg gen i, dw i ddim yn deall dim byd.",
     "en": "Sorry, I don't understand anything."
    },
    {
@@ -6176,22 +6176,22 @@
    }
   ],
   "story": {
-   "title": "Arafach, plis!",
+   "title": "Arafach, os gwelwch yn dda!",
    "lines": [
     {
      "cy": "Fues i ar fferm yn Nhrevelin heddiw efo ffrind.",
      "en": "I went to a farm in Trevelin today with a friend."
     },
     {
-     "cy": "Roedd y dyn yn siarad lot, a doedden ni ddim yn deall.",
+     "cy": "Roedd y dyn yn siarad llawer, a doedden ni ddim yn deall.",
      "en": "The man talked a lot, and we didn't understand."
     },
     {
-     "cy": "'Arafach, plis! Dw i'n ddysgwr.'",
+     "cy": "'Arafach, os gwelwch yn dda! Dw i'n ddysgwr.'",
      "en": "'Slower, please! I'm a learner.'"
     },
     {
-     "cy": "'Sori! Dach chi isio cawl?'",
+     "cy": "'Mae'n ddrwg gen i! Dach chi isio cawl?'",
      "en": "'Sorry! Do you want some cawl?'"
     },
     {
@@ -6263,7 +6263,7 @@
   "speak": [
    {
     "prompt": "Ask someone to slow down.",
-    "cy": "Arafach, plis. Dw i'n ddysgwr.",
+    "cy": "Arafach, os gwelwch yn dda. Dw i'n ddysgwr.",
     "en": "Slower, please. I'm a learner."
    },
    {
@@ -6347,7 +6347,7 @@
      "en": "It's windy, but the Andes are wonderful."
     },
     {
-     "cy": "Mae'r lleill yn weitio am y bys.",
+     "cy": "Mae'r lleill yn aros am y bws.",
      "en": "The others are waiting for the bus."
     },
     {
@@ -6375,7 +6375,7 @@
      "en": "Gwen: 'The choir won a prize at the Eisteddfod.'"
     },
     {
-     "cy": "'Dydy'r côr ddim yn broffesiynol, ond mae o'n grêt.'",
+     "cy": "'Dydy'r côr ddim yn broffesiynol, ond mae o'n wych.'",
      "en": "'The choir isn't professional, but it's great.'"
     },
     {
@@ -6403,7 +6403,7 @@
      "en": "What has the choir won?",
      "options": [
       "Fferm",
-      "Bys",
+      "Bws",
       "Gwobr"
      ],
      "answer": 2
@@ -6531,7 +6531,7 @@
      "en": "In Trevelin, I chatted with a man from a local farm."
     },
     {
-     "cy": "Wnes i ddim deall bob dim, felly wnes i ofyn, 'Arafach, plis!'",
+     "cy": "Wnes i ddim deall bob dim, felly wnes i ofyn, 'Arafach, os gwelwch yn dda!'",
      "en": "I didn't understand everything, so I asked, 'Slower, please!'"
     },
     {
@@ -6572,7 +6572,7 @@
      "q": "Be wnes i ofyn yn Nhrevelin?",
      "en": "What did I ask in Trevelin?",
      "options": [
-      "'Arafach, plis!'",
+      "'Arafach, os gwelwch yn dda!'",
       "'Faint ydy o?'",
       "'Ga i baned?'"
      ],
@@ -6588,7 +6588,7 @@
    },
    {
     "prompt": "Say something you learned.",
-    "cy": "Wnes i ddysgu lot o Gymraeg.",
+    "cy": "Wnes i ddysgu llawer o Gymraeg.",
     "en": "I learned a lot of Welsh."
    },
    {
@@ -6750,7 +6750,7 @@
    },
    {
     "prompt": "Say what you usually do before bed.",
-    "cy": "Rhan amla, dw i'n watsiad fideo cyn mynd i'r gwely.",
+    "cy": "Rhan amla, dw i'n gwylio fideo cyn mynd i'r gwely.",
     "en": "Usually I watch a video before going to bed."
    }
   ]
@@ -6787,7 +6787,7 @@
     "en": "Where are you from?"
    },
    {
-    "cy": "Pa fath o fwyd wyt ti'n licio?",
+    "cy": "Pa fath o fwyd wyt ti'n hoffi?",
     "en": "What kind of food do you like?"
    },
    {
@@ -6795,7 +6795,7 @@
     "en": "You speak Welsh, don't you?"
    },
    {
-    "cy": "Be wyt ti'n licio am y Wladfa?",
+    "cy": "Be wyt ti'n hoffi am y Wladfa?",
     "en": "What do you like about Y Wladfa?"
    },
    {
@@ -6803,7 +6803,7 @@
     "en": "Really? Why?"
    },
    {
-    "cy": "Wyt ti'n licio'r diwylliant fan hyn?",
+    "cy": "Wyt ti'n hoffi'r diwylliant fan hyn?",
     "en": "Do you like the culture here?"
    }
   ],
@@ -6819,7 +6819,7 @@
      "en": "Ana: \"Come in! Cuppa?\""
     },
     {
-     "cy": "\"Ia plis, mwg mawr o goffi!\"",
+     "cy": "\"Ia, os gwelwch yn dda, mwg mawr o goffi!\"",
      "en": "\"Yes please, a big mug of coffee!\""
     },
     {
@@ -6831,11 +6831,11 @@
      "en": "\"What's your name?\" Ana: \"Ana! You know that, don't you?\""
     },
     {
-     "cy": "\"Sori! O lle wyt ti'n dod?\" \"O Gaiman, wrth gwrs.\"",
+     "cy": "\"Mae'n ddrwg gen i! O lle wyt ti'n dod?\" \"O Gaiman, wrth gwrs.\"",
      "en": "\"Sorry! Where are you from?\" \"From Gaiman, of course.\""
     },
     {
-     "cy": "\"Be wyt ti'n licio am y Wladfa?\" \"Y diwylliant, yn enwedig y côr.\"",
+     "cy": "\"Be wyt ti'n hoffi am y Wladfa?\" \"Y diwylliant, yn enwedig y côr.\"",
      "en": "\"What do you like about Y Wladfa?\" \"The culture, especially the choir.\""
     },
     {
@@ -6851,7 +6851,7 @@
      "en": "Ana: \"Doesn't matter! It's strange at the start.\""
     },
     {
-     "cy": "Dan ni'n trio eto, tra dan ni'n yfed coffi.",
+     "cy": "Dan ni'n ceisio eto, tra dan ni'n yfed coffi.",
      "en": "We try again, while we drink coffee."
     }
    ],
@@ -6867,7 +6867,7 @@
      "answer": 0
     },
     {
-     "q": "Be mae Ana'n licio am y Wladfa?",
+     "q": "Be mae Ana'n hoffi am y Wladfa?",
      "en": "What does Ana like about Y Wladfa?",
      "options": [
       "Y diwylliant",
@@ -6896,12 +6896,12 @@
    },
    {
     "prompt": "Say what you like about Y Wladfa.",
-    "cy": "Dw i'n licio'r diwylliant, yn enwedig y te.",
+    "cy": "Dw i'n hoffi'r diwylliant, yn enwedig y te.",
     "en": "I like the culture, especially the tea."
    },
    {
     "prompt": "Say what kind of food you like.",
-    "cy": "Dw i'n licio pob math o fwyd.",
+    "cy": "Dw i'n hoffi pob math o fwyd.",
     "en": "I like every kind of food."
    },
    {
@@ -7003,7 +7003,7 @@
      "en": "Ana says: \"That's quite a feat! We have to celebrate!\""
     },
     {
-     "cy": "Wedyn, dan ni'n cael paned a dyncio bisged.",
+     "cy": "Wedyn, dan ni'n cael paned a throchi bisged.",
      "en": "Then we have a cuppa and dunk a biscuit."
     }
    ],
@@ -7022,7 +7022,7 @@
      "q": "Pam dw i'n dysgu Cymraeg?",
      "en": "Why am I learning Welsh?",
      "options": [
-      "Achos dw i'n licio coffi",
+      "Achos dw i'n hoffi coffi",
       "Achos mae gen i gath",
       "Achos roedd fy hen nain yn Gymraes"
      ],
@@ -7218,7 +7218,7 @@
    },
    {
     "prompt": "Say what you especially like here.",
-    "cy": "Dw i'n licio'r teisennau fa'ma yn arbennig.",
+    "cy": "Dw i'n hoffi'r teisennau fa'ma yn arbennig.",
     "en": "I especially like the cakes here."
    }
   ]
@@ -7229,14 +7229,14 @@
   "why": "Mix opinions, plans and reasons.",
   "catchUp": false,
   "grammar": {
-   "explain": "Mix three tools in one chat. Opinion: 'Dw i'n meddwl bod...' (I think that...). Plan or wish: 'Baswn i'n licio...' (I'd like to...) or 'Bydda i'n / Byddwn ni'n...' (I'll / we'll...). Reason: add 'achos...' (because) or 'felly...' (so). Remember: after 'yn' adjectives take soft mutation: yn gryf, yn bwysig.",
+   "explain": "Mix three tools in one chat. Opinion: 'Dw i'n meddwl bod...' (I think that...). Plan or wish: 'Baswn i'n hoffi...' (I'd like to...) or 'Bydda i'n / Byddwn ni'n...' (I'll / we'll...). Reason: add 'achos...' (because) or 'felly...' (so). Remember: after 'yn' adjectives take soft mutation: yn gryf, yn bwysig.",
    "examples": [
     {
      "cy": "Dw i'n meddwl bod y Gymraeg yn gryf yma.",
      "en": "I think Welsh is strong here."
     },
     {
-     "cy": "Baswn i'n licio dod yn ôl, achos dw i wrth fy modd yma.",
+     "cy": "Baswn i'n hoffi dod yn ôl, achos dw i wrth fy modd yma.",
      "en": "I'd like to come back, because I love it here."
     },
     {
@@ -7255,11 +7255,11 @@
     "en": "I think the bara brith is delicious."
    },
    {
-    "cy": "Baswn i'n licio cymryd rhan yn yr ŵyl flwyddyn nesa.",
+    "cy": "Baswn i'n hoffi cymryd rhan yn yr ŵyl flwyddyn nesa.",
     "en": "I'd like to take part in the festival next year."
    },
    {
-    "cy": "Byddwn ni'n watchad y gêm heno achos mae hi'n sbeshial.",
+    "cy": "Byddwn ni'n gwylio'r gêm heno achos mae hi'n arbennig.",
     "en": "We'll watch the game tonight because it's special."
    },
    {
@@ -7271,7 +7271,7 @@
     "en": "I'm staying in Gaiman at the moment, but I'll go home in August."
    },
    {
-    "cy": "Dw i'n gwerthfawrogi'r gymuned, felly baswn i'n licio dod yn ôl.",
+    "cy": "Dw i'n gwerthfawrogi'r gymuned, felly baswn i'n hoffi dod yn ôl.",
     "en": "I appreciate the community, so I'd like to come back."
    }
   ],
@@ -7303,7 +7303,7 @@
      "en": "Taid Elfed: \"I was brought up with Welsh in the house.\""
     },
     {
-     "cy": "Fi: \"Baswn i'n licio dod yn ôl ar gyfer yr ŵyl.\"",
+     "cy": "Fi: \"Baswn i'n hoffi dod yn ôl ar gyfer yr ŵyl.\"",
      "en": "Me: \"I'd like to come back for the festival.\""
     },
     {
@@ -7319,7 +7319,7 @@
      "en": "Then we stand on the doorstep."
     },
     {
-     "cy": "Mae'r haul yn mynd i lawr. Mae'r olygfa'n sbeshial.",
+     "cy": "Mae'r haul yn mynd i lawr. Mae'r olygfa'n arbennig.",
      "en": "The sun is going down. The view is special."
     }
    ],
@@ -7350,7 +7350,7 @@
      "options": [
       "Dod yn ôl ar gyfer yr ŵyl",
       "Mopio'r llawr",
-      "Watchad y gêm"
+      "Gwylio'r gêm"
      ],
      "answer": 0
     }
@@ -7364,7 +7364,7 @@
    },
    {
     "prompt": "Say something you'd like to take part in next time.",
-    "cy": "Baswn i'n licio cymryd rhan yn yr Eisteddfod y tro nesa.",
+    "cy": "Baswn i'n hoffi cymryd rhan yn yr Eisteddfod y tro nesa.",
     "en": "I'd like to take part in the Eisteddfod next time."
    },
    {
@@ -7385,7 +7385,7 @@
   "why": "The questions you’ll ask on camera, and how to react.",
   "catchUp": false,
   "grammar": {
-   "explain": "Street-interview questions are short. 'Dach chi'n...?' = Do you...? 'Be ydy...?' = What is...? 'Be dach chi'n licio am...?' = What do you like about...? After 'am' you get soft mutation: Cymru → Gymru. React fast with: 'Wir?' (Really?), 'Bobol bach!' (Goodness!), 'Yn hollol!' (Exactly!), 'Diolch yn fawr iawn!'",
+   "explain": "Street-interview questions are short. 'Dach chi'n...?' = Do you...? 'Be ydy...?' = What is...? 'Be dach chi'n hoffi am...?' = What do you like about...? After 'am' you get soft mutation: Cymru → Gymru. React fast with: 'Wir?' (Really?), 'Bobol bach!' (Goodness!), 'Yn hollol!' (Exactly!), 'Diolch yn fawr iawn!'",
    "examples": [
     {
      "cy": "Dach chi'n siarad Cymraeg? Yndw, tipyn bach.",
@@ -7396,7 +7396,7 @@
      "en": "What's the best Welsh word?"
     },
     {
-     "cy": "Be dach chi'n licio am Gymru?",
+     "cy": "Be dach chi'n hoffi am Gymru?",
      "en": "What do you like about Wales?"
     },
     {
@@ -7415,7 +7415,7 @@
     "en": "What's the best Welsh word?"
    },
    {
-    "cy": "Be dach chi'n licio am Gymru?",
+    "cy": "Be dach chi'n hoffi am Gymru?",
     "en": "What do you like about Wales?"
    },
    {
@@ -7447,15 +7447,15 @@
      "en": "What's the best Welsh word? Hiraeth, to be honest."
     },
     {
-     "cy": "Dynes ifanc: Well gen i 'cariad'. Mae o'n air neis.",
+     "cy": "Dynes ifanc: Well gen i 'cariad'. Mae o'n air braf.",
      "en": "A young woman: I prefer 'cariad'. It's a nice word."
     },
     {
-     "cy": "Be dach chi'n licio am Gymru? Hen ddyn: Y Cymreictod, a'r adeiladau llechi.",
+     "cy": "Be dach chi'n hoffi am Gymru? Hen ddyn: Y Cymreictod, a'r adeiladau llechi.",
      "en": "What do you like about Wales? An old man: The Welshness, and the slate buildings."
     },
     {
-     "cy": "Geneth: Dw i'n licio lobsgows. Mae nain yn ei goginio.",
+     "cy": "Geneth: Dw i'n hoffi lobsgows. Mae nain yn ei goginio.",
      "en": "A girl: I like lobscouse. Nain cooks it."
     },
     {
@@ -7525,7 +7525,7 @@
    },
    {
     "prompt": "Say what you like about Wales.",
-    "cy": "Dw i'n licio'r Cymreictod a'r bobl gyfeillgar.",
+    "cy": "Dw i'n hoffi'r Cymreictod a'r bobl gyfeillgar.",
     "en": "I like the Welshness and the friendly people."
    },
    {
@@ -7755,7 +7755,7 @@
      "en": "Good morning! My name is Alex, and I'm a learner."
     },
     {
-     "cy": "Dw i'n siarad dipyn bach o Gymraeg, ond dw i'n gwrando lot.",
+     "cy": "Dw i'n siarad dipyn bach o Gymraeg, ond dw i'n gwrando llawer.",
      "en": "I speak a little bit of Welsh, but I listen a lot."
     },
     {
