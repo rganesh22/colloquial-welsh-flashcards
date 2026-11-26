@@ -14,6 +14,7 @@
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { callJson, here, pool, privateDir } from './claude.mjs'
 import { DAYS, isCatchUp, SYLLABUS } from './syllabus.mjs'
 
@@ -67,13 +68,13 @@ function unmutate(t) {
   return out
 }
 
-function knownTokens(words) {
+export function knownTokens(words) {
   const set = new Set(ALWAYS)
   for (const w of words) for (const f of [w.cy, ...(w.forms ?? [])]) for (const t of tokens(f)) set.add(t)
   return set
 }
 
-function unknownIn(text, known) {
+export function unknownIn(text, known) {
   return tokens(text).filter((t) => !/^\d+$/.test(t) && !unmutate(t).some((c) => known.has(c)))
 }
 
@@ -276,7 +277,8 @@ async function main() {
   console.log(`Wrote ${days.length} days.`)
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+if (import.meta.url === pathToFileURL(process.argv[1]).href)
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })

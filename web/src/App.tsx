@@ -144,7 +144,7 @@ export default function App() {
   function updateSprint(next: SprintState) {
     setTrip((t) => saveTrip({ ...t, sprint: next }))
   }
-  /** The sprint's daily limits (25 new, 250 reviews) become the daily targets everywhere. */
+  /** The sprint's daily limits (32 new, 300 reviews) become the daily targets everywhere. */
   function applySprintTargets() {
     if (settings.dailyWordGoal !== SPRINT_NEW_PER_DAY || settings.maxDailyReviews !== SPRINT_REVIEW_CAP) {
       updateSettings({ dailyWordGoal: SPRINT_NEW_PER_DAY, maxDailyReviews: SPRINT_REVIEW_CAP })

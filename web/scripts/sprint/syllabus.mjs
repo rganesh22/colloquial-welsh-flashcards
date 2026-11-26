@@ -4,7 +4,7 @@
  * is a catch-up day: no new words, so a missed day costs nothing.
  */
 export const DAYS = 50
-export const NEW_PER_DAY = 25
+export const NEW_PER_DAY = 30
 export const isCatchUp = (day) => day % 7 === 0
 
 /** [day, pattern title, what it lets you say] */

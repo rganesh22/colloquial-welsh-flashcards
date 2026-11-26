@@ -546,3 +546,11 @@
 .sprint-videos a {
   color: var(--ink);
 }
+
+.sprint-note {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  opacity: 0.85;
+  margin-top: 0.1rem;
+}

@@ -257,6 +257,7 @@ function WordRows({ words, learned }: { words: typeof SPRINT_WORDS; learned?: Se
           <span className="sprint-en">
             {w.en}
             {w.patagonia && <span className="sprint-tag">Y Wladfa</span>}
+            {w.note && <span className="sprint-note">{w.note}</span>}
           </span>
         </li>
       ))}
@@ -297,12 +298,14 @@ function DayPlan({ day, apiKey }: { day: SprintDay; apiKey: string | null }) {
 }
 
 type ListTab = 'words' | 'grammar' | 'videos'
-type WordFilter = 'all' | 'patagonia' | 'verbs' | 'phrases' | 'todo'
+type WordFilter = 'all' | 'patagonia' | 'verbs' | 'english' | 'dialect' | 'phrases' | 'todo'
 
 const WORD_FILTERS: { id: WordFilter; label: string }[] = [
   { id: 'all', label: 'All' },
   { id: 'patagonia', label: 'Y Wladfa' },
   { id: 'verbs', label: 'Verbs' },
+  { id: 'english', label: 'English ↔ Welsh' },
+  { id: 'dialect', label: 'North ↔ South' },
   { id: 'phrases', label: 'Phrases & forms' },
   { id: 'todo', label: 'Not learned yet' },
 ]
@@ -327,9 +330,11 @@ function ListsPanel({
   const words = SPRINT_WORDS.filter((w) => {
     if (filter === 'patagonia' && !w.patagonia) return false
     if (filter === 'verbs' && w.pos !== 'verb') return false
+    if (filter === 'english' && !/From English|from English/.test(w.note ?? '')) return false
+    if (filter === 'dialect' && !/(North|South) Wales:/.test(w.note ?? '')) return false
     if (filter === 'phrases' && w.pos !== 'phrase' && w.pos !== 'verb-form') return false
     if (filter === 'todo' && learned.has(w.id)) return false
-    return !q || w.cy.toLowerCase().includes(q) || w.en.toLowerCase().includes(q)
+    return !q || w.cy.toLowerCase().includes(q) || w.en.toLowerCase().includes(q) || (w.note ?? '').toLowerCase().includes(q)
   })
   const byDay = new Map<number, typeof SPRINT_WORDS>()
   for (const w of words) byDay.set(w.day, [...(byDay.get(w.day) ?? []), w])
